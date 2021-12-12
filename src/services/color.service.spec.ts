@@ -19,7 +19,7 @@ describe("ColorService", () => {
       const color = "#ff0000";
       let pallete = colorService.getPallete(color);
       assert.equal(pallete.foreground, `${color}FF`);
-      assert.equal(pallete.background, `${color}11`);
+      assert.equal(pallete.background, `${color}28`);
     });
   });
 });

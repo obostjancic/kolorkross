@@ -7,7 +7,6 @@ import { GroupService } from "./services/group.service";
 import { ProjectRepository } from "./repositories/project.repository";
 import { ProjectService } from "./services/project.service";
 
-// TODO:  remodel the extension settings
 // TODO: Workspace <-> Project relation needs rethinking, update function cleanup
 // TODO: Configuration access layer is needed
 
@@ -54,10 +53,10 @@ export async function activate(context: vscode.ExtensionContext) {
       // const proj = await projectService.findById("fountainProject");
       // await groupService.addProject(proj, gr);
       // await config.update("workbench.colorCustomizations", { "titleBar.activeBackground": "#ff0000" }, 2);
+      vscode.window.showInformationMessage(JSON.stringify(groupService.findAll()));
     } catch (err) {
       console.log(err);
     }
-    vscode.window.showInformationMessage(JSON.stringify(groupService.findAll()));
   });
 
   context.subscriptions.push(disposable);

@@ -10,11 +10,11 @@ export class ProjectRepository implements Repository<Project> {
     this.config = config;
   }
 
-  private readProjectConfig(): Project[] {
-    return this.config.get(this.section) || [];
+  private readProjectConfig(): Record<string, Project> {
+    return this.config.get(this.section) || {};
   }
 
-  private async writeProjectConfig(data: any) {
+  private async writeProjectConfig(data: Record<string, Project>): Promise<void> {
     this.config.update(this.section, data, true);
   }
 
@@ -38,19 +38,20 @@ export class ProjectRepository implements Repository<Project> {
   }
 
   findById(id: string): Project | undefined {
-    return this.readProjectConfig().find((g: Project) => g.id === id);
+    return this.readProjectConfig()[id];
   }
 
   findAll(): Project[] {
-    return this.readProjectConfig();
+    return Object(this.readProjectConfig()).values();
   }
 
   find(query: Partial<Project>): Project[] {
-    return this.readProjectConfig().filter(p => matcher(p, query));
+    return this.findAll().filter(p => matcher(p, query));
   }
 
   async create(project: Project): Promise<Project> {
-    await this.writeProjectConfig([...this.readProjectConfig(), project]);
+    const currentConfig = this.readProjectConfig();
+    await this.writeProjectConfig({ ...currentConfig, [project.id]: project });
     return project;
   }
 
@@ -60,14 +61,14 @@ export class ProjectRepository implements Repository<Project> {
       throw new Error("Project not found");
     }
     const updatedProject = { ...project, ...updateData };
-    const otherProjects = this.readProjectConfig().filter(p => p.id !== id);
-    await this.writeProjectConfig([...otherProjects, updatedProject]);
+    const currentConfig = this.readProjectConfig();
+    await this.writeProjectConfig({ ...currentConfig, [project.id]: updatedProject });
     await this.updateWorkspaceConfig(updatedProject.color);
     return updatedProject;
   }
 
   async delete(id: string): Promise<void> {
-    const otherProjects = this.readProjectConfig().filter(p => p.id !== id);
-    await this.writeProjectConfig(otherProjects);
+    const { [id]: _, ...newConfig } = this.readProjectConfig();
+    await this.writeProjectConfig(newConfig);
   }
 }

@@ -10,28 +10,29 @@ export class GroupRepository implements Repository<Group> {
     this.config = config;
   }
 
-  private readGroupConfig(): Group[] {
-    return this.config.get(this.section) || [];
+  private readGroupConfig(): Record<string, Group> {
+    return this.config.get(this.section) || {};
   }
 
-  private async writeGroupConfig(data: any) {
+  private async writeGroupConfig(data: Record<string, Group>): Promise<void> {
     this.config.update(this.section, data, true);
   }
 
   findById(id: string): Group | undefined {
-    return this.readGroupConfig().find((g: Group) => g.id === id);
+    return this.readGroupConfig()[id];
   }
 
   findAll(): Group[] {
-    return this.readGroupConfig();
+    return Object(this.readGroupConfig()).values();
   }
 
   find(query: Partial<Group>): Group[] {
-    return this.readGroupConfig().filter(g => matcher(g, query));
+    return this.findAll().filter(g => matcher(g, query));
   }
 
   async create(group: Group): Promise<Group> {
-    await this.writeGroupConfig([...this.readGroupConfig(), group]);
+    const currentConfig = this.readGroupConfig();
+    await this.writeGroupConfig({ ...currentConfig, [group.id]: group });
     return group;
   }
 
@@ -42,14 +43,14 @@ export class GroupRepository implements Repository<Group> {
     }
 
     const updatedGroup = { ...group, ...updateData };
-    const otherGroups = this.readGroupConfig().filter(g => g.id !== id);
-    await this.writeGroupConfig([...otherGroups, updatedGroup]);
+    const currentConfig = this.readGroupConfig();
+    await this.writeGroupConfig({ ...currentConfig, [group.id]: updatedGroup });
 
     return updatedGroup;
   }
 
   async delete(id: string): Promise<void> {
-    const otherGroups = this.readGroupConfig().filter(g => g.id !== id);
-    await this.writeGroupConfig(otherGroups);
+    const { [id]: _, ...newConfig } = this.readGroupConfig();
+    await this.writeGroupConfig(newConfig);
   }
 }
