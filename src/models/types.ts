@@ -7,7 +7,9 @@ export interface Group {
   projects: string[];
 }
 
-export type UpdateGroupDTO = Pick<Group, "id" | "name" | "color">;
+export type UpdateGroupDTO = Partial<Group> & { id: string };
+
+export type CreateGroupDTO = Partial<Group> & { name: string };
 
 export interface Project {
   id: string;
@@ -16,4 +18,6 @@ export interface Project {
   path: string;
 }
 
-export type UpdateProjectDTO = Pick<Project, "id" | "name" | "color" | "path">;
+export type UpdateProjectDTO = Partial<Project> & { id: string };
+
+export type CreateProjectDTO = Partial<Project> & { path: string };

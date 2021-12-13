@@ -3,13 +3,12 @@ import { GroupService } from "../services/group.service";
 import { ProjectService } from "../services/project.service";
 import * as vscode from "vscode";
 import * as path from "path";
+import { deleteIcon, editIcon } from "./icons";
 
-function getMediaResource(context: vscode.ExtensionContext, webview: vscode.Webview, name: string) {
-  let resource = vscode.Uri.file(path.join(context.extensionPath, "src", "ui", name));
-  resource = webview.asWebviewUri(resource);
-
-  return resource;
-}
+const getResource = (context: vscode.ExtensionContext, webview: vscode.Webview, name: string) => {
+  const resource = vscode.Uri.file(path.join(context.extensionPath, "src", "ui", name));
+  return webview.asWebviewUri(resource);
+};
 
 export const dashboardContent = async (
   groupService: GroupService,
@@ -19,21 +18,28 @@ export const dashboardContent = async (
 ) => {
   const groups = await groupService.findAll();
 
-  var projectScriptsPath = getMediaResource(context, webview, "webviewProjectScripts.js");
+  const dashboardScript = getResource(context, webview, "dashboardScript.js");
+  const style = getResource(context, webview, "style.css");
+
+  const getGroupProjects = async (group: Group) => {
+    const projects = await projectService.findAll();
+    return projects.filter(project => group.projects.includes(project.id));
+  };
 
   const renderGroup = async (group: Group) => {
     return `
-    <div class="group">
-      <div class="group-name" style="border-color: ${group.color}">
-        <h2>${group.name}</h2>
+    <div class="group" id="${group.id}">
+      <div class="group-name" >
+      <h2>${group.name}</h2>  
+        <div class="icons group-icons">
+          <div class="delete-group delete-icon icon" data-id="${group.id}">${deleteIcon}</div>
+          <div class="update-group edit-icon icon" data-id="${group.id}">${editIcon}</div>
+        </div>
+
       </div>
       <div class="group-projects">
-        ${(
-          await Promise.all(
-            group.projects.map(async projectId => renderProject(await projectService.findById(projectId)))
-          )
-        ).join("")}
-        ${renderAddProject()}
+        ${(await getGroupProjects(group)).map(renderProject).join("")}
+        ${renderAddProject(group.id)}
       </div>
     </div>
   `;
@@ -41,9 +47,13 @@ export const dashboardContent = async (
 
   const renderProject = (project: Project) => {
     return `
-    <div class="project" id="${project.id}" data-action="project-click">
-      <div class="project-name" style="border-color: ${project.color}">
-        <h3>${project.name}</h3>
+    <div class="project" id="${project.id}" data-id="${project.id}">
+      <div class="project-name" >
+        <div class="icons">
+          <div class="delete-project delete-icon icon" data-id="${project.id}">${deleteIcon}</div>
+          <div class="update-project edit-icon icon" data-id="${project.id}">${editIcon}</div>
+        </div>
+        <h3 style="border-color: ${project.color}">${project.name}</h3>
       </div>
       <div class="project-path">
         ${project.path}
@@ -52,15 +62,10 @@ export const dashboardContent = async (
   `;
   };
 
-  const renderAddProject = () => {
+  const renderAddProject = (groupId: string) => {
     return `
-    <div class="project">
-      <div class="project-name" style="border-color: #FFF0">
-        <h3>Add Project</h3>
-      </div>
-      <div class="project-path">
-        +
-      </div>
+    <div class="create-project icon" data-id="${groupId}">
+        <h3> + </h3>
     </div>
   `;
   };
@@ -72,9 +77,9 @@ export const dashboardContent = async (
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <style>${css}</style>
+      <link rel="stylesheet" href="${style}">
       <title>Document</title>
-      <script src="${projectScriptsPath}"></script>
+      <script src="${dashboardScript}"></script>
 
       </head>
       <body>
@@ -88,45 +93,10 @@ export const dashboardContent = async (
           window.vscode = acquireVsCodeApi();
           
           window.onload = () => {
-              initProjects();
+              initDashboardScript();
           }
       })();
   </script>
       </html>
   `;
 };
-
-const css = `
-  .group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .group-name {
-    border-bottom: 2px solid;
-  }
-
-  .group-name h2 {
-      margin-bottom: 0.5em;
-  }
-
-  .group-projects {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .project {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid;
-    border-radius: 2px;
-    margin: 0.5em 1em 0.5em 0;
-    padding: 0 1em 1em 1em;
-  }
-  .project-name {
-    border-bottom: 2px solid;
-  }
-  .project-name h3 {
-    margin-bottom: 0.25em;
-}
-`;
