@@ -1,9 +1,11 @@
-import { Project, UpdateProjectDTO } from "../models/types";
+import { CreateProjectDTO, Project, UpdateProjectDTO } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { ColorService } from "./color.service";
 
 export class ProjectService {
-  constructor(private repo: Repository<Project>, colorService = new ColorService()) {}
+  private colorService = new ColorService();
+
+  constructor(private repo: Repository<Project>) {}
 
   async findById(id: string): Promise<Project> {
     const project = this.repo.findById(id);
@@ -29,12 +31,14 @@ export class ProjectService {
     return this.repo.findAll();
   }
 
-  async create(project: Project): Promise<Project> {
-    const alreadyExistingProject = this.repo.findById(project.id);
-    if (alreadyExistingProject) {
-      throw new Error("Project already exists");
-    }
-    return this.repo.create(project);
+  async create(project: CreateProjectDTO): Promise<Project> {
+    const newProject = {
+      path: project.path,
+      color: project.color || this.colorService.getRandomColor(),
+      //TODO: probably better handled with path module
+      name: project.name || project.path.split("/").pop(),
+    };
+    return this.repo.create(newProject);
   }
 
   async update(updateData: UpdateProjectDTO): Promise<Project> {

@@ -1,7 +1,9 @@
-import { Group, Project, UpdateGroupDTO } from "../models/types";
+import { CreateGroupDTO, Group, Project, UpdateGroupDTO } from "../models/types";
 import { Repository } from "../repositories/base.repository";
+import { ColorService } from "./color.service";
 
 export class GroupService {
+  private colorService = new ColorService();
   constructor(private repo: Repository<Group>) {}
 
   async findById(id: string): Promise<Group> {
@@ -16,12 +18,13 @@ export class GroupService {
     return this.repo.findAll();
   }
 
-  async create(group: Group): Promise<Group> {
-    const alreadyExistingGroup = this.repo.findById(group.id);
-    if (alreadyExistingGroup) {
-      throw new Error("Group already exists");
-    }
-    return this.repo.create(group);
+  async create(group: CreateGroupDTO): Promise<Group> {
+    const newGroup = {
+      name: group.name,
+      color: group.color || this.colorService.getRandomColor(),
+      projects: [],
+    };
+    return this.repo.create(newGroup);
   }
 
   async update(updateData: UpdateGroupDTO): Promise<Group> {
@@ -30,11 +33,14 @@ export class GroupService {
     return updatedGroup;
   }
 
-  async delete(group: Group): Promise<void> {
-    this.repo.delete(group.id);
+  async delete(id: string): Promise<void>;
+  async delete(group: Group): Promise<void>;
+  async delete(arg: any): Promise<void> {
+    //TODO clean up
+    this.repo.delete(arg.id || arg);
   }
 
-  async addProject(project: Project, group: Group): Promise<void> {
+  async createProject(project: Project, group: Group): Promise<void> {
     if (group.projects.find(p => p === project.id)) {
       throw new Error("Project already exists in group");
     }

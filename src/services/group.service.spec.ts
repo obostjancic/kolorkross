@@ -4,11 +4,10 @@ import { MockRepository, Repository } from "../repositories/base.repository";
 import { GroupService } from "./group.service";
 
 const mockGroup = {
-  id: "1",
   name: "group1",
-  color: "#FF0000",
+  color: "#FF0000" as Color,
   projects: ["0"],
-} as Group;
+};
 
 describe("GroupService", () => {
   let service: GroupService;
@@ -25,30 +24,24 @@ describe("GroupService", () => {
     });
 
     it("should return one group", async () => {
-      const group = {
-        id: "1",
-        name: "group1",
-        color: "#FF0000" as Color,
-        projects: [],
-      };
-      await repository.create(group);
+      const group = await repository.create({ name: "group1" });
 
       const groups = await service.findAll();
       assert.equal(groups.length, 1);
-      assert.equal(groups[0].id, "1");
-      assert.equal(groups[0].name, "group1");
+      assert.equal(groups[0].id, group.id);
+      assert.equal(groups[0].name, group.name);
 
-      repository.delete("1");
+      repository.delete(group.id);
     });
   });
 
   describe("findById", () => {
     it("should return group with id", async () => {
-      await repository.create(mockGroup);
-      const group = await service.findById(mockGroup.id);
-      assert.equal(group.id, mockGroup.id);
-      assert.equal(group.name, mockGroup.name);
-      assert.equal(group.color, mockGroup.color);
+      const created = await repository.create(mockGroup);
+      const group = await service.findById(created.id);
+      assert.equal(group.id, created.id);
+      assert.equal(group.name, created.name);
+      assert.equal(group.color, created.color);
     });
 
     it("should throw an exception", async () => {
@@ -58,11 +51,22 @@ describe("GroupService", () => {
   });
 
   describe("create", () => {
-    it("should create group", async () => {
+    it("should create a group when all props are passed", async () => {
       const group = await service.create(mockGroup);
-      assert.equal(group.id, mockGroup.id);
       assert.equal(group.name, mockGroup.name);
       assert.equal(group.color, mockGroup.color);
+    });
+
+    it("should create a group when name and color are passed", async () => {
+      const group = await service.create({ name: mockGroup.name, color: mockGroup.color });
+      assert.equal(group.name, mockGroup.name);
+      assert.equal(group.color, mockGroup.color);
+    });
+
+    it("should create a group when only name is passed", async () => {
+      const group = await service.create({ name: mockGroup.name });
+      assert.equal(group.name, mockGroup.name);
+      assert.notEqual(group.color, mockGroup.color);
     });
 
     it("should throw an exception", async () => {
@@ -73,24 +77,24 @@ describe("GroupService", () => {
 
   describe("update", () => {
     it("should update group", async () => {
-      await repository.create(mockGroup);
-      const group = await service.update(mockGroup);
-      assert.equal(group.id, mockGroup.id);
-      assert.equal(group.name, mockGroup.name);
-      assert.equal(group.color, mockGroup.color);
+      const group = await repository.create(mockGroup);
+      const updated = await service.update({ id: group.id, name: "updatedName" });
+      assert.equal(group.id, updated.id);
+      assert.equal("updatedName", updated.name);
+      assert.equal(group.color, updated.color);
     });
 
     it("should throw an exception", async () => {
-      const updatingNonexistingGroup = async () => service.update(mockGroup);
+      const updatingNonexistingGroup = async () => service.update({ id: "2", name: "updatedName" });
       assert.rejects(updatingNonexistingGroup, Error, "Group not found");
     });
   });
 
   describe("delete", () => {
     it("should delete group", async () => {
-      await repository.create(mockGroup);
-      await service.delete(mockGroup);
-      assert.equal(repository.findById(mockGroup.id), undefined);
+      const created = await repository.create(mockGroup);
+      await service.delete(created);
+      assert.equal(repository.findById(created.id), undefined);
     });
 
     it("should throw an exception", async () => {
@@ -99,28 +103,28 @@ describe("GroupService", () => {
     });
   });
 
-  describe("addProject", () => {
+  describe("createProject", () => {
     it("should add project to group", async () => {
-      await repository.create(mockGroup);
+      const group = await repository.create(mockGroup);
       const project = {
         id: "1",
         name: "project1",
         color: "#FF0000" as Color,
         path: "path1",
       };
-      await service.addProject(project, mockGroup);
-      const group = await service.findById(mockGroup.id);
-      assert.equal(group.projects.length, 2);
-      assert.equal(group.projects[1], project.id);
+      await service.createProject(project, group);
+      const savedGroup = await service.findById(group.id);
+      assert.equal(savedGroup.projects.length, 2);
+      assert.equal(savedGroup.projects[1], project.id);
     });
   });
 
   describe("removeProject", () => {
     it("should remove project from group", async () => {
-      await repository.create(mockGroup);
-      await service.removeProject({ id: "0" } as Project, mockGroup);
-      const group = await service.findById(mockGroup.id);
-      assert.equal(group.projects.length, 0);
+      const group = await repository.create(mockGroup);
+      await service.removeProject({ id: "0" } as Project, group);
+      const savedGroup = await service.findById(group.id);
+      assert.equal(savedGroup.projects.length, 0);
     });
   });
 });

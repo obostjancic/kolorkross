@@ -1,8 +1,8 @@
-export interface Repository<T> {
+export interface Repository<T extends { id: string }> {
   findAll(): T[];
   findById(id: string): T | undefined;
   find(query: Partial<T>): T[];
-  create(item: T): Promise<T>;
+  create(item: Partial<T>): Promise<T>;
   update(id: string, item: T): Promise<T>;
   delete(id: string): Promise<void>;
 }
@@ -15,6 +15,10 @@ export const matcher = <T>(p: T, q: Partial<T>) => {
     }
   }
   return true;
+};
+
+export const id = () => {
+  return Math.random().toString(36).slice(2, 9);
 };
 
 export class MockRepository<T extends { id: string }> implements Repository<T> {
@@ -32,15 +36,16 @@ export class MockRepository<T extends { id: string }> implements Repository<T> {
     return this.entities.filter(en => matcher(en, query));
   }
 
-  create(entity: T): Promise<T> {
-    this.entities.push(entity);
-    return Promise.resolve(entity);
+  create(entity: Partial<T>): Promise<T> {
+    const newEntity = { ...entity, id: id() } as T;
+    this.entities.push(newEntity);
+    return Promise.resolve(newEntity);
   }
 
   update(id: string, entity: T): Promise<T> {
     const index = this.entities.findIndex(en => en.id === id);
     if (index === -1) {
-      throw new Error("Group not found");
+      throw new Error("T not found");
     }
     this.entities[index] = entity;
     return Promise.resolve(entity);
@@ -49,7 +54,7 @@ export class MockRepository<T extends { id: string }> implements Repository<T> {
   delete(id: string): Promise<void> {
     const index = this.entities.findIndex(en => en.id === id);
     if (index === -1) {
-      throw new Error("Group not found");
+      throw new Error("T not found");
     }
     this.entities.splice(index, 1);
     return Promise.resolve();

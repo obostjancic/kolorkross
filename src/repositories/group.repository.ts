@@ -1,12 +1,12 @@
-import { WorkspaceConfiguration } from "vscode";
-import { Group } from "../models/types";
-import { matcher, Repository } from "./base.repository";
+import { Memento, WorkspaceConfiguration } from "vscode";
+import { CreateGroupDTO, Group } from "../models/types";
+import { id, matcher, Repository } from "./base.repository";
 
 export class GroupRepository implements Repository<Group> {
-  private readonly config: WorkspaceConfiguration;
+  private readonly config: Memento;
   private readonly section = "dash.groups";
 
-  constructor(config: WorkspaceConfiguration) {
+  constructor(config: Memento) {
     this.config = config;
   }
 
@@ -15,7 +15,7 @@ export class GroupRepository implements Repository<Group> {
   }
 
   private async writeGroupConfig(data: Record<string, Group>): Promise<void> {
-    this.config.update(this.section, data, true);
+    this.config.update(this.section, data);
   }
 
   findById(id: string): Group | undefined {
@@ -30,10 +30,11 @@ export class GroupRepository implements Repository<Group> {
     return this.findAll().filter(g => matcher(g, query));
   }
 
-  async create(group: Group): Promise<Group> {
+  async create(group: CreateGroupDTO): Promise<Group> {
+    const newGroup = { ...group, id: id() } as Group;
     const currentConfig = this.readGroupConfig();
-    await this.writeGroupConfig({ ...currentConfig, [group.id]: group });
-    return group;
+    await this.writeGroupConfig({ ...currentConfig, [newGroup.id]: newGroup });
+    return newGroup;
   }
 
   async update(id: string, updateData: Partial<Group>): Promise<Group> {

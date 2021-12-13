@@ -1,28 +1,33 @@
-import { WorkspaceConfiguration } from "vscode";
+import { Memento, WorkspaceConfiguration } from "vscode";
 import { Color, Project } from "../models/types";
 import { ColorService } from "../services/color.service";
-import { matcher, Repository } from "./base.repository";
+import { id, matcher, Repository } from "./base.repository";
 
 export class ProjectRepository implements Repository<Project> {
-  private readonly config: WorkspaceConfiguration;
+  private readonly state: Memento;
+  private readonly workspaceConfig: WorkspaceConfiguration;
   private readonly section = "dash.projects";
-  constructor(config: WorkspaceConfiguration) {
-    this.config = config;
+  constructor(state: Memento, workspaceConfig: WorkspaceConfiguration) {
+    this.state = state;
+    this.workspaceConfig = workspaceConfig;
   }
 
   private readProjectConfig(): Record<string, Project> {
-    return this.config.get(this.section) || {};
+    return this.state.get(this.section) || {};
   }
 
   private async writeProjectConfig(data: Record<string, Project>): Promise<void> {
-    this.config.update(this.section, data, true);
+    this.state.update(this.section, data);
   }
 
   private async writeWorkspaceConfig(data: any) {
-    this.config.update("workbench.colorCustomizations", data, 2);
+    this.workspaceConfig.update("workbench.colorCustomizations", data, 2);
   }
 
   public async updateWorkspaceConfig(color: Color): Promise<void> {
+    if (!color) {
+      return;
+    }
     const cs = new ColorService();
     const { foreground, background } = cs.getPallete(color);
     this.writeWorkspaceConfig({
@@ -50,9 +55,11 @@ export class ProjectRepository implements Repository<Project> {
   }
 
   async create(project: Project): Promise<Project> {
+    const newProject = { ...project, id: id() } as Project;
+
     const currentConfig = this.readProjectConfig();
-    await this.writeProjectConfig({ ...currentConfig, [project.id]: project });
-    return project;
+    await this.writeProjectConfig({ ...currentConfig, [newProject.id]: newProject });
+    return newProject;
   }
 
   async update(id: string, updateData: Partial<Project>): Promise<Project> {
