@@ -1,0 +1,97 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.group-name {
+  width: 100%;
+  /* border-bottom: 2px solid; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.group-name h2 {
+  width: 100%;
+  margin-bottom: 1.5em;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+  justify-content: flex-start;
+  margin-top: 0.25em;
+}
+
+.icon {
+  width: 0.6em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+  margin: 0 0 0 0.25em;
+  font-size: 1.25em;
+  align-content: center;
+  justify-content: center;
+}
+.icon:hover {
+  cursor: pointer;
+  filter: brightness(120%);
+}
+
+.delete-icon {
+  width: 0.5em;
+}
+
+.group-icons .icon {
+  width: 1em;
+}
+
+.group-projects {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 2.5em;
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 2px;
+  margin: 0.5em 1em 0.5em 0;
+  padding: 0 1em 1em 1em;
+}
+.project:hover {
+  cursor: pointer;
+}
+
+.project-name {
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.project-path {
+  margin: 0.75em 0 0 0;
+}
+
+.project-name h3 {
+  border-bottom: 2px solid;
+  font-weight: 200;
+  font-size: 1.75em;
+  /* width: 100%; */
+  margin: 0 0 0 0;
+  padding: 0.1em 0.5em 0.25em 0.5em;
+}
+
+.create-project {
+  font-size: 3em;
+  padding: 0 1.5em;
+  display: inherit;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+  font-weight: lighter;
+}

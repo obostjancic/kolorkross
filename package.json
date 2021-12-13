@@ -11,9 +11,9 @@
   ],
   "activationEvents": [
     "onStartupFinished",
-    "onView:dash",
     "onCommand:dash.helloWorld",
-    "onCommand:dash.listGroups"
+    "onCommand:dash.createGroup",
+    "onWebviewPanel:dash.dashboard"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -40,12 +40,32 @@
     },
     "commands": [
       {
-        "command": "dash.listGroups",
-        "title": "List Groups"
+        "command": "dash.openDashboard",
+        "title": "Dash: Open Dashboard"
       },
       {
-        "command": "dash.openDashboard",
-        "title": "Open Dashboard"
+        "command": "dash.createGroup",
+        "title": "Dash: Create Group"
+      },
+      {
+        "command": "dash.updateGroup",
+        "title": "Dash: Edit Group"
+      },
+      {
+        "command": "dash.deleteGroup",
+        "title": "Dash: Delete Group"
+      },
+      {
+        "command": "dash.createProject",
+        "title": "Dash: Create Project"
+      },
+      {
+        "command": "dash.updateProject",
+        "title": "Dash: Edit Project"
+      },
+      {
+        "command": "dash.deleteProject",
+        "title": "Dash: Delete Project"
       }
     ],
     "configuration": [
