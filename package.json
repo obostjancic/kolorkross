@@ -11,15 +11,41 @@
   ],
   "activationEvents": [
     "onStartupFinished",
+    "onView:dash",
     "onCommand:dash.helloWorld",
     "onCommand:dash.listGroups"
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "dashboard",
+          "title": "Dashboard",
+          "icon": "assets/dash.svg"
+        }
+      ]
+    },
+    "views": {
+      "dashboard": [
+        {
+          "type": "webview",
+          "id": "dash.dashboard",
+          "name": "Project Dashboard",
+          "icon": "media/icon.svg",
+          "visibility": "visible",
+          "contextualTitle": "Project Dashboard"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "dash.listGroups",
         "title": "List Groups"
+      },
+      {
+        "command": "dash.openDashboard",
+        "title": "Open Dashboard"
       }
     ],
     "configuration": [
