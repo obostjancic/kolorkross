@@ -8,7 +8,7 @@ export interface Repository<T> {
 }
 
 export const matcher = <T>(p: T, q: Partial<T>) => {
-  for (const key in Object.keys(q)) {
+  for (const key of Object.keys(q)) {
     //@ts-ignore
     if (p[key] !== q[key]) {
       return false;

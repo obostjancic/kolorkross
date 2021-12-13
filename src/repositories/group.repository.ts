@@ -23,7 +23,7 @@ export class GroupRepository implements Repository<Group> {
   }
 
   findAll(): Group[] {
-    return Object(this.readGroupConfig()).values();
+    return Object.values(this.readGroupConfig());
   }
 
   find(query: Partial<Group>): Group[] {

@@ -42,7 +42,7 @@ export class ProjectRepository implements Repository<Project> {
   }
 
   findAll(): Project[] {
-    return Object(this.readProjectConfig()).values();
+    return Object.values(this.readProjectConfig());
   }
 
   find(query: Partial<Project>): Project[] {
