@@ -33,11 +33,8 @@ export class GroupService {
     return updatedGroup;
   }
 
-  async delete(id: string): Promise<void>;
-  async delete(group: Group): Promise<void>;
-  async delete(arg: any): Promise<void> {
-    //TODO clean up
-    this.repo.delete(arg.id || arg);
+  async delete(id: string): Promise<void> {
+    this.repo.delete(id);
   }
 
   async createProject(project: Project, group: Group): Promise<void> {

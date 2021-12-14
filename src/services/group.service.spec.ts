@@ -93,12 +93,12 @@ describe("GroupService", () => {
   describe("delete", () => {
     it("should delete group", async () => {
       const created = await repository.create(mockGroup);
-      await service.delete(created);
+      await service.delete(created.id);
       assert.equal(repository.findById(created.id), undefined);
     });
 
     it("should throw an exception", async () => {
-      const deletingNonexistingGroup = async () => service.delete({ ...mockGroup, id: "2" });
+      const deletingNonexistingGroup = async () => service.delete("2");
       assert.rejects(deletingNonexistingGroup, Error, "Group not found");
     });
   });
