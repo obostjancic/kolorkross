@@ -2,9 +2,21 @@ import * as vscode from "vscode";
 import { Color } from "./models/types";
 import { GroupService } from "./services/group.service";
 import { ProjectService } from "./services/project.service";
+import { WorkspaceConfigService } from "./services/workspaceConfig.service";
+import { Catch } from "./util";
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const ShowError = () =>
+  Catch((error: Error) => {
+    vscode.window.showErrorMessage(error.message);
+  });
 
 export class Commands {
-  constructor(private projectService: ProjectService, private groupService: GroupService) {
+  constructor(
+    private projectService: ProjectService,
+    private groupService: GroupService,
+    private workspaceConfigService: WorkspaceConfigService
+  ) {
     this.openProject = this.openProject.bind(this);
     this.createProject = this.createProject.bind(this);
     this.updateProject = this.updateProject.bind(this);
@@ -14,46 +26,46 @@ export class Commands {
     this.deleteGroup = this.deleteGroup.bind(this);
   }
 
+  @ShowError()
   public async openProject(projectId?: string): Promise<void> {
-    projectId = projectId || (await this.input("Project Id"));
-    if (!projectId) {
-      return;
-    }
+    projectId = await this.validatedInput("Project Id", projectId);
+
     const project = await this.projectService.findById(projectId);
     vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), false);
   }
 
+  @ShowError()
   public async createProject(groupId?: string): Promise<void> {
-    const projectPath = await this.input("Project Path");
-    if (!projectPath) {
-      return this.output("No project path provided");
-    }
-    groupId = groupId || (await this.input("Group Id", "", false));
+    const projectPath = await this.validatedInput("Project Path");
+    groupId = await this.validatedInput("Group Id", groupId);
+
     const newProject = await this.projectService.create({ path: projectPath });
-    if (groupId) {
-      const group = await this.groupService.findById(groupId);
-      this.groupService.createProject(newProject, group);
-    }
+    const group = await this.groupService.findById(groupId);
+    this.groupService.createProject(newProject, group);
   }
 
+  @ShowError()
   public async updateProject(projectId?: string): Promise<void> {
-    projectId = projectId || (await this.input("Project Id"));
-    if (!projectId) {
-      return;
-    }
-    const project = await this.projectService.findById(projectId);
-    const newName = await this.input("Project Name", project.name);
-    const newColor = (await this.input("Project Color", project.color)) as Color;
-    const newPath = await this.input("Project Path", project.path);
+    projectId = await this.validatedInput("Project Id", projectId);
 
-    await this.projectService.update({ ...project, name: newName, color: newColor, path: newPath });
+    const project = await this.projectService.findById(projectId);
+    const name = await this.input("Project Name", project.name);
+    const color = (await this.input("Project Color", project.color)) as Color;
+    const path = await this.input("Project Path", project.path);
+
+    const updatedProject = await this.projectService.update({
+      ...project,
+      name,
+      color,
+      path,
+    });
+
+    this.workspaceConfigService.applyConfigToWorkspace(updatedProject);
   }
 
+  @ShowError()
   public async deleteProject(projectId?: string): Promise<void> {
-    projectId = projectId || (await this.input("Project Id"));
-    if (!projectId) {
-      return this.output("No project id provided");
-    }
+    projectId = await this.validatedInput("Project Id", projectId);
     const project = await this.projectService.findById(projectId);
     if (!(await this.confirm(`Are you sure you want to delete project ${project.name}?`))) {
       return;
@@ -61,20 +73,17 @@ export class Commands {
     await this.projectService.delete(project);
   }
 
+  @ShowError()
   public async createGroup(): Promise<void> {
-    const groupName = await this.input("Group Name");
-    if (!groupName) {
-      return this.output("No group name provided");
-    }
+    const groupName = await this.validatedInput("Group Id");
+
     this.groupService.create({ name: groupName });
     // openDashboard();
   }
 
+  @ShowError()
   public async updateGroup(groupId?: string): Promise<void> {
-    groupId = groupId || (await this.input("Group Id"));
-    if (!groupId) {
-      return;
-    }
+    groupId = await this.validatedInput("Group Id", groupId);
     const group = await this.groupService.findById(groupId);
     const newName = await this.input("Group Name", group.name);
     const newColor = (await this.input("Group Color", group.color)) as Color;
@@ -82,16 +91,22 @@ export class Commands {
     await this.groupService.update({ ...group, name: newName, color: newColor });
   }
 
+  @ShowError()
   public async deleteGroup(groupId?: string): Promise<void> {
-    groupId = groupId || (await this.input("Group Id", "", false));
-    if (!groupId) {
-      return this.output("No group id provided");
-    }
+    groupId = await this.validatedInput("Group Id", groupId);
     const group = await this.groupService.findById(groupId);
     if (!(await this.confirm(`Are you sure you want to delete group ${group.name}?`))) {
       return;
     }
-    this.groupService.delete(group);
+    this.groupService.delete(group.id);
+  }
+
+  private async validatedInput(label: string, value?: string): Promise<string> {
+    const result = value || (await this.input(label));
+    if (!result) {
+      throw new Error(`No ${label} provided`);
+    }
+    return result;
   }
 
   private async input(name: string, defaultValue: string = "", required = true): Promise<string | undefined> {
@@ -106,9 +121,5 @@ export class Commands {
   private async confirm(text: string): Promise<boolean> {
     const answer = await vscode.window.showInformationMessage(text, ...["Yes", "No"]);
     return answer === "Yes";
-  }
-
-  private async output(text: string) {
-    await vscode.window.showInformationMessage(text);
   }
 }
