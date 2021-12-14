@@ -49,7 +49,7 @@
       },
       {
         "command": "dash.updateGroup",
-        "title": "Dash: Edit Group"
+        "title": "Dash: Update Group"
       },
       {
         "command": "dash.deleteGroup",
@@ -61,7 +61,7 @@
       },
       {
         "command": "dash.updateProject",
-        "title": "Dash: Edit Project"
+        "title": "Dash: Update Project"
       },
       {
         "command": "dash.deleteProject",
