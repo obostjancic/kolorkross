@@ -23,10 +23,6 @@ export class ProjectService {
     return project;
   }
 
-  async applyConfig(project: Project): Promise<void> {
-    this.repo.update(project.id, { ...project, color: project.color });
-  }
-
   async findAll(): Promise<Project[]> {
     return this.repo.findAll();
   }
