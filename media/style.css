@@ -44,10 +44,6 @@
   width: 0.5em;
 }
 
-.group-icons .icon {
-  width: 1em;
-}
-
 .group-projects {
   display: flex;
   flex-direction: row;
