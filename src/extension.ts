@@ -1,16 +1,13 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
-import { Color } from "./models/types";
-import { GroupRepository } from "./repositories/group.repository";
-import { GroupService } from "./services/group.service";
-import { ProjectRepository } from "./repositories/project.repository";
-import { ProjectService } from "./services/project.service";
-import path = require("path");
-import { readFile } from "fs/promises";
-import { dashboardContent } from "./ui/dashboard";
-import { ColorService } from "./services/color.service";
 import { Commands } from "./commands";
+import { GroupRepository } from "./repositories/group.repository";
+import { ProjectRepository } from "./repositories/project.repository";
+import { GroupService } from "./services/group.service";
+import { ProjectService } from "./services/project.service";
+import { WorkspaceConfigService } from "./services/workspaceConfig.service";
+import { dashboardContent } from "./ui/dashboard";
 
 // TODO: Workspace <-> Project relation needs rethinking, update function cleanup
 // TODO: Configuration access layer is needed
@@ -27,29 +24,22 @@ const DELETE_PROJECT = "dash.deleteProject";
 const OPEN_DASHBOARD = "dash.openDashboard";
 const DASHBOARD_VIEW_ID = "dash.dashboard";
 
-export const init = (context: vscode.ExtensionContext) => {
-  const repo = new GroupRepository(context.globalState);
-  const projRepo = new ProjectRepository(context.globalState, vscode.workspace.getConfiguration());
-  const groupService = new GroupService(repo);
-  const projectService = new ProjectService(projRepo);
-  const commands = new Commands(projectService, groupService);
+export const init = async (context: vscode.ExtensionContext) => {
+  const getCurrentPath = () => vscode.workspace.workspaceFolders?.[0].uri.path ?? "";
+
+  const groupService = new GroupService(new GroupRepository(context.globalState));
+  const projectService = new ProjectService(new ProjectRepository(context.globalState));
+  const configService = new WorkspaceConfigService(vscode.workspace.getConfiguration(), getCurrentPath());
+
+  configService.applyConfigToWorkspace(await projectService.findByPath(getCurrentPath()));
+
+  const commands = new Commands(projectService, groupService, configService);
 
   return {
     commands,
     groupService,
     projectService,
   };
-};
-
-export const applyConfigToWorkspace = async (projectService: ProjectService): Promise<void> => {
-  const getCurrentPath = () => vscode.workspace.workspaceFolders?.[0].uri.path ?? "";
-
-  try {
-    const currentProject = await projectService.findByPath(getCurrentPath());
-    projectService.applyConfig(currentProject);
-  } catch (err) {
-    console.warn("Project not part of dashboard");
-  }
 };
 
 class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProvider {
@@ -72,26 +62,43 @@ class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProvider {
   };
 }
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+class DashboardSerializer implements vscode.WebviewPanelSerializer {
+  constructor(private readonly context: vscode.ExtensionContext) {}
+
+  async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
+    console.log(`Got state: ${state}`);
+    const { groupService, projectService } = state;
+
+    webviewPanel.webview.html = await dashboardContent(
+      groupService,
+      projectService,
+      this.context,
+      webviewPanel.webview
+    ); //dashboardContent();
+  }
+}
+
 export async function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "dash" is now active!');
 
-  // const config = vscode.workspace.getConfiguration();
-  const { groupService, projectService, commands } = init(context);
-  applyConfigToWorkspace(projectService);
+  const { groupService, projectService, commands } = await init(context);
+  const serializer = new DashboardSerializer(context);
+  let panel: vscode.WebviewPanel;
 
-  const openDashboard = async () => {
-    const panel = vscode.window.createWebviewPanel(DASHBOARD_VIEW_ID, "Dashboard", vscode.ViewColumn.One, {
+  const openDashboard = () => {
+    panel = vscode.window.createWebviewPanel(DASHBOARD_VIEW_ID, "Dashboard", vscode.ViewColumn.One, {
       enableScripts: true,
     });
-    panel.webview.html = await dashboardContent(groupService, projectService, context, panel.webview);
     eventHandler(panel.webview);
+    renderDashboard();
+  };
+
+  const renderDashboard = async () => {
+    serializer.deserializeWebviewPanel(panel, { groupService, projectService });
   };
 
   const eventHandler = (webview: vscode.Webview) =>
     webview.onDidReceiveMessage(async (e: any) => {
-      console.group(e.type);
       switch (e.type) {
         case OPEN_PROJECT:
           await commands.openProject(e.payload);
@@ -112,34 +119,24 @@ export async function activate(context: vscode.ExtensionContext) {
           await commands.updateGroup(e.payload);
           break;
       }
-      openDashboard();
+      renderDashboard();
     });
 
   const provider = new SidebarDummyDashboardViewProvider(context.extensionUri);
   context.subscriptions.push(vscode.window.registerWebviewViewProvider(DASHBOARD_VIEW_ID, provider));
-  // vscode.window.registerWebviewPanelSerializer(DASHBOARD_VIEW_ID, new DashboardSerializer());
+  vscode.window.registerWebviewPanelSerializer(DASHBOARD_VIEW_ID, serializer);
 
   registerCommands();
   function registerCommands() {
     context.subscriptions.push(vscode.commands.registerCommand(OPEN_DASHBOARD, openDashboard));
     context.subscriptions.push(vscode.commands.registerCommand(CREATE_GROUP, commands.createGroup));
+    context.subscriptions.push(vscode.commands.registerCommand(UPDATE_GROUP, commands.updateGroup));
     context.subscriptions.push(vscode.commands.registerCommand(DELETE_GROUP, commands.deleteGroup));
     context.subscriptions.push(vscode.commands.registerCommand(CREATE_PROJECT, commands.createProject));
+    context.subscriptions.push(vscode.commands.registerCommand(UPDATE_PROJECT, commands.updateProject));
     context.subscriptions.push(vscode.commands.registerCommand(DELETE_PROJECT, commands.deleteProject));
   }
 }
 
-class DashboardSerializer implements vscode.WebviewPanelSerializer {
-  async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
-    // `state` is the state persisted using `setState` inside the webview
-    console.log(`Got state: ${state}`);
-
-    // Restore the content of our webview.
-    //
-    // Make sure we hold on to the `webviewPanel` passed in here and
-    // also restore any event listeners we need on it.
-    webviewPanel.webview.html = "CONTENT"; //dashboardContent();
-  }
-}
 // this method is called when your extension is deactivated
 export function deactivate() {}
