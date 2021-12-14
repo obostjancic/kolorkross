@@ -19,8 +19,6 @@ import {
 } from "./ui/consts";
 // import { dashboardContent } from "./ui/dashboard";
 import { DashboardPanel } from "./ui/DashboardPanel";
-// TODO: Workspace <-> Project relation needs rethinking, update function cleanup
-// TODO: Configuration access layer is needed
 
 export const init = async (context: vscode.ExtensionContext) => {
   const getCurrentPath = () => vscode.workspace.workspaceFolders?.[0].uri.path ?? "";
