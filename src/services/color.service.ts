@@ -2,17 +2,17 @@ import { Color } from "../models/types";
 
 export enum Colors {
   purple = "#c678dd",
-  red = "#f447471",
+  red = "#f44747",
   coral = "#e06c75",
   whiskey = "#d19a66",
   chalky = "#E5C07B",
   lightDark = "#7F848E",
   dark = "#5C63701",
   malibu = "#61AFEF",
-  green = "#98c37911",
+  green = "#98c379",
   fountainBlue = "#56b6c2",
   white = "#FFFFFF",
-  lightwhite = "#abb2bfu",
+  lightwhite = "#abb2bf",
 }
 
 export interface Pallete {
@@ -41,16 +41,16 @@ export class ColorService {
 
   public getPallete(color: Color): Pallete {
     return {
-      foreground: this.getForegroundColor(color),
-      background: this.getBackgroundColor(color),
+      foreground: this.getForegroundShade(color),
+      background: this.getBackgroundShade(color),
     };
   }
 
-  private getForegroundColor(color: Color): Color {
+  private getForegroundShade(color: Color): Color {
     return `${color}FF`;
   }
 
-  private getBackgroundColor(color: Color): Color {
+  private getBackgroundShade(color: Color): Color {
     return `${color}28`;
   }
 }
