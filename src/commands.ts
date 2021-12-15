@@ -75,10 +75,8 @@ export class Commands {
 
   @ShowError()
   public async createGroup(): Promise<void> {
-    const groupName = await this.validatedInput("Group Id");
-
+    const groupName = await this.validatedInput("Group Name");
     this.groupService.create({ name: groupName });
-    // openDashboard();
   }
 
   @ShowError()
@@ -86,9 +84,8 @@ export class Commands {
     groupId = await this.validatedInput("Group Id", groupId);
     const group = await this.groupService.findById(groupId);
     const newName = await this.input("Group Name", group.name);
-    const newColor = (await this.input("Group Color", group.color)) as Color;
 
-    await this.groupService.update({ ...group, name: newName, color: newColor });
+    await this.groupService.update({ ...group, name: newName });
   }
 
   @ShowError()

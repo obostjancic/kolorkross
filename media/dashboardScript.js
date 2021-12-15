@@ -17,6 +17,13 @@ function initDashboardScript() {
     });
   });
 
+  addClickListenerToClass(".create-group", e => {
+    vscode.postMessage({
+      command: "dash.createGroup",
+      payload: null,
+    });
+  });
+
   addClickListenerToClass(".update-group", e => {
     vscode.postMessage({
       command: "dash.updateGroup",

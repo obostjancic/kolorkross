@@ -21,7 +21,6 @@ export class GroupService {
   async create(group: CreateGroupDTO): Promise<Group> {
     const newGroup = {
       name: group.name,
-      color: group.color || this.colorService.getRandomColor(),
       projects: [],
     };
     return this.repo.create(newGroup);

@@ -100,3 +100,28 @@ vscode-badge {
   line-height: 0;
   font-weight: lighter; */
 }
+
+.header-title {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin-bottom: 0.5em;
+  font-size: 2em;
+}
+
+.header-title > * {
+  margin-right: 0.5em;
+}
+
+.header-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5em;
+}
+
+.header-add > * {
+  margin: 0;
+}

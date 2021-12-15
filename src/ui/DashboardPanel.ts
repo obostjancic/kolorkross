@@ -4,6 +4,7 @@ import { Group, Project } from "../models/types";
 import { GroupService } from "../services/group.service";
 import { ProjectService } from "../services/project.service";
 import {
+  CREATE_GROUP,
   CREATE_PROJECT,
   DASHBOARD_VIEW_ID,
   DELETE_GROUP,
@@ -12,7 +13,6 @@ import {
   UPDATE_GROUP,
   UPDATE_PROJECT,
 } from "./consts";
-import { deleteIcon, editIcon } from "./icons";
 import { getUri } from "./util";
 
 export class DashboardPanel {
@@ -77,15 +77,17 @@ export class DashboardPanel {
       "toolkit.js",
     ]);
 
-    // dont call services here, put this into state
+    type GroupWProject = Group & { projects: Project[] };
+
     const groups = await this.groupService.findAll();
+    const projects = await this.projectService.findAll();
+    const groupsWithProjects = await groups.map(async (group: Group) => {
+      return { ...group, projects: projects.filter(project => group.projects.includes(project.id)) } as GroupWProject;
+    });
 
-    const getGroupProjects = async (group: Group) => {
-      const projects = await this.projectService.findAll();
-      return projects.filter(project => group.projects.includes(project.id));
-    };
+    // dont call services here, put this into state
 
-    const renderGroup = async (group: Group): Promise<string> => {
+    const renderGroup = (group: GroupWProject): string => {
       return /*html*/ `
       <div class="group" id="${group.id}">
         <div class="group-name" >
@@ -101,7 +103,8 @@ export class DashboardPanel {
         </div>
         <vscode-divider></vscode-divider>
         <div class="group-projects">
-          ${(await getGroupProjects(group)).map(renderProject).join("")}
+       
+          ${group.projects.map(renderProject).join("")}
           ${renderAddProject(group.id)}
         </div>
 
@@ -131,24 +134,40 @@ export class DashboardPanel {
           </div>
         </div>
         `;
-
-      // <h3 style="border-color: ${project.color}">${project.name}</h3>
-      //   <div class="icons">
-      //   <vscode-button class="update-project" appearance="icon" aria-label="Edit" data-id="${project.id}">
-      //     <span class="codicon codicon-edit" />
-      //   </vscode-button>
-      //   <vscode-button class="delete-project" appearance="icon" aria-label="Remove" data-id="${project.id}">
-      //     <span class="codicon codicon-close" />
-      //   </vscode-button>
-      // </div>
     };
 
     const renderAddProject = (groupId: string) => {
       return /*html*/ `
-      <vscode-button class="create-project icon"  aria-label="Add" data-id="${groupId}">
-        + Add project       
+      <vscode-button class="create-project icon" appearance="icon" aria-label="Add" data-id="${groupId}">
+        Add project   
+        <span slot="start" class="codicon codicon-add"></span>    
       </vscode-button>
     `;
+    };
+
+    const renderHeader = () => {
+      return /*html*/ `
+      <div class="header">
+        <div class="header-title">
+          <span class="codicon codicon-dashboard"></span>
+          <span>Dashboard</span>
+        </div>
+        <div class="header-actions">
+          <div class="header-search">
+            <vscode-text-field placeholder="Search...">
+              <span slot="start" class="codicon codicon-search"></span>
+            </vscode-text-field>
+          </div>
+          <div class="header-add">
+              <vscode-button class="create-group icon" appearance="icon" aria-label="Add">
+                Add group
+                <span slot="start" class="codicon codicon-add"></span>
+              </vscode-button>
+            </div>
+          </div>
+        </div>
+      </div>
+      `;
     };
 
     // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
@@ -164,13 +183,14 @@ export class DashboardPanel {
         <link href="${stylesUri}" rel="stylesheet" />
       </head>
       <body>
-        <h1>Dashboard</h1>
-        ${(await Promise.all(groups.map(renderGroup))).join("")}      </body>
+        ${renderHeader()}
+        ${(await Promise.all(groupsWithProjects)).map(renderGroup).join("")}
+      </body>
     </html>
     `;
   }
 
-  //Switches are terrible, make a map of commands to functions
+  //TODO: Switches are terrible, make a map of commands to functions
   private _setWebviewMessageListener(webview: vscode.Webview) {
     webview.onDidReceiveMessage(
       async (message: any) => {
@@ -181,6 +201,9 @@ export class DashboardPanel {
             break;
           case DELETE_GROUP:
             await this.commands.deleteGroup(payload);
+            break;
+          case CREATE_GROUP:
+            await this.commands.createGroup();
             break;
           case CREATE_PROJECT:
             await this.commands.createProject(payload);

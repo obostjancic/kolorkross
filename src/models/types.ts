@@ -3,7 +3,6 @@ export type Color = `#${string}`;
 export interface Group {
   id: string;
   name: string;
-  color: Color;
   projects: string[];
 }
 
