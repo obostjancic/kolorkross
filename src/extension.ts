@@ -17,8 +17,16 @@ import {
   UPDATE_GROUP,
   UPDATE_PROJECT,
 } from "./ui/consts";
-// import { dashboardContent } from "./ui/dashboard";
 import { DashboardPanel } from "./ui/DashboardPanel";
+import { SidebarDummyDashboardViewProvider } from "./ui/SidebarViewProvider";
+
+// TODO: go through, do cleanup stuff, deps
+// TODO: add tests for commands and workspaceConfigService
+// TODO: check the deployment/testing
+// TODO: add a simple DI container, vscode - libs - handwritten
+// TODO: color service, taking colors from theme
+// TODO: input mechanisms for folder and color
+// TODO: project drag and drop
 
 export const init = async (context: vscode.ExtensionContext) => {
   const getCurrentPath = () => vscode.workspace.workspaceFolders?.[0].uri.path ?? "";
@@ -37,26 +45,6 @@ export const init = async (context: vscode.ExtensionContext) => {
     projectService,
   };
 };
-
-class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProvider {
-  private _view?: vscode.WebviewView;
-
-  constructor(private readonly _extensionUri: vscode.Uri) {}
-
-  resolveWebviewView(webviewView: vscode.WebviewView): void | Thenable<void> {
-    this._view = webviewView;
-    // The only job of this "view" is to close itself and open the main project dashboard webview
-    this.switchToMainDashboard();
-    webviewView.onDidChangeVisibility(this.switchToMainDashboard);
-  }
-
-  switchToMainDashboard = () => {
-    if (this._view?.visible) {
-      vscode.commands.executeCommand("workbench.view.explorer");
-      vscode.commands.executeCommand(OPEN_DASHBOARD);
-    }
-  };
-}
 
 export async function activate(context: vscode.ExtensionContext) {
   console.log('Congratulations, your extension "dash" is now active!');
