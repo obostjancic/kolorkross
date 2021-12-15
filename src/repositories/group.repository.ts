@@ -1,14 +1,13 @@
-import { Memento, WorkspaceConfiguration } from "vscode";
+import { inject, injectable } from "tsyringe";
+import { Memento } from "vscode";
 import { CreateGroupDTO, Group } from "../models/types";
+import { token } from "../ui/consts";
 import { id, matcher, Repository } from "./base.repository";
 
+@injectable()
 export class GroupRepository implements Repository<Group> {
-  private readonly config: Memento;
   private readonly section = "dash.groups";
-
-  constructor(config: Memento) {
-    this.config = config;
-  }
+  constructor(@inject(token.GLOBAL_STATE) private readonly config: Memento) {}
 
   private readGroupConfig(): Record<string, Group> {
     return this.config.get(this.section) || {};
@@ -18,26 +17,26 @@ export class GroupRepository implements Repository<Group> {
     this.config.update(this.section, data);
   }
 
-  findById(id: string): Group | undefined {
+  public findById(id: string): Group | undefined {
     return this.readGroupConfig()[id];
   }
 
-  findAll(): Group[] {
+  public findAll(): Group[] {
     return Object.values(this.readGroupConfig());
   }
 
-  find(query: Partial<Group>): Group[] {
+  public find(query: Partial<Group>): Group[] {
     return this.findAll().filter(g => matcher(g, query));
   }
 
-  async create(group: CreateGroupDTO): Promise<Group> {
+  public async create(group: CreateGroupDTO): Promise<Group> {
     const newGroup = { ...group, id: id() } as Group;
     const currentConfig = this.readGroupConfig();
     await this.writeGroupConfig({ ...currentConfig, [newGroup.id]: newGroup });
     return newGroup;
   }
 
-  async update(id: string, updateData: Partial<Group>): Promise<Group> {
+  public async update(id: string, updateData: Partial<Group>): Promise<Group> {
     const group = this.findById(id);
     if (!group) {
       throw new Error("Group not found");
@@ -50,7 +49,7 @@ export class GroupRepository implements Repository<Group> {
     return updatedGroup;
   }
 
-  async delete(id: string): Promise<void> {
+  public async delete(id: string): Promise<void> {
     const { [id]: _, ...newConfig } = this.readGroupConfig();
     await this.writeGroupConfig(newConfig);
   }

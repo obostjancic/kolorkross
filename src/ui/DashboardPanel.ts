@@ -1,18 +1,11 @@
+import { container, inject } from "tsyringe";
 import * as vscode from "vscode";
 import { Commands } from "../commands";
 import { Group, Project } from "../models/types";
 import { GroupService } from "../services/group.service";
 import { ProjectService } from "../services/project.service";
-import {
-  CREATE_GROUP,
-  CREATE_PROJECT,
-  DASHBOARD_VIEW_ID,
-  DELETE_GROUP,
-  DELETE_PROJECT,
-  OPEN_PROJECT,
-  UPDATE_GROUP,
-  UPDATE_PROJECT,
-} from "./consts";
+import { cmd, DASHBOARD_VIEW_ID } from "./consts";
+import { DashboardService, GroupWProject } from "./DashboardService";
 import { getUri } from "./util";
 
 export class DashboardPanel {
@@ -20,25 +13,22 @@ export class DashboardPanel {
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
 
-  private readonly groupService: GroupService;
-  private readonly projectService: ProjectService;
-  private readonly commands: Commands;
-
-  private constructor(panel: vscode.WebviewPanel, private readonly extensionUri: vscode.Uri, deps: any) {
+  private constructor(
+    panel: vscode.WebviewPanel,
+    private readonly extensionUri: vscode.Uri,
+    @inject(DashboardService) private readonly dashboardService: DashboardService,
+    @inject(Commands) private readonly commands: Commands
+  ) {
     this._panel = panel;
     this._panel.onDidDispose(this.dispose, null, this._disposables);
     this._setWebviewMessageListener(this._panel.webview);
-
-    this.groupService = deps.groupService;
-    this.projectService = deps.projectService;
-    this.commands = deps.commands;
   }
 
   public async setContent() {
     this._panel.webview.html = await this._getWebviewContent(this._panel.webview, this.extensionUri);
   }
 
-  public static async render(extensionUri: vscode.Uri, deps: any) {
+  public static async render() {
     if (DashboardPanel.currentPanel) {
       DashboardPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
     } else {
@@ -46,7 +36,12 @@ export class DashboardPanel {
         enableScripts: true,
       });
 
-      DashboardPanel.currentPanel = new DashboardPanel(panel, extensionUri, deps);
+      DashboardPanel.currentPanel = new DashboardPanel(
+        panel,
+        container.resolve<vscode.ExtensionContext>("context").extensionUri,
+        container.resolve(DashboardService),
+        container.resolve(Commands)
+      );
       await DashboardPanel.currentPanel.setContent();
     }
   }
@@ -76,14 +71,6 @@ export class DashboardPanel {
       "dist",
       "toolkit.js",
     ]);
-
-    type GroupWProject = Group & { projects: Project[] };
-
-    const groups = await this.groupService.findAll();
-    const projects = await this.projectService.findAll();
-    const groupsWithProjects = await groups.map(async (group: Group) => {
-      return { ...group, projects: projects.filter(project => group.projects.includes(project.id)) } as GroupWProject;
-    });
 
     // dont call services here, put this into state
 
@@ -184,40 +171,26 @@ export class DashboardPanel {
       </head>
       <body>
         ${renderHeader()}
-        ${(await Promise.all(groupsWithProjects)).map(renderGroup).join("")}
+        ${(await this.dashboardService.getGroups()).map(renderGroup).join("")}
       </body>
     </html>
     `;
   }
 
-  //TODO: Switches are terrible, make a map of commands to functions
   private _setWebviewMessageListener(webview: vscode.Webview) {
+    const map = {
+      [cmd.OPEN_PROJECT]: this.commands.openProject,
+      [cmd.DELETE_GROUP]: this.commands.deleteGroup,
+      [cmd.CREATE_GROUP]: this.commands.createGroup,
+      [cmd.CREATE_PROJECT]: this.commands.createProject,
+      [cmd.DELETE_PROJECT]: this.commands.deleteProject,
+      [cmd.UPDATE_PROJECT]: this.commands.updateProject,
+      [cmd.UPDATE_GROUP]: this.commands.updateGroup,
+    };
+
     webview.onDidReceiveMessage(
-      async (message: any) => {
-        const { command, payload } = message;
-        switch (command) {
-          case OPEN_PROJECT:
-            await this.commands.openProject(payload);
-            break;
-          case DELETE_GROUP:
-            await this.commands.deleteGroup(payload);
-            break;
-          case CREATE_GROUP:
-            await this.commands.createGroup();
-            break;
-          case CREATE_PROJECT:
-            await this.commands.createProject(payload);
-            break;
-          case DELETE_PROJECT:
-            await this.commands.deleteProject(payload);
-            break;
-          case UPDATE_PROJECT:
-            await this.commands.updateProject(payload);
-            break;
-          case UPDATE_GROUP:
-            await this.commands.updateGroup(payload);
-            break;
-        }
+      async ({ command, payload }: { command: keyof typeof map; payload: any }) => {
+        await map[command](payload);
         await DashboardPanel?.currentPanel?.setContent();
       },
       undefined,

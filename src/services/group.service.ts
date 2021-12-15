@@ -1,10 +1,11 @@
+import { inject, injectable } from "tsyringe";
 import { CreateGroupDTO, Group, Project, UpdateGroupDTO } from "../models/types";
 import { Repository } from "../repositories/base.repository";
-import { ColorService } from "./color.service";
+import { GroupRepository } from "../repositories/group.repository";
 
+@injectable()
 export class GroupService {
-  private colorService = new ColorService();
-  constructor(private repo: Repository<Group>) {}
+  constructor(@inject(GroupRepository) private readonly repo: Repository<Group>) {}
 
   async findById(id: string): Promise<Group> {
     const group = this.repo.findById(id);

@@ -1,12 +1,13 @@
-import { Memento, WorkspaceConfiguration } from "vscode";
-import { Color, Project } from "../models/types";
-import { ColorService } from "../services/color.service";
+import { inject, injectable } from "tsyringe";
+import { Memento } from "vscode";
+import { Project } from "../models/types";
+import { token } from "../ui/consts";
 import { id, matcher, Repository } from "./base.repository";
 
-// FIXME:
+@injectable()
 export class ProjectRepository implements Repository<Project> {
   private readonly section = "dash.projects";
-  constructor(private readonly state: Memento) {}
+  constructor(@inject(token.GLOBAL_STATE) private readonly state: Memento) {}
 
   private readProjectConfig(): Record<string, Project> {
     return this.state.get(this.section) || {};
@@ -16,19 +17,19 @@ export class ProjectRepository implements Repository<Project> {
     this.state.update(this.section, data);
   }
 
-  findById(id: string): Project | undefined {
+  public findById(id: string): Project | undefined {
     return this.readProjectConfig()[id];
   }
 
-  findAll(): Project[] {
+  public findAll(): Project[] {
     return Object.values(this.readProjectConfig());
   }
 
-  find(query: Partial<Project>): Project[] {
+  public find(query: Partial<Project>): Project[] {
     return this.findAll().filter(p => matcher(p, query));
   }
 
-  async create(project: Project): Promise<Project> {
+  public async create(project: Project): Promise<Project> {
     const newProject = { ...project, id: id() } as Project;
 
     const currentConfig = this.readProjectConfig();
@@ -36,7 +37,7 @@ export class ProjectRepository implements Repository<Project> {
     return newProject;
   }
 
-  async update(id: string, updateData: Partial<Project>): Promise<Project> {
+  public async update(id: string, updateData: Partial<Project>): Promise<Project> {
     const project = this.findById(id);
     if (!project) {
       throw new Error("Project not found");
@@ -48,7 +49,7 @@ export class ProjectRepository implements Repository<Project> {
     return updatedProject;
   }
 
-  async delete(id: string): Promise<void> {
+  public async delete(id: string): Promise<void> {
     const { [id]: _, ...newConfig } = this.readProjectConfig();
     await this.writeProjectConfig(newConfig);
   }

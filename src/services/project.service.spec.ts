@@ -1,6 +1,8 @@
 var assert = require("assert");
+import "reflect-metadata";
 import { Color, Project } from "../models/types";
 import { MockRepository, Repository } from "../repositories/base.repository";
+import { ColorService } from "./color.service";
 import { ProjectService } from "./project.service";
 
 const mockProject = {
@@ -15,7 +17,7 @@ describe("ProjectService", () => {
 
   beforeEach(() => {
     repository = new MockRepository<Project>();
-    service = new ProjectService(repository);
+    service = new ProjectService(repository, new ColorService());
   });
 
   describe("findAll", () => {

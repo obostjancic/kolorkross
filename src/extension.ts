@@ -1,72 +1,39 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+import "reflect-metadata";
+import { container } from "tsyringe";
 import * as vscode from "vscode";
-import { Commands } from "./commands";
-import { GroupRepository } from "./repositories/group.repository";
-import { ProjectRepository } from "./repositories/project.repository";
-import { GroupService } from "./services/group.service";
+import { CommandRegisterer } from "./command.registerer";
 import { ProjectService } from "./services/project.service";
 import { WorkspaceConfigService } from "./services/workspaceConfig.service";
-import {
-  CREATE_GROUP,
-  CREATE_PROJECT,
-  DASHBOARD_VIEW_ID,
-  DELETE_GROUP,
-  DELETE_PROJECT,
-  OPEN_DASHBOARD,
-  UPDATE_GROUP,
-  UPDATE_PROJECT,
-} from "./ui/consts";
-import { DashboardPanel } from "./ui/DashboardPanel";
+import { DASHBOARD_VIEW_ID, token } from "./ui/consts";
 import { SidebarDummyDashboardViewProvider } from "./ui/SidebarViewProvider";
 
 // TODO: go through, do cleanup stuff, deps
 // TODO: add tests for commands and workspaceConfigService
 // TODO: check the deployment/testing
-// TODO: add a simple DI container, vscode - libs - handwritten
-// TODO: color service, taking colors from theme
-// TODO: input mechanisms for folder and color
 // TODO: project drag and drop
+// TODO: add search
+export const init = (context: vscode.ExtensionContext) => {
+  container.register(token.CONTEXT, { useValue: context });
+  container.register(token.GLOBAL_STATE, { useValue: context.globalState });
+  container.register(token.WORKSPACE_CONFIG, { useValue: vscode.workspace.getConfiguration() });
+  container.register(token.CURRENT_PATH, { useValue: vscode.workspace.workspaceFolders?.[0].uri.path ?? "" });
+};
 
-export const init = async (context: vscode.ExtensionContext) => {
-  const getCurrentPath = () => vscode.workspace.workspaceFolders?.[0].uri.path ?? "";
+const checkWorkspaceConfig = async () => {
+  const currentPath = container.resolve<string>(token.CURRENT_PATH);
+  const projectService = container.resolve(ProjectService);
+  const configService = container.resolve(WorkspaceConfigService);
 
-  const groupService = new GroupService(new GroupRepository(context.globalState));
-  const projectService = new ProjectService(new ProjectRepository(context.globalState));
-  const configService = new WorkspaceConfigService(vscode.workspace.getConfiguration(), getCurrentPath());
-
-  configService.applyConfigToWorkspace(await projectService.findByPath(getCurrentPath()));
-
-  const commands = new Commands(projectService, groupService, configService);
-
-  return {
-    commands,
-    groupService,
-    projectService,
-  };
+  configService.applyConfigToWorkspace(await projectService.findByPath(currentPath));
 };
 
 export async function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "dash" is now active!');
-
-  const { groupService, projectService, commands } = await init(context);
-  const openDashboard = () => {
-    DashboardPanel.render(context.extensionUri, { groupService, projectService, commands });
-  };
-
-  const provider = new SidebarDummyDashboardViewProvider(context.extensionUri);
+  init(context);
+  checkWorkspaceConfig();
+  const provider = container.resolve(SidebarDummyDashboardViewProvider);
   context.subscriptions.push(vscode.window.registerWebviewViewProvider(DASHBOARD_VIEW_ID, provider));
 
-  registerCommands();
-  function registerCommands() {
-    context.subscriptions.push(vscode.commands.registerCommand(OPEN_DASHBOARD, openDashboard));
-    context.subscriptions.push(vscode.commands.registerCommand(CREATE_GROUP, commands.createGroup));
-    context.subscriptions.push(vscode.commands.registerCommand(UPDATE_GROUP, commands.updateGroup));
-    context.subscriptions.push(vscode.commands.registerCommand(DELETE_GROUP, commands.deleteGroup));
-    context.subscriptions.push(vscode.commands.registerCommand(CREATE_PROJECT, commands.createProject));
-    context.subscriptions.push(vscode.commands.registerCommand(UPDATE_PROJECT, commands.updateProject));
-    context.subscriptions.push(vscode.commands.registerCommand(DELETE_PROJECT, commands.deleteProject));
-  }
+  container.resolve(CommandRegisterer).register();
 }
 
 // this method is called when your extension is deactivated

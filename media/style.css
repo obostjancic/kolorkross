@@ -112,6 +112,7 @@ vscode-badge {
 
 .header-title > * {
   margin-right: 0.5em;
+  color: #123456;
 }
 
 .header-actions {

@@ -1,9 +1,10 @@
+import { inject, injectable } from "tsyringe";
 import * as vscode from "vscode";
 import { Color } from "./models/types";
 import { GroupService } from "./services/group.service";
 import { ProjectService } from "./services/project.service";
 import { WorkspaceConfigService } from "./services/workspaceConfig.service";
-import { Catch } from "./util";
+import { Catch, isValidHex } from "./util";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ShowError = () =>
@@ -11,11 +12,12 @@ const ShowError = () =>
     vscode.window.showErrorMessage(error.message);
   });
 
+@injectable()
 export class Commands {
   constructor(
-    private projectService: ProjectService,
-    private groupService: GroupService,
-    private workspaceConfigService: WorkspaceConfigService
+    @inject(ProjectService) private readonly projectService: ProjectService,
+    @inject(GroupService) private readonly groupService: GroupService,
+    @inject(WorkspaceConfigService) private readonly workspaceConfigService: WorkspaceConfigService
   ) {
     this.openProject = this.openProject.bind(this);
     this.createProject = this.createProject.bind(this);
@@ -36,8 +38,8 @@ export class Commands {
 
   @ShowError()
   public async createProject(groupId?: string): Promise<void> {
-    const projectPath = await this.validatedInput("Project Path");
     groupId = await this.validatedInput("Group Id", groupId);
+    const projectPath = await this.inputPath("Open");
 
     const newProject = await this.projectService.create({ path: projectPath });
     const group = await this.groupService.findById(groupId);
@@ -50,8 +52,8 @@ export class Commands {
 
     const project = await this.projectService.findById(projectId);
     const name = await this.input("Project Name", project.name);
-    const color = (await this.input("Project Color", project.color)) as Color;
-    const path = await this.input("Project Path", project.path);
+    const color = await this.inputColor("Project Color", project.color);
+    const path = await this.inputPath("Update", project.path);
 
     const updatedProject = await this.projectService.update({
       ...project,
@@ -106,13 +108,34 @@ export class Commands {
     return result;
   }
 
-  private async input(name: string, defaultValue: string = "", required = true): Promise<string | undefined> {
+  private async input(name: string, defaultValue: string = "", validateInput?: any): Promise<string | undefined> {
     return await vscode.window.showInputBox({
       placeHolder: name,
       ignoreFocusOut: true,
       value: defaultValue,
-      validateInput: (val: string) => (required ? (val ? "" : `A ${name} must be provided.`) : ""),
+      validateInput,
     });
+  }
+
+  private async inputColor(name: string, defaultValue: string = ""): Promise<Color> {
+    return (await this.input(name, defaultValue, (val: string) =>
+      isValidHex(val) ? "" : "Invalid hex color"
+    )) as Color;
+  }
+
+  private async inputPath(label: string, defaultValue: string = ""): Promise<string> {
+    const uri = await vscode.window.showOpenDialog({
+      canSelectFiles: false,
+      canSelectFolders: true,
+      canSelectMany: false,
+      openLabel: label,
+      defaultUri: vscode.Uri.parse(defaultValue),
+    });
+    const result = uri?.[0].path;
+    if (!result) {
+      throw new Error(`No ${label} provided`);
+    }
+    return result;
   }
 
   private async confirm(text: string): Promise<boolean> {

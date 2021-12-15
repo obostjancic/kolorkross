@@ -114,6 +114,8 @@
   },
   "dependencies": {
     "@vscode/codicons": "^0.0.27",
-    "@vscode/webview-ui-toolkit": "^0.8.4"
+    "@vscode/webview-ui-toolkit": "^0.8.4",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.6.0"
   }
 }

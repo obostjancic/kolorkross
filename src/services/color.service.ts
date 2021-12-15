@@ -1,3 +1,4 @@
+import { injectable } from "tsyringe";
 import { Color } from "../models/types";
 
 export enum Colors {
@@ -20,6 +21,7 @@ export interface Pallete {
   background: Color;
 }
 
+@injectable()
 export class ColorService {
   private readonly colors: Color[] = [
     Colors.chalky,

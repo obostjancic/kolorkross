@@ -1,9 +1,15 @@
+import { inject, injectable } from "tsyringe";
 import { WorkspaceConfiguration } from "vscode";
 import { Color, Project } from "../models/types";
+import { token } from "../ui/consts";
 import { ColorService } from "./color.service";
 
+@injectable()
 export class WorkspaceConfigService {
-  constructor(private readonly workspaceConfig: WorkspaceConfiguration, private readonly currentPath: string) {}
+  constructor(
+    @inject(token.WORKSPACE_CONFIG) private readonly workspaceConfig: WorkspaceConfiguration,
+    @inject(token.CURRENT_PATH) private readonly currentPath: string
+  ) {}
 
   private async writeWorkspaceConfig(data: any) {
     this.workspaceConfig.update("workbench.colorCustomizations", data, 2);

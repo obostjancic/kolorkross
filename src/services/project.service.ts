@@ -1,11 +1,15 @@
+import { autoInjectable, inject, injectable } from "tsyringe";
 import { CreateProjectDTO, Project, UpdateProjectDTO } from "../models/types";
 import { Repository } from "../repositories/base.repository";
+import { ProjectRepository } from "../repositories/project.repository";
 import { ColorService } from "./color.service";
 
+@injectable()
 export class ProjectService {
-  private colorService = new ColorService();
-
-  constructor(private repo: Repository<Project>) {}
+  constructor(
+    @inject(ProjectRepository) private readonly repo: Repository<Project>,
+    @inject(ColorService) private readonly colorService: ColorService
+  ) {}
 
   async findById(id: string): Promise<Project> {
     const project = this.repo.findById(id);

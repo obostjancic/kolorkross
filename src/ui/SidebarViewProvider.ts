@@ -1,10 +1,10 @@
+import { injectable } from "tsyringe";
 import * as vscode from "vscode";
-import { OPEN_DASHBOARD } from "./consts";
+import { cmd } from "./consts";
 
+@injectable()
 export class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
-
-  constructor(private readonly _extensionUri: vscode.Uri) {}
 
   resolveWebviewView(webviewView: vscode.WebviewView): void | Thenable<void> {
     this._view = webviewView;
@@ -15,8 +15,8 @@ export class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProv
 
   switchToMainDashboard = () => {
     if (this._view?.visible) {
-      vscode.commands.executeCommand("workbench.view.explorer");
-      vscode.commands.executeCommand(OPEN_DASHBOARD);
+      vscode.commands.executeCommand(cmd.VIEW_EXPLORER);
+      vscode.commands.executeCommand(cmd.OPEN_DASHBOARD);
     }
   };
 }

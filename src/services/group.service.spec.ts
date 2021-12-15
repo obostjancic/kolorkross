@@ -1,11 +1,11 @@
 var assert = require("assert");
+import "reflect-metadata";
 import { Color, Group, Project } from "../models/types";
 import { MockRepository, Repository } from "../repositories/base.repository";
 import { GroupService } from "./group.service";
 
 const mockGroup = {
   name: "group1",
-  color: "#FF0000" as Color,
   projects: ["0"],
 };
 
@@ -41,7 +41,6 @@ describe("GroupService", () => {
       const group = await service.findById(created.id);
       assert.equal(group.id, created.id);
       assert.equal(group.name, created.name);
-      assert.equal(group.color, created.color);
     });
 
     it("should throw an exception", async () => {
@@ -54,19 +53,16 @@ describe("GroupService", () => {
     it("should create a group when all props are passed", async () => {
       const group = await service.create(mockGroup);
       assert.equal(group.name, mockGroup.name);
-      assert.equal(group.color, mockGroup.color);
     });
 
     it("should create a group when name and color are passed", async () => {
-      const group = await service.create({ name: mockGroup.name, color: mockGroup.color });
+      const group = await service.create({ name: mockGroup.name });
       assert.equal(group.name, mockGroup.name);
-      assert.equal(group.color, mockGroup.color);
     });
 
     it("should create a group when only name is passed", async () => {
       const group = await service.create({ name: mockGroup.name });
       assert.equal(group.name, mockGroup.name);
-      assert.notEqual(group.color, mockGroup.color);
     });
 
     it("should throw an exception", async () => {
@@ -81,7 +77,6 @@ describe("GroupService", () => {
       const updated = await service.update({ id: group.id, name: "updatedName" });
       assert.equal(group.id, updated.id);
       assert.equal("updatedName", updated.name);
-      assert.equal(group.color, updated.color);
     });
 
     it("should throw an exception", async () => {
