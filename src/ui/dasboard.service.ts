@@ -1,16 +1,39 @@
 import { inject, injectable } from "tsyringe";
+import { CommandService } from "../services/command.service";
 import { Group, Project } from "../models/types";
 import { GroupService } from "../services/group.service";
 import { ProjectService } from "../services/project.service";
+import { cmd } from "../util/constants";
 
 export type GroupWProject = Omit<Group, "projects"> & { projects: Project[] };
+
+export type EventMessage = {
+  command: typeof cmd;
+  payload: any;
+};
 
 @injectable()
 export class DashboardService {
   constructor(
     @inject(ProjectService) private readonly projectService: ProjectService,
-    @inject(GroupService) private readonly groupService: GroupService
+    @inject(GroupService) private readonly groupService: GroupService,
+    @inject(CommandService) private readonly cmdService: CommandService
   ) {}
+
+  private readonly eventCmdMap = {
+    [cmd.OPEN_PROJECT]: this.cmdService.openProject,
+    [cmd.DELETE_GROUP]: this.cmdService.deleteGroup,
+    [cmd.CREATE_GROUP]: this.cmdService.createGroup,
+    [cmd.CREATE_PROJECT]: this.cmdService.createProject,
+    [cmd.DELETE_PROJECT]: this.cmdService.deleteProject,
+    [cmd.UPDATE_PROJECT]: this.cmdService.updateProject,
+    [cmd.UPDATE_GROUP]: this.cmdService.updateGroup,
+  };
+
+  public async handleCommand(command: typeof cmd, payload: any) {
+    //@ts-expect-error
+    return this.eventCmdMap[command](payload);
+  }
 
   public async getGroups(): Promise<GroupWProject[]> {
     const groups = await this.groupService.findAll();

@@ -1,10 +1,11 @@
 import { inject, injectable } from "tsyringe";
 import * as vscode from "vscode";
-import { Color } from "./models/types";
-import { GroupService } from "./services/group.service";
-import { ProjectService } from "./services/project.service";
-import { WorkspaceConfigService } from "./services/workspaceConfig.service";
-import { Catch, isValidHex } from "./util";
+import { Color } from "../models/types";
+import { GroupService } from "./group.service";
+import { ProjectService } from ".//project.service";
+import { WorkspaceConfigService } from "./workspaceConfig.service";
+import { isValidHex } from "../util/validators";
+import { Catch } from "../util/decorators";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ShowError = () =>
@@ -13,7 +14,7 @@ const ShowError = () =>
   });
 
 @injectable()
-export class Commands {
+export class CommandService {
   constructor(
     @inject(ProjectService) private readonly projectService: ProjectService,
     @inject(GroupService) private readonly groupService: GroupService,

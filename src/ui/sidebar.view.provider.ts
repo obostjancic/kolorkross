@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
 import * as vscode from "vscode";
-import { cmd } from "./consts";
+import { cmd } from "../util/constants";
 
 @injectable()
 export class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProvider {

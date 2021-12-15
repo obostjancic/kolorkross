@@ -4,8 +4,8 @@ import * as vscode from "vscode";
 import { CommandRegisterer } from "./command.registerer";
 import { ProjectService } from "./services/project.service";
 import { WorkspaceConfigService } from "./services/workspaceConfig.service";
-import { DASHBOARD_VIEW_ID, token } from "./ui/consts";
-import { SidebarDummyDashboardViewProvider } from "./ui/SidebarViewProvider";
+import { DASHBOARD_VIEW_ID, token } from "./util/constants";
+import { SidebarDummyDashboardViewProvider } from "./ui/sidebar.view.provider";
 
 // TODO: go through, do cleanup stuff, deps
 // TODO: add tests for commands and workspaceConfigService
@@ -30,6 +30,7 @@ const checkWorkspaceConfig = async () => {
 export async function activate(context: vscode.ExtensionContext) {
   init(context);
   checkWorkspaceConfig();
+
   const provider = container.resolve(SidebarDummyDashboardViewProvider);
   context.subscriptions.push(vscode.window.registerWebviewViewProvider(DASHBOARD_VIEW_ID, provider));
 

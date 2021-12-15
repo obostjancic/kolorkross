@@ -1,14 +1,14 @@
 import "reflect-metadata";
 import { inject, injectable } from "tsyringe";
 import * as vscode from "vscode";
-import { Commands } from "./commands";
-import { cmd, token } from "./ui/consts";
-import { DashboardPanel } from "./ui/DashboardPanel";
+import { CommandService } from "./services/command.service";
+import { cmd, token } from "./util/constants";
+import { DashboardPanel } from "./ui/dasboard.panel";
 
 @injectable()
 export class CommandRegisterer {
   constructor(
-    @inject(Commands) private readonly commands: Commands,
+    @inject(CommandService) private readonly commands: CommandService,
     @inject(token.CONTEXT) private readonly context: vscode.ExtensionContext
   ) {}
 

@@ -13,11 +13,11 @@ export namespace cmd {
   export const VIEW_EXPLORER = "workbench.view.explorer";
 }
 
-export const DASHBOARD_VIEW_ID = "dash.dashboard";
-
 export namespace token {
   export const CONTEXT = "context";
   export const GLOBAL_STATE = "globalState";
   export const WORKSPACE_CONFIG = "workspaceConfig";
   export const CURRENT_PATH = "currentPath";
 }
+
+export const DASHBOARD_VIEW_ID = "dash.dashboard";

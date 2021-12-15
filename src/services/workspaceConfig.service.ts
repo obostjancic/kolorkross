@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { WorkspaceConfiguration } from "vscode";
 import { Color, Project } from "../models/types";
-import { token } from "../ui/consts";
+import { token } from "../util/constants";
 import { ColorService } from "./color.service";
 
 @injectable()

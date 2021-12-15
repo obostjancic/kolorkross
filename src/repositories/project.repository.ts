@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 import { Memento } from "vscode";
 import { Project } from "../models/types";
-import { token } from "../ui/consts";
+import { token } from "../util/constants";
 import { id, matcher, Repository } from "./base.repository";
 
 @injectable()
