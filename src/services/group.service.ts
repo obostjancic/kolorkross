@@ -34,6 +34,7 @@ export class GroupService {
   }
 
   async delete(id: string): Promise<void> {
+    await this.findById(id);
     this.repo.delete(id);
   }
 

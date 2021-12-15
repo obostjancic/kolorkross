@@ -1,4 +1,4 @@
-import { autoInjectable, inject, injectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 import { CreateProjectDTO, Project, UpdateProjectDTO } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { ProjectRepository } from "../repositories/project.repository";
@@ -47,7 +47,8 @@ export class ProjectService {
     return updatedProject;
   }
 
-  async delete(project: Project): Promise<void> {
-    this.repo.delete(project.id);
+  async delete(id: string): Promise<void> {
+    await this.findById(id);
+    this.repo.delete(id);
   }
 }

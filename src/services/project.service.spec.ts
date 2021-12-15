@@ -1,4 +1,3 @@
-var assert = require("assert");
 import "reflect-metadata";
 import { Color, Project } from "../models/types";
 import { MockRepository, Repository } from "../repositories/base.repository";
@@ -23,15 +22,14 @@ describe("ProjectService", () => {
   describe("findAll", () => {
     it("should return nothing", async () => {
       const projects = await service.findAll();
-      assert.equal(projects.length, 0);
+      expect(projects.length).toEqual(0);
     });
 
     it("should return one project", async () => {
       await repository.create(mockProject);
       const projects = await service.findAll();
-      assert.equal(projects.length, 1);
-      assert.equal(projects[0].name, "project1");
-      repository.delete(projects[0].id);
+      expect(projects.length).toEqual(1);
+      expect(projects[0].name).toEqual("project1");
     });
   });
 
@@ -39,39 +37,37 @@ describe("ProjectService", () => {
     it("should return project with id", async () => {
       const created = await repository.create(mockProject);
       const project = await service.findById(created.id);
-      assert.equal(created.id, project.id);
-      assert.equal(created.name, project.name);
-      assert.equal(created.color, project.color);
+      expect(created.id).toEqual(project.id);
+      expect(created.name).toEqual(project.name);
+      expect(created.color).toEqual(project.color);
     });
 
     it("should throw an exception", async () => {
       const gettingNonexistingProject = async () => service.findById("2");
-      assert.rejects(gettingNonexistingProject, Error, "Project not found");
+      expect(gettingNonexistingProject).rejects.toThrow("Project not found");
+      // , Error, "Project not found");
     });
   });
 
   describe("create", () => {
     it("should create a project when all props are passed", async () => {
       const project = await service.create(mockProject);
-      assert.equal(project.name, mockProject.name);
-      assert.equal(project.color, mockProject.color);
-    });
-    it("should create a project when path and name are passed", async () => {
-      const project = await service.create({ name: mockProject.name, path: mockProject.path });
-      assert.equal(project.name, mockProject.name);
-      assert.equal(project.path, mockProject.path);
-      assert.notEqual(project.color, mockProject.color);
-    });
-    it("should create a project when path is passed", async () => {
-      const project = await service.create({ path: mockProject.path });
-      assert.equal(project.name, mockProject.path.split("/").pop());
-      assert.equal(project.path, mockProject.path);
-      assert.notEqual(project.color, mockProject.color);
+      expect(project.name).toEqual(mockProject.name);
+      expect(project.color).toEqual(mockProject.color);
     });
 
-    it("should throw an exception", async () => {
-      const creatingExistingProject = async () => service.create(mockProject);
-      assert.rejects(creatingExistingProject, Error, "Project already exists");
+    it("should create a project when path and name are passed", async () => {
+      const project = await service.create({ name: mockProject.name, path: mockProject.path });
+      expect(project.name).toEqual(mockProject.name);
+      expect(project.path).toEqual(mockProject.path);
+      expect(project.color).not.toEqual(mockProject.color);
+    });
+
+    it("should create a project when path is passed", async () => {
+      const project = await service.create({ path: mockProject.path });
+      expect(project.name).toEqual(mockProject.path.split("/").pop());
+      expect(project.path).toEqual(mockProject.path);
+      expect(project.color).not.toEqual(mockProject.color);
     });
   });
 
@@ -79,27 +75,27 @@ describe("ProjectService", () => {
     it("should update project", async () => {
       const created = await repository.create(mockProject);
       const project = await service.update({ id: created.id, name: "project2" });
-      assert.equal(created.id, project.id);
-      assert.equal("project2", project.name);
-      assert.equal(created.color, project.color);
+      expect(created.id).toEqual(project.id);
+      expect("project2").toEqual(project.name);
+      expect(created.color).toEqual(project.color);
     });
 
     it("should throw an exception", async () => {
       const updatingNonexistingProject = async () => service.update({ id: "2", name: "project2" });
-      assert.rejects(updatingNonexistingProject, Error, "Project not found");
+      expect(updatingNonexistingProject).rejects.toThrow("Project not found");
     });
   });
 
   describe("delete", () => {
     it("should delete project", async () => {
       const created = await repository.create(mockProject);
-      await service.delete(created);
-      assert.equal(repository.findById(created.id), undefined);
+      await service.delete(created.id);
+      expect(repository.findById(created.id)).toEqual(undefined);
     });
 
     it("should throw an exception", async () => {
-      const deletingNonexistingProject = async () => service.delete({ ...mockProject, id: "2" });
-      assert.rejects(deletingNonexistingProject, Error, "Project not found");
+      const deletingNonexistingProject = async () => service.delete("2");
+      expect(deletingNonexistingProject).rejects.toThrow("Project not found");
     });
   });
 });

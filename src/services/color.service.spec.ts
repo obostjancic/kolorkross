@@ -1,4 +1,3 @@
-var assert = require("assert");
 import "reflect-metadata";
 
 import { ColorService } from "./color.service";
@@ -9,7 +8,7 @@ describe("ColorService", () => {
   describe("getRandomColor", () => {
     it("should return a color", () => {
       let color = colorService.getRandomColor();
-      assert.equal(typeof color, "string");
+      expect(typeof color).toBe("string");
     });
   });
 
@@ -17,8 +16,8 @@ describe("ColorService", () => {
     it("should return a pallete", () => {
       const color = "#ff0000";
       let pallete = colorService.getPallete(color);
-      assert.equal(pallete.foreground, `${color}FF`);
-      assert.equal(pallete.background, `${color}28`);
+      expect(pallete.foreground).toEqual(`${color}FF`);
+      expect(pallete.background).toEqual(`${color}28`);
     });
   });
 });

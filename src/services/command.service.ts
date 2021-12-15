@@ -73,7 +73,7 @@ export class CommandService {
     if (!(await this.confirm(`Are you sure you want to delete project ${project.name}?`))) {
       return;
     }
-    await this.projectService.delete(project);
+    await this.projectService.delete(project.id);
   }
 
   @ShowError()

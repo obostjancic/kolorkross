@@ -7,7 +7,6 @@ import { WorkspaceConfigService } from "./services/workspaceConfig.service";
 import { DASHBOARD_VIEW_ID, token } from "./util/constants";
 import { SidebarDummyDashboardViewProvider } from "./ui/sidebar.view.provider";
 
-// TODO: go through, do cleanup stuff, deps
 // TODO: add tests for commands and workspaceConfigService
 // TODO: check the deployment/testing
 // TODO: project drag and drop
