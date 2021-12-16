@@ -26,7 +26,7 @@ export class CommandService {
     projectId = await this.windowService.validatedInput("Project Id", projectId);
 
     const project = await this.projectService.findById(projectId);
-    vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), false);
+    vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), true);
   }
 
   @ShowError()
