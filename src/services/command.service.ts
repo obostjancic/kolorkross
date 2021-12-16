@@ -3,7 +3,7 @@ import { ProjectService } from ".//project.service";
 import { GroupService } from "./group.service";
 import { ShowError, WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
-
+import * as vscode from "vscode";
 @Service()
 export class CommandService {
   private readonly projectService: ProjectService = Container.get(ProjectService);
@@ -26,7 +26,7 @@ export class CommandService {
     projectId = await this.windowService.validatedInput("Project Id", projectId);
 
     const project = await this.projectService.findById(projectId);
-    // vscode.commands.executeCommand("vscode.openFolder", Uri.file(project.path), false);
+    vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), false);
   }
 
   @ShowError()

@@ -3,6 +3,8 @@
   "displayName": "dash",
   "description": "",
   "version": "0.0.1",
+  "publisher": "obostjancic",
+  "repository": "",
   "engines": {
     "vscode": "^1.63.0"
   },

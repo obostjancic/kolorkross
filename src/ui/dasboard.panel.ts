@@ -30,11 +30,7 @@ export class DashboardPanel {
         enableScripts: true,
       });
 
-      DashboardPanel.currentPanel = new DashboardPanel(
-        panel,
-        Container.get<vscode.Uri>(token.URI)
-        // Container.get(DashboardService)
-      );
+      DashboardPanel.currentPanel = new DashboardPanel(panel, Container.get<vscode.Uri>(token.URI));
       await DashboardPanel.currentPanel.setContent();
     }
   }
@@ -55,15 +51,8 @@ export class DashboardPanel {
   private async _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
     const scriptUri = getUri(webview, extensionUri, ["media", "dashboardScript.js"]);
     const stylesUri = getUri(webview, extensionUri, ["media", "style.css"]);
-    const codiconsUri = getUri(webview, extensionUri, ["node_modules", "@vscode/codicons", "dist", "codicon.css"]);
-
-    const toolkitUri = getUri(webview, extensionUri, [
-      "node_modules",
-      "@vscode",
-      "webview-ui-toolkit",
-      "dist",
-      "toolkit.js",
-    ]);
+    const codiconsUri = getUri(webview, extensionUri, ["media", "codicons", "dist", "codicon.css"]);
+    const toolkitUri = getUri(webview, extensionUri, ["media", "webview-ui-toolkit", "dist", "toolkit.js"]);
 
     const groups = await this.dashboardService.getGroups();
 
