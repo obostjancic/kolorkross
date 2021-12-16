@@ -1,15 +1,13 @@
-import { inject, injectable } from "tsyringe";
+import Container, { Service } from "typedi";
 import { CreateProjectDTO, Project, UpdateProjectDTO } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { ProjectRepository } from "../repositories/project.repository";
 import { ColorService } from "./color.service";
 
-@injectable()
+@Service()
 export class ProjectService {
-  constructor(
-    @inject(ProjectRepository) private readonly repo: Repository<Project>,
-    @inject(ColorService) private readonly colorService: ColorService
-  ) {}
+  private readonly repo: Repository<Project> = Container.get(ProjectRepository);
+  private readonly colorService: ColorService = Container.get(ColorService);
 
   async findById(id: string): Promise<Project> {
     const project = this.repo.findById(id);

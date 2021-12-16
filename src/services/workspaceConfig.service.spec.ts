@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { WorkspaceConfigService } from "./workspaceConfig.service";
 
 describe("WorkspaceConfigService", () => {

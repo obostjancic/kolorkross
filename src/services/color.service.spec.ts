@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { ColorService } from "./color.service";
 
 describe("ColorService", () => {

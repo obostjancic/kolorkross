@@ -1,4 +1,4 @@
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 import { Color } from "../models/types";
 
 export enum Colors {
@@ -21,8 +21,10 @@ export interface Pallete {
   background: Color;
 }
 
-@injectable()
+@Service()
 export class ColorService {
+  constructor() {}
+
   private readonly colors: Color[] = [
     Colors.chalky,
     Colors.coral,

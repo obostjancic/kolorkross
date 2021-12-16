@@ -1,4 +1,4 @@
-import { container, inject } from "tsyringe";
+import { Container } from "typedi";
 import * as vscode from "vscode";
 import { DASHBOARD_VIEW_ID, token } from "../util/constants";
 import { group } from "./components/Group";
@@ -10,12 +10,9 @@ export class DashboardPanel {
   public static currentPanel: DashboardPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
+  private readonly dashboardService: DashboardService = Container.get(DashboardService);
 
-  private constructor(
-    panel: vscode.WebviewPanel,
-    private readonly extensionUri: vscode.Uri,
-    @inject(DashboardService) private readonly dashboardService: DashboardService
-  ) {
+  private constructor(panel: vscode.WebviewPanel, private readonly extensionUri: vscode.Uri) {
     this._panel = panel;
     this._panel.onDidDispose(this.dispose, null, this._disposables);
     this._setWebviewMessageListener(this._panel.webview);
@@ -35,8 +32,8 @@ export class DashboardPanel {
 
       DashboardPanel.currentPanel = new DashboardPanel(
         panel,
-        container.resolve<vscode.ExtensionContext>(token.CONTEXT).extensionUri,
-        container.resolve(DashboardService)
+        Container.get<vscode.Uri>(token.URI)
+        // Container.get(DashboardService)
       );
       await DashboardPanel.currentPanel.setContent();
     }

@@ -1,6 +1,8 @@
 import "reflect-metadata";
+import Container from "typedi";
 import { Color, Group, Project } from "../models/types";
 import { MockRepository, Repository } from "../repositories/base.repository";
+import { GroupRepository } from "../repositories/group.repository";
 import { GroupService } from "./group.service";
 
 const mockGroup = {
@@ -10,10 +12,10 @@ const mockGroup = {
 
 describe("GroupService", () => {
   let service: GroupService;
-  let repository: Repository<Group>;
+  let repository: Repository<Group> = new MockRepository<Group>();
   beforeEach(() => {
-    repository = new MockRepository<Group>();
-    service = new GroupService(repository);
+    Container.set(GroupRepository, repository);
+    service = Container.get(GroupService);
   });
 
   describe("findAll", () => {

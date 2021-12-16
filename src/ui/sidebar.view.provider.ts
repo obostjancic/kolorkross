@@ -1,8 +1,8 @@
-import { injectable } from "tsyringe";
+import { Service } from "typedi";
 import * as vscode from "vscode";
 import { cmd } from "../util/constants";
 
-@injectable()
+@Service()
 export class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProvider {
   private _view?: vscode.WebviewView;
 

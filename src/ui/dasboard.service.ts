@@ -1,6 +1,6 @@
-import { inject, injectable } from "tsyringe";
-import { CommandService } from "../services/command.service";
+import Container, { Service } from "typedi";
 import { Group, Project } from "../models/types";
+import { CommandService } from "../services/command.service";
 import { GroupService } from "../services/group.service";
 import { ProjectService } from "../services/project.service";
 import { cmd } from "../util/constants";
@@ -11,14 +11,11 @@ export type EventMessage = {
   command: typeof cmd;
   payload: any;
 };
-
-@injectable()
+@Service()
 export class DashboardService {
-  constructor(
-    @inject(ProjectService) private readonly projectService: ProjectService,
-    @inject(GroupService) private readonly groupService: GroupService,
-    @inject(CommandService) private readonly cmdService: CommandService
-  ) {}
+  private readonly projectService: ProjectService = Container.get(ProjectService);
+  private readonly groupService: GroupService = Container.get(GroupService);
+  private readonly cmdService: CommandService = Container.get(CommandService);
 
   private readonly eventCmdMap = {
     [cmd.OPEN_PROJECT]: this.cmdService.openProject,

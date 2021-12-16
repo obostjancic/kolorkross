@@ -14,8 +14,9 @@ export namespace cmd {
 }
 
 export namespace token {
-  export const CONTEXT = "context";
   export const GLOBAL_STATE = "globalState";
+  export const SUBSCRIPTIONS = "subscriptions";
+  export const URI = "uri";
   export const WORKSPACE_CONFIG = "workspaceConfig";
   export const CURRENT_PATH = "currentPath";
 }

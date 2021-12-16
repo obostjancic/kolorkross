@@ -1,13 +1,13 @@
-import { inject, injectable } from "tsyringe";
+import Container, { Service } from "typedi";
 import { Memento } from "vscode";
 import { CreateGroupDTO, Group } from "../models/types";
 import { token } from "../util/constants";
 import { id, matcher, Repository } from "./base.repository";
 
-@injectable()
+@Service()
 export class GroupRepository implements Repository<Group> {
   private readonly section = "dash.groups";
-  constructor(@inject(token.GLOBAL_STATE) private readonly config: Memento) {}
+  private readonly config: Memento = Container.get(token.GLOBAL_STATE);
 
   private readGroupConfig(): Record<string, Group> {
     return this.config.get(this.section) || {};

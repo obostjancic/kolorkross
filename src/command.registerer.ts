@@ -1,24 +1,21 @@
-import "reflect-metadata";
-import { inject, injectable } from "tsyringe";
+import Container, { Service } from "typedi";
 import * as vscode from "vscode";
 import { CommandService } from "./services/command.service";
-import { cmd, token } from "./util/constants";
 import { DashboardPanel } from "./ui/dasboard.panel";
+import { cmd, token } from "./util/constants";
 
-@injectable()
+@Service()
 export class CommandRegisterer {
-  constructor(
-    @inject(CommandService) private readonly commands: CommandService,
-    @inject(token.CONTEXT) private readonly context: vscode.ExtensionContext
-  ) {}
+  private readonly cmdService: CommandService = Container.get(CommandService);
+  private readonly subs: any = Container.get(token.SUBSCRIPTIONS);
 
   public register() {
-    this.context.subscriptions.push(vscode.commands.registerCommand(cmd.OPEN_DASHBOARD, DashboardPanel.render));
-    this.context.subscriptions.push(vscode.commands.registerCommand(cmd.CREATE_GROUP, this.commands.createGroup));
-    this.context.subscriptions.push(vscode.commands.registerCommand(cmd.UPDATE_GROUP, this.commands.updateGroup));
-    this.context.subscriptions.push(vscode.commands.registerCommand(cmd.DELETE_GROUP, this.commands.deleteGroup));
-    this.context.subscriptions.push(vscode.commands.registerCommand(cmd.CREATE_PROJECT, this.commands.createProject));
-    this.context.subscriptions.push(vscode.commands.registerCommand(cmd.UPDATE_PROJECT, this.commands.updateProject));
-    this.context.subscriptions.push(vscode.commands.registerCommand(cmd.DELETE_PROJECT, this.commands.deleteProject));
+    this.subs.push(vscode.commands.registerCommand(cmd.OPEN_DASHBOARD, DashboardPanel.render));
+    this.subs.push(vscode.commands.registerCommand(cmd.CREATE_GROUP, this.cmdService.createGroup));
+    this.subs.push(vscode.commands.registerCommand(cmd.UPDATE_GROUP, this.cmdService.updateGroup));
+    this.subs.push(vscode.commands.registerCommand(cmd.DELETE_GROUP, this.cmdService.deleteGroup));
+    this.subs.push(vscode.commands.registerCommand(cmd.CREATE_PROJECT, this.cmdService.createProject));
+    this.subs.push(vscode.commands.registerCommand(cmd.UPDATE_PROJECT, this.cmdService.updateProject));
+    this.subs.push(vscode.commands.registerCommand(cmd.DELETE_PROJECT, this.cmdService.deleteProject));
   }
 }

@@ -1,7 +1,9 @@
 import "reflect-metadata";
+
+import Container from "typedi";
 import { Color, Project } from "../models/types";
 import { MockRepository, Repository } from "../repositories/base.repository";
-import { ColorService } from "./color.service";
+import { ProjectRepository } from "../repositories/project.repository";
 import { ProjectService } from "./project.service";
 
 const mockProject = {
@@ -12,11 +14,10 @@ const mockProject = {
 
 describe("ProjectService", () => {
   let service: ProjectService;
-  let repository: Repository<Project>;
-
+  let repository: Repository<Project> = new MockRepository<Project>();
   beforeEach(() => {
-    repository = new MockRepository<Project>();
-    service = new ProjectService(repository, new ColorService());
+    Container.set(ProjectRepository, repository);
+    service = Container.get(ProjectService);
   });
 
   describe("findAll", () => {

@@ -1,13 +1,13 @@
-import { inject, injectable } from "tsyringe";
+import Container, { Service, Inject } from "typedi";
 import { Memento } from "vscode";
 import { Project } from "../models/types";
 import { token } from "../util/constants";
 import { id, matcher, Repository } from "./base.repository";
 
-@injectable()
-export class ProjectRepository implements Repository<Project> {
+@Service()
+export class ProjectRepository {
   private readonly section = "dash.projects";
-  constructor(@inject(token.GLOBAL_STATE) private readonly state: Memento) {}
+  private readonly state: Memento = Container.get(token.GLOBAL_STATE);
 
   private readProjectConfig(): Record<string, Project> {
     return this.state.get(this.section) || {};

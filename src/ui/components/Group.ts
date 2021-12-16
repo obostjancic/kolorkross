@@ -19,7 +19,7 @@ export const group = (group: GroupWProject): string => {
     <div class="group-projects">
    
       ${group.projects.map(project).join("")}
-      ${addProject(group.id)}O
+      ${addProject(group.id)}
     </div>
 
   </div>
