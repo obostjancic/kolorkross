@@ -1,4 +1,4 @@
-name: Demo pipeline
+name: Build & Test
 on: [push]
 
 jobs:
