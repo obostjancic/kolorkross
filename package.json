@@ -1,45 +1,21 @@
 {
-  "name": "dash",
+  "description": "VS Code extension that allows fast & colorful access to multiple workspaces",
   "displayName": "dash",
-  "description": "",
-  "version": "0.0.1",
+  "main": "./dist/extension.js",
+  "name": "dash",
   "publisher": "obostjancic",
-  "repository": "",
-  "engines": {
-    "vscode": "^1.63.0"
-  },
-  "categories": [
-    "Other"
-  ],
+  "repository": "https://github.com/obostjancic/dash",
+  "version": "0.0.1",
   "activationEvents": [
     "onStartupFinished",
     "onCommand:dash.helloWorld",
     "onCommand:dash.createGroup",
     "onWebviewPanel:dash.dashboard"
   ],
-  "main": "./dist/extension.js",
+  "categories": [
+    "Other"
+  ],
   "contributes": {
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "dashboard",
-          "title": "Dashboard",
-          "icon": "assets/dash.svg"
-        }
-      ]
-    },
-    "views": {
-      "dashboard": [
-        {
-          "type": "webview",
-          "id": "dash.dashboard",
-          "name": "Project Dashboard",
-          "icon": "media/icon.svg",
-          "visibility": "visible",
-          "contextualTitle": "Project Dashboard"
-        }
-      ]
-    },
     "commands": [
       {
         "command": "dash.openDashboard",
@@ -72,9 +48,9 @@
     ],
     "configuration": [
       {
+        "order": 1,
         "id": "dash",
         "title": "Dash",
-        "order": 1,
         "properties": {
           "dash.groups": {
             "type": "object"
@@ -84,20 +60,37 @@
           }
         }
       }
-    ]
+    ],
+    "views": {
+      "dashboard": [
+        {
+          "contextualTitle": "Project Dashboard",
+          "icon": "media/icon.svg",
+          "id": "dash.dashboard",
+          "name": "Project Dashboard",
+          "type": "webview",
+          "visibility": "visible"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "icon": "assets/dash.svg",
+          "id": "dashboard",
+          "title": "Dashboard"
+        }
+      ]
+    }
   },
-  "scripts": {
-    "vscode:prepublish": "yarn run package",
-    "compile": "webpack",
-    "watch": "webpack --watch",
-    "prepackage": "rm -rf vendor | true && mkdir vendor && cp -R node_modules/@vscode vendor/@vscode && rm -rf vendor/@vscode/test-electron",
-    "package": "webpack --mode production --devtool hidden-source-map",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p -w . --outDir out",
-    "pretest:e2e": "yarn run compile-tests && yarn run compile && yarn run lint",
-    "lint": "eslint src --ext ts",
-    "test": "jest",
-    "test:e2e": "node ./out/test/runTest.js"
+  "dependencies": {
+    "@vscode/codicons": "^0.0.27",
+    "@vscode/webview-ui-toolkit": "^0.8.4",
+    "inversify": "^6.0.1",
+    "inversify-binding-decorators": "^4.0.0",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.6.0",
+    "typedi": "^0.10.0"
   },
   "devDependencies": {
     "@types/glob": "^7.1.4",
@@ -109,20 +102,33 @@
     "@vscode/test-electron": "^1.6.2",
     "eslint": "^7.32.0",
     "glob": "^7.1.7",
+    "husky": ">=6",
     "jest": "^27.4.5",
+    "lint-staged": ">=10",
     "ts-jest": "^27.1.1",
     "ts-loader": "^9.2.5",
     "typescript": "^4.4.3",
     "webpack": "^5.52.1",
     "webpack-cli": "^4.8.0"
   },
-  "dependencies": {
-    "@vscode/codicons": "^0.0.27",
-    "@vscode/webview-ui-toolkit": "^0.8.4",
-    "inversify": "^6.0.1",
-    "inversify-binding-decorators": "^4.0.0",
-    "reflect-metadata": "^0.1.13",
-    "tsyringe": "^4.6.0",
-    "typedi": "^0.10.0"
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix"
+  },
+  "scripts": {
+    "compile": "webpack",
+    "compile-tests": "tsc -p . --outDir out",
+    "lint": "eslint src --ext ts",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "prepackage": "rm -rf vendor | true && mkdir vendor && cp -R node_modules/@vscode vendor/@vscode && rm -rf vendor/@vscode/test-electron",
+    "prepare": "husky install",
+    "pretest:e2e": "yarn run compile-tests && yarn run compile && yarn run lint",
+    "test": "jest",
+    "test:e2e": "node ./out/test/runTest.js",
+    "vscode:prepublish": "yarn run package",
+    "watch": "webpack --watch",
+    "watch-tests": "tsc -p -w . --outDir out"
   }
 }

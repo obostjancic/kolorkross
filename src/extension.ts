@@ -11,7 +11,6 @@ import { DASHBOARD_VIEW_ID, token } from "./util/constants";
 // TODO: ops - lint
 // TODO: ops - add tests for commands and workspaceConfigService
 // TODO: ops - check the deployment/testing
-// TODO: ops - Init git repo
 
 // TODO: feat - project drag and drop
 // TODO: feat - add search
