@@ -1,7 +1,7 @@
 name: Release
-on: 
+on:
   push:
-    branches: 
+    branches:
       - main
     tags:
       - v*.*.*
@@ -33,7 +33,7 @@ jobs:
         run: yarn compile
       - name: Run tests
         run: yarn test
-  
+
   release:
     runs-on: ubuntu-latest
     steps:
@@ -54,9 +54,9 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-        - name: Install dependencies
-          run: yarn
-        - name: Install npx
-          run: yarn global add npx
-        - name: Publish version
-          run: npx vsce publish -p ${{ secrets.PUBLISH_TOKEN }}
+      - name: Install dependencies
+        run: yarn
+      - name: Install npx
+        run: yarn global add npx
+      - name: Publish version
+        run: npx vsce publish -p ${{ secrets.PUBLISH_TOKEN }}
