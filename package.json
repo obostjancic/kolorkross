@@ -122,11 +122,13 @@
     "prepackage": "rm -rf vendor | true && mkdir vendor && cp -R node_modules/@vscode vendor/@vscode && rm -rf vendor/@vscode/test-electron",
     "prepare": "husky install",
     "pretest:e2e": "yarn run compile-tests && yarn run compile && yarn run lint",
+    "release:major": "npm version major && git push && git push --tags",
+    "release:minor": "npm version minor && git push && git push --tags",
+    "release:patch": "npm version patch && git push && git push --tags",
     "test": "jest",
     "test:e2e": "node ./out/test/runTest.js",
     "vscode:prepublish": "yarn run package",
     "watch": "webpack --watch",
-    "watch-tests": "tsc -p -w . --outDir out",
-    "release:patch": "npm version patch && git push && git push --tags"
+    "watch-tests": "tsc -p -w . --outDir out"
   }
 }
