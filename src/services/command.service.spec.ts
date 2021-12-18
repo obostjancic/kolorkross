@@ -1,35 +1,41 @@
 import "reflect-metadata";
-import * as vscode from "vscode";
 import Container from "typedi";
 import { CommandService } from "./command.service";
 import { GroupService } from "./group.service";
 import { ProjectService } from "./project.service";
 import { WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
+import { ProjectRepository } from "../repositories/project.repository";
+import { MockRepository } from "../repositories/base.repository";
+import { GroupRepository } from "../repositories/group.repository";
 
-jest.mock("vscode");
+// jest.mock("vscode");
 
 class Mock {}
 describe("CommandService", () => {
   let service: CommandService;
-  let projectService = new Mock();
-  let groupService = new Mock();
-  let workspaceConfigService = new Mock();
-  let windowService = new Mock();
+  // let projectService: ProjectService;
+  // let groupService: GroupService;
+  // let windowService: WindowService;
+  // let workspaceConfigService: WorkspaceConfigService;
 
   beforeEach(() => {
-    Container.set(ProjectService, projectService);
-    Container.set(GroupService, groupService);
-    Container.set(WorkspaceConfigService, workspaceConfigService);
-    Container.set(WindowService, windowService);
-    service = Container.get(CommandService);
+    Container.set(ProjectRepository, MockRepository);
+    Container.set(GroupRepository, MockRepository);
+
+    // projectService = Container.get(ProjectService);
+    // groupService = Container.get(GroupService);
+    // windowService = Container.get(WindowService);
+    // workspaceConfigService = Container.get(WorkspaceConfigService);
+    // service = Container.get(CommandService);
   });
 
-  vscode.commands.executeCommand = jest.fn();
-
-  it("should pass", () => {
-    service.createGroup();
+  it("Should open project", async () => {
+    // windowService.validatedInput = jest.fn();
+    // await service.openProject();
+    // expect(VSCode.executeCommand).toHaveBeenCalledWith("vscode.openFolder", VSCode.file(""), true);
   });
+
   // describe("getRandomColor", () => {
   //   it("should return a color", () => {
   //     let color = colorService.getRandomColor();

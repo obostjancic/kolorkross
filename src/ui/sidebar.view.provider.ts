@@ -1,12 +1,12 @@
 import { Service } from "typedi";
-import * as vscode from "vscode";
+import { VSCode } from "../util/vscode.env";
 import { cmd } from "../util/constants";
-
+import { WebviewView, WebviewViewProvider } from "vscode";
 @Service()
-export class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProvider {
-  private _view?: vscode.WebviewView;
+export class SidebarDummyDashboardViewProvider implements WebviewViewProvider {
+  private _view?: WebviewView;
 
-  resolveWebviewView(webviewView: vscode.WebviewView): void | Thenable<void> {
+  resolveWebviewView(webviewView: WebviewView): void | Thenable<void> {
     this._view = webviewView;
     // The only job of this "view" is to close itself and open the main project dashboard webview
     this.switchToMainDashboard();
@@ -15,8 +15,8 @@ export class SidebarDummyDashboardViewProvider implements vscode.WebviewViewProv
 
   switchToMainDashboard = () => {
     if (this._view?.visible) {
-      vscode.commands.executeCommand(cmd.VIEW_EXPLORER);
-      vscode.commands.executeCommand(cmd.OPEN_DASHBOARD);
+      VSCode.executeCommand(cmd.VIEW_EXPLORER);
+      VSCode.executeCommand(cmd.OPEN_DASHBOARD);
     }
   };
 }

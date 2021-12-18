@@ -5,16 +5,20 @@
     "dist": true, // set this to true to hide the "dist" folder with the compiled JS files
     ".husky": true,
     "node_modules": true,
-    // ".*": true
     ".eslintcache": true,
     ".yarn*": true,
-    "yarn*": true
+    "yarn*": true,
+    "vendor": true
   },
   "search.exclude": {
     "out": true, // set this to true to hide the "out" folder with the compiled JS files
     "dist": true, // set this to true to hide the "dist" folder with the compiled JS files
     ".husky": true,
-    "node_modules": true
+    "node_modules": true,
+    ".eslintcache": true,
+    ".yarn*": true,
+    "yarn*": true,
+    "vendor": true
   },
   // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
   "typescript.tsc.autoDetect": "off"

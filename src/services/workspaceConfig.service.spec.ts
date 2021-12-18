@@ -1,23 +1,45 @@
+import "reflect-metadata";
+import Container from "typedi";
+import { Color } from "../models/types";
+import { token } from "../util/constants";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
 
 describe("WorkspaceConfigService", () => {
-  // let colorService = new WorkspaceConfigService();
-
-  it("should pass", () => {
-    expect(1).toBe(1);
+  let service: WorkspaceConfigService;
+  beforeEach(() => {
+    Container.set(token.WORKSPACE_CONFIG, { update: () => {} });
+    Container.set(token.CURRENT_PATH, "path1");
+    service = new WorkspaceConfigService();
   });
-  // describe("getRandomColor", () => {
-  //   it("should return a color", () => {
-  //     let color = colorService.getRandomColor();
-  //     assert.equal(typeof color, "string");
-  //   });
-  // });
-  // describe("getPallete", () => {
-  //   it("should return a pallete", () => {
-  //     const color = "#ff0000";
-  //     let pallete = colorService.getPallete(color);
-  //     assert.equal(pallete.foreground, `${color}FF`);
-  //     assert.equal(pallete.background, `${color}28`);
-  //   });
-  // });
+
+  describe("applyConfigToWorkspace", () => {
+    const writeWorkspaceConfig = jest.spyOn(WorkspaceConfigService.prototype as any, "writeWorkspaceConfig");
+    const updateWorkspaceConfig = jest.spyOn(WorkspaceConfigService.prototype as any, "updateWorkspaceConfig");
+
+    it("Should not apply config to workspace", async () => {
+      const project = {
+        id: "id1",
+        name: "name1",
+        path: "path2",
+        color: "#654321" as Color,
+      };
+
+      await service.applyConfigToWorkspace(project);
+      expect(updateWorkspaceConfig).not.toHaveBeenCalled();
+      expect(writeWorkspaceConfig).not.toHaveBeenCalled();
+    });
+
+    it("Should apply config to workspace", async () => {
+      const project = {
+        id: "id1",
+        name: "name1",
+        path: "path1",
+        color: "#123456" as Color,
+      };
+
+      await service.applyConfigToWorkspace(project);
+      expect(updateWorkspaceConfig).toHaveBeenCalled();
+      expect(writeWorkspaceConfig).toHaveBeenCalled();
+    });
+  });
 });

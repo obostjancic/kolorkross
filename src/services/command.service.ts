@@ -1,9 +1,9 @@
 import Container, { Service } from "typedi";
-import { ProjectService } from ".//project.service";
+import { ProjectService } from "./project.service";
 import { GroupService } from "./group.service";
 import { ShowError, WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
-import * as vscode from "vscode";
+import { VSCode } from "../util/vscode.env";
 @Service()
 export class CommandService {
   private readonly projectService: ProjectService = Container.get(ProjectService);
@@ -21,12 +21,12 @@ export class CommandService {
     this.deleteGroup = this.deleteGroup.bind(this);
   }
 
-  @ShowError()
+  // @ShowError()
   public async openProject(projectId?: string): Promise<void> {
     projectId = await this.windowService.validatedInput("Project Id", projectId);
 
     const project = await this.projectService.findById(projectId);
-    vscode.commands.executeCommand("vscode.openFolder", vscode.Uri.file(project.path), true);
+    VSCode.executeCommand("vscode.openFolder", VSCode.file(project.path), true);
   }
 
   @ShowError()

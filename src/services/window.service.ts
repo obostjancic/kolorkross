@@ -1,13 +1,13 @@
 import { Service } from "typedi";
-import * as vscode from "vscode";
 import { Color } from "../models/types";
 import { Catch } from "../util/decorators";
 import { isValidHex } from "../util/validators";
+import { VSCode } from "../util/vscode.env";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ShowError = () =>
   Catch((error: Error) => {
-    vscode.window.showErrorMessage(error.message);
+    VSCode.showErrorMessage(error.message);
   });
 
 @Service()
@@ -21,7 +21,7 @@ export class WindowService {
   }
 
   async input(name: string, defaultValue: string = "", validateInput?: any): Promise<string | undefined> {
-    return await vscode.window.showInputBox({
+    return await VSCode.showInputBox({
       placeHolder: name,
       ignoreFocusOut: true,
       value: defaultValue,
@@ -36,12 +36,12 @@ export class WindowService {
   }
 
   async inputPath(label: string, defaultValue: string = ""): Promise<string> {
-    const uri = await vscode.window.showOpenDialog({
+    const uri = await VSCode.showOpenDialog({
       canSelectFiles: false,
       canSelectFolders: true,
       canSelectMany: false,
       openLabel: label,
-      defaultUri: vscode.Uri.parse(defaultValue),
+      defaultUri: VSCode.parse(defaultValue),
     });
     const result = uri?.[0].path;
     if (!result) {
@@ -51,7 +51,7 @@ export class WindowService {
   }
 
   async confirm(text: string): Promise<boolean> {
-    const answer = await vscode.window.showInformationMessage(text, ...["Yes", "No"]);
+    const answer = await VSCode.showInformationMessage(text, ...["Yes", "No"]);
     return answer === "Yes";
   }
 }
