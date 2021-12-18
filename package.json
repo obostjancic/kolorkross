@@ -126,6 +126,7 @@
     "test:e2e": "node ./out/test/runTest.js",
     "vscode:prepublish": "yarn run package",
     "watch": "webpack --watch",
-    "watch-tests": "tsc -p -w . --outDir out"
+    "watch-tests": "tsc -p -w . --outDir out",
+    "release:patch": "npm version patch && git push && git push --tags"
   }
 }
