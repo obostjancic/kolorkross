@@ -14,11 +14,12 @@ export namespace cmd {
 }
 
 export namespace token {
+  export const URI = "uri";
+  export const RUN_MODE = "runMode";
+  export const CURRENT_PATH = "currentPath";
   export const GLOBAL_STATE = "globalState";
   export const SUBSCRIPTIONS = "subscriptions";
-  export const URI = "uri";
   export const WORKSPACE_CONFIG = "workspaceConfig";
-  export const CURRENT_PATH = "currentPath";
 }
 
 export const DASHBOARD_VIEW_ID = "dash.dashboard";

@@ -4,7 +4,7 @@ import { DASHBOARD_VIEW_ID, token } from "../util/constants";
 import { group } from "./components/Group";
 import { header } from "./components/Header";
 import { DashboardService, EventMessage } from "./dasboard.service";
-import { getUri } from "./util";
+import { getResource } from "../util/loaders";
 
 export class DashboardPanel {
   public static currentPanel: DashboardPanel | undefined;
@@ -49,10 +49,21 @@ export class DashboardPanel {
   }
 
   private async _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
-    const scriptUri = getUri(webview, extensionUri, ["media", "dashboardScript.js"]);
-    const stylesUri = getUri(webview, extensionUri, ["media", "style.css"]);
-    const codiconsUri = getUri(webview, extensionUri, ["media", "codicons", "dist", "codicon.css"]);
-    const toolkitUri = getUri(webview, extensionUri, ["media", "webview-ui-toolkit", "dist", "toolkit.js"]);
+    const runMode = Container.get<vscode.ExtensionMode>(token.RUN_MODE);
+    const scriptUri = getResource(webview, extensionUri, ["media", "dashboardScript.js"], runMode);
+    const stylesUri = getResource(webview, extensionUri, ["media", "style.css"], runMode);
+    const codiconsUri = getResource(
+      webview,
+      extensionUri,
+      ["node_modules", "@vscode", "codicons", "dist", "codicon.css"],
+      runMode
+    );
+    const toolkitUri = getResource(
+      webview,
+      extensionUri,
+      ["node_modules", "@vscode", "webview-ui-toolkit", "dist", "toolkit.js"],
+      runMode
+    );
 
     const groups = await this.dashboardService.getGroups();
 
