@@ -30,6 +30,6 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Build TypeScript
-        run: yarn build
+        run: yarn compile
       - name: Run tests
         run: yarn test
