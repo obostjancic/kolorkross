@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Container, Token } from "typedi";
+import { Container } from "typedi";
 import * as vscode from "vscode";
 import { CommandRegisterer } from "./command.registerer";
 import { ProjectService } from "./services/project.service";
@@ -8,14 +8,13 @@ import { SidebarDummyDashboardViewProvider } from "./ui/sidebar.view.provider";
 import { DASHBOARD_VIEW_ID, token } from "./util/constants";
 
 // TODO: ops - write a nice readme
-// TODO: ops - lint
 // TODO: ops - add tests for commands and workspaceConfigService
 // TODO: ops - check the deployment/testing
 
-// TODO: feat - project drag and drop
-// TODO: feat - add search
 // TODO: feat - add a better project update mechanism
 // TODO: feat - add a color picker for the project
+// TODO: feat - add search
+// TODO: feat - project drag and drop
 
 // TODO: fix - _dispose error
 
