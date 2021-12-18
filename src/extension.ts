@@ -9,7 +9,7 @@ import { DASHBOARD_VIEW_ID, token } from "./util/constants";
 
 // TODO: ops - write a nice readme
 // TODO: ops - add tests for commands
-// TODO: ops - check the deployment/testing
+// TODO: ops - check the deployment/testing wip
 
 // TODO: feat - add a better project update mechanism
 // TODO: feat - add a color picker for the project
