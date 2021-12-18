@@ -5,7 +5,7 @@
   "name": "dash",
   "publisher": "obostjancic",
   "repository": "https://github.com/obostjancic/dash",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "activationEvents": [
     "onStartupFinished",
     "onCommand:dash.helloWorld",
