@@ -24,7 +24,7 @@ export class CommandService {
 
   // @ShowError()
   public async openProject(projectId?: string): Promise<void> {
-    projectId = await this.windowService.validatedInput("Project Id", projectId);
+    projectId = await this.windowService.defaultInput("Project Id", projectId);
 
     const project = await this.projectService.findById(projectId);
     VSCode.executeCommand("vscode.openFolder", VSCode.file(project.path), true);
@@ -32,7 +32,7 @@ export class CommandService {
 
   @ShowError()
   public async createProject(groupId?: string): Promise<void> {
-    groupId = await this.windowService.validatedInput("Group Id", groupId);
+    groupId = await this.windowService.defaultInput("Group Id", groupId);
     const projectPath = await this.windowService.inputPath("Open");
 
     const newProject = await this.projectService.create({ path: projectPath });
@@ -42,7 +42,7 @@ export class CommandService {
 
   @ShowError()
   public async updateProject(projectId?: string): Promise<void> {
-    projectId = await this.windowService.validatedInput("Project Id", projectId);
+    projectId = await this.windowService.defaultInput("Project Id", projectId);
 
     const project = await this.projectService.findById(projectId);
     const name = await this.windowService.input("Project Name", project.name);
@@ -65,7 +65,7 @@ export class CommandService {
 
   @ShowError()
   public async deleteProject(projectId?: string): Promise<void> {
-    projectId = await this.windowService.validatedInput("Project Id", projectId);
+    projectId = await this.windowService.defaultInput("Project Id", projectId);
     const project = await this.projectService.findById(projectId);
     if (!(await this.windowService.confirm(`Are you sure you want to delete project ${project.name}?`))) {
       return;
@@ -75,13 +75,13 @@ export class CommandService {
 
   @ShowError()
   public async createGroup(): Promise<void> {
-    const groupName = await this.windowService.validatedInput("Group Name");
+    const groupName = await this.windowService.defaultInput("Group Name");
     this.groupService.create({ name: groupName });
   }
 
   @ShowError()
   public async updateGroup(groupId?: string): Promise<void> {
-    groupId = await this.windowService.validatedInput("Group Id", groupId);
+    groupId = await this.windowService.defaultInput("Group Id", groupId);
     const group = await this.groupService.findById(groupId);
     const newName = await this.windowService.input("Group Name", group.name);
 
@@ -90,7 +90,7 @@ export class CommandService {
 
   @ShowError()
   public async deleteGroup(groupId?: string): Promise<void> {
-    groupId = await this.windowService.validatedInput("Group Id", groupId);
+    groupId = await this.windowService.defaultInput("Group Id", groupId);
     const group = await this.groupService.findById(groupId);
     if (!(await this.windowService.confirm(`Are you sure you want to delete group ${group.name}?`))) {
       return;

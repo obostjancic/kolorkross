@@ -58,7 +58,6 @@ describe("GroupRepository", () => {
   describe("find", () => {
     it("should match group by name", async () => {
       await state.update("dash.groups", { [group.id]: group, ["2"]: group });
-      console.log(state.get("dash.groups"));
       const found = await repository.find({ name: "group1" });
       expect(found.length).toEqual(2);
     });

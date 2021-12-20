@@ -12,7 +12,7 @@ export const ShowError = () =>
 
 @Service()
 export class WindowService {
-  async validatedInput(label: string, value?: string): Promise<string> {
+  async defaultInput(label: string, value?: string): Promise<string> {
     const result = value || (await this.input(label));
     if (!result) {
       throw new Error(`No ${label} provided`);

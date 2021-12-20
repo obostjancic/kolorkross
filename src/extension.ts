@@ -11,8 +11,6 @@ import { DASHBOARD_VIEW_ID, token } from "./util/constants";
 // TODO: ops - add tests for commands
 
 // TODO: feat - add a better project update mechanism
-// TODO: feat - add a color picker for the project
-// TODO: feat - add search
 // TODO: feat - project drag and drop
 
 // TODO: fix - _dispose error

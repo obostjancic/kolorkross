@@ -52,6 +52,8 @@ function initDashboardScript() {
       payload: e.currentTarget.getAttribute("data-id"),
     });
   });
+
+  addSearchFilter();
 }
 
 function addClickListenerToClass(className, cb) {
@@ -63,4 +65,20 @@ function addClickListenerToClass(className, cb) {
       cb(e);
     })
   );
+}
+
+function addSearchFilter() {
+  document.querySelector("#search-input").addEventListener("keyup", e => {
+    const searchTerm = e.currentTarget.value;
+    const projectDivs = document.querySelectorAll(".project");
+    projectDivs.forEach(projectDiv => {
+      const projectName = projectDiv.querySelector(".project-name").innerText;
+      const match = projectName.toLowerCase().includes(searchTerm.toLowerCase().trim());
+      if (searchTerm.length === 0 || match) {
+        projectDiv.style.display = "flex";
+      } else {
+        projectDiv.style.display = "none";
+      }
+    });
+  });
 }
