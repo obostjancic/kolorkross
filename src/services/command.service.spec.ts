@@ -4,10 +4,10 @@ import { GroupRepository } from "../repositories/group.repository";
 import { ProjectRepository } from "../repositories/project.repository";
 import { MockRepository } from "../util/test";
 import { CommandService } from "./command.service";
+// import { WindowService } from "./window.service";
 
-// jest.mock("vscode");
+// jest.mock("VSCode");
 
-class Mock {}
 describe("CommandService", () => {
   let service: CommandService;
   // let projectService: ProjectService;
@@ -18,12 +18,11 @@ describe("CommandService", () => {
   beforeEach(() => {
     Container.set(ProjectRepository, MockRepository);
     Container.set(GroupRepository, MockRepository);
-
     // projectService = Container.get(ProjectService);
     // groupService = Container.get(GroupService);
     // windowService = Container.get(WindowService);
     // workspaceConfigService = Container.get(WorkspaceConfigService);
-    // service = Container.get(CommandService);
+    service = Container.get(CommandService);
   });
 
   it("Should open project", async () => {

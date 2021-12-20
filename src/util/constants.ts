@@ -13,6 +13,8 @@ export namespace cmd {
   export const OPEN_DASHBOARD = "dash.openDashboard";
 
   export const VIEW_EXPLORER = "workbench.view.explorer";
+
+  export const OPEN_FOLDER = "vscode.openFolder";
 }
 
 export namespace token {

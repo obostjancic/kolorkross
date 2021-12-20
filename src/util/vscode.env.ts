@@ -1,5 +1,7 @@
+import { Service } from "typedi";
 import * as vscode from "vscode";
 
+@Service()
 export class VSCode {
   public static showInputBox(
     options?: vscode.InputBoxOptions,

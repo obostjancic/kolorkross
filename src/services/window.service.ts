@@ -1,5 +1,6 @@
 import { Service } from "typedi";
-import { Color } from "../models/types";
+import { Color, Project } from "../models/types";
+import { cmd } from "../util/constants";
 import { Catch } from "../util/decorators";
 import { isValidHex } from "../util/validators";
 import { VSCode } from "../util/vscode.env";
@@ -30,18 +31,19 @@ export class WindowService {
   }
 
   async inputColor(name: string, defaultValue: string = "", colors: Color[]): Promise<Color> {
-    const quickPick = await this.quickPickColor(name, defaultValue, colors);
-    if (!quickPick || quickPick.name === "Custom") {
-      const hex = await this.input(name, defaultValue, (val: string) => (isValidHex(val) ? "" : "Invalid hex color"));
-      if (!hex) {
-        throw new Error(`No ${hex} provided`);
-      }
-      return { name, value: hex };
+    const quickPick = await this.quickPickColor(colors);
+    if (quickPick && quickPick.name !== "Custom") {
+      return quickPick;
     }
-    return quickPick;
+
+    const hex = await this.input(name, defaultValue, (val: string) => (isValidHex(val) ? "" : "Invalid hex color"));
+    if (!hex) {
+      throw new Error(`No ${hex} provided`);
+    }
+    return { name, value: hex };
   }
 
-  private async quickPickColor(name: string, defaultValue: string = "", colors: Color[]): Promise<Color | undefined> {
+  private async quickPickColor(colors: Color[]): Promise<Color | undefined> {
     const quickPickItems = [...colors.map(c => c.name), "Custom"];
     const quickPick = await VSCode.showQuickPick(quickPickItems);
     return colors.find(c => c.name === quickPick);
@@ -65,5 +67,9 @@ export class WindowService {
   async confirm(text: string): Promise<boolean> {
     const answer = await VSCode.showInformationMessage(text, ...["Yes", "No"]);
     return answer === "Yes";
+  }
+
+  async openProject(project: Project): Promise<void> {
+    VSCode.executeCommand(cmd.OPEN_FOLDER, VSCode.file(project.path), true);
   }
 }
