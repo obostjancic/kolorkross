@@ -45,7 +45,7 @@ export class CommandService {
 
     const project = await this.projectService.findById(projectId);
     const name = await this.windowService.input("Project Name", project.name);
-    const color = await this.windowService.inputColor("Project Color", project.color);
+    const color = await this.windowService.inputColor("Project Color", project.color.value);
     const path = await this.windowService.inputPath("Update", project.path);
 
     const updatedProject = await this.projectService.update({

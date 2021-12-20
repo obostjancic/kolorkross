@@ -1,20 +1,6 @@
 import { Service } from "typedi";
 import { Color } from "../models/types";
-
-export enum Colors {
-  purple = "#c678dd",
-  red = "#f44747",
-  coral = "#e06c75",
-  whiskey = "#d19a66",
-  chalky = "#E5C07B",
-  lightDark = "#7F848E",
-  dark = "#5C63701",
-  malibu = "#61AFEF",
-  green = "#98c379",
-  fountainBlue = "#56b6c2",
-  white = "#FFFFFF",
-  lightwhite = "#abb2bf",
-}
+import { PREDEFINED_COLORS } from "../util/constants";
 
 export interface Pallete {
   foreground: Color;
@@ -25,18 +11,7 @@ export interface Pallete {
 export class ColorService {
   constructor() {}
 
-  private readonly colors: Color[] = [
-    Colors.chalky,
-    Colors.coral,
-    Colors.purple,
-    Colors.red,
-    Colors.whiskey,
-    Colors.malibu,
-    Colors.green,
-    Colors.fountainBlue,
-    Colors.white,
-    Colors.lightwhite,
-  ];
+  private readonly colors: Color[] = [...Object.values(PREDEFINED_COLORS)];
 
   public getRandomColor(): Color {
     const randomIndex = Math.floor(Math.random() * this.colors.length);
@@ -51,10 +26,10 @@ export class ColorService {
   }
 
   private getForegroundShade(color: Color): Color {
-    return `${color}FF`;
+    return { name: `foreground${color.name}`, value: `${color}FF` };
   }
 
   private getBackgroundShade(color: Color): Color {
-    return `${color}28`;
+    return { name: `background${color.name}`, value: `${color}28` };
   }
 }

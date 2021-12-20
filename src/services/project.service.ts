@@ -33,7 +33,6 @@ export class ProjectService {
     const newProject = {
       path: project.path,
       color: project.color || this.colorService.getRandomColor(),
-      //TODO: probably better handled with path module
       name: project.name || project.path.split("/").pop(),
     };
     return this.repo.create(newProject);

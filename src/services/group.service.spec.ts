@@ -105,7 +105,7 @@ describe("GroupService", () => {
       const project = {
         id: "1",
         name: "project1",
-        color: "#FF0000" as Color,
+        color: { name: "red", value: "#FF0000" },
         path: "path1",
       };
       await service.createProject(project, group);

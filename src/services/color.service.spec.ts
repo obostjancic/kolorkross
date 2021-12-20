@@ -6,16 +6,16 @@ describe("ColorService", () => {
   describe("getRandomColor", () => {
     it("should return a color", () => {
       let color = colorService.getRandomColor();
-      expect(typeof color).toBe("string");
+      expect(typeof color.value).toBe("string");
     });
   });
 
   describe("getPallete", () => {
     it("should return a pallete", () => {
-      const color = "#ff0000";
+      const color = { name: "red", value: "#ff0000" };
       let pallete = colorService.getPallete(color);
-      expect(pallete.foreground).toEqual(`${color}FF`);
-      expect(pallete.background).toEqual(`${color}28`);
+      expect(pallete.foreground.value).toEqual(`${color}FF`);
+      expect(pallete.background.value).toEqual(`${color}28`);
     });
   });
 });

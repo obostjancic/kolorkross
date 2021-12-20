@@ -8,7 +8,7 @@ import { ProjectService } from "./project.service";
 
 const mockProject = {
   name: "project1",
-  color: "#FF0000" as Color,
+  color: { name: "red", value: "#FF0000" },
   path: "dir1/dir12/path1",
 };
 

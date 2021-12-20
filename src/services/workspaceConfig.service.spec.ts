@@ -21,7 +21,7 @@ describe("WorkspaceConfigService", () => {
         id: "id1",
         name: "name1",
         path: "path2",
-        color: "#654321" as Color,
+        color: { name: "red", value: "#FF0000" },
       };
 
       await service.applyConfigToWorkspace(project);
@@ -34,7 +34,7 @@ describe("WorkspaceConfigService", () => {
         id: "id1",
         name: "name1",
         path: "path1",
-        color: "#123456" as Color,
+        color: { name: "red", value: "#FF0000" },
       };
 
       await service.applyConfigToWorkspace(project);

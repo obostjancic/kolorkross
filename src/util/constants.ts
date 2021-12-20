@@ -1,3 +1,5 @@
+import { Color } from "../models/types";
+
 export namespace cmd {
   export const CREATE_GROUP = "dash.createGroup";
   export const UPDATE_GROUP = "dash.updateGroup";
@@ -23,3 +25,21 @@ export namespace token {
 }
 
 export const DASHBOARD_VIEW_ID = "dash.dashboard";
+
+export const PREDEFINED_COLORS: Color[] = [
+  { name: "purple", value: "#c678dd" },
+
+  { name: "red", value: "#f44747" },
+
+  { name: "coral", value: "#e06c75" },
+
+  { name: "whiskey", value: "#d19a66" },
+  { name: "chalky", value: "#E5C07B" },
+  { name: "lightDark", value: "#7F848E" },
+  { name: "dark", value: "#5C63701" },
+  { name: "malibu", value: "#61AFEF" },
+  { name: "green", value: "#98c379" },
+  { name: "fountainBlue", value: "#56b6c2" },
+  { name: "white", value: "#FFFFFF" },
+  { name: "lightwhite", value: "#abb2bf" },
+];

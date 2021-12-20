@@ -1,4 +1,7 @@
-export type Color = `#${string}`;
+export type Color = {
+  name: string;
+  value: string;
+};
 
 export interface Group {
   id: string;

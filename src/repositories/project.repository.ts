@@ -45,7 +45,6 @@ export class ProjectRepository {
     const updatedProject = { ...project, ...updateData };
     const currentConfig = this.readProjectConfig();
     await this.writeProjectConfig({ ...currentConfig, [project.id]: updatedProject });
-    // await this.updateWorkspaceConfig(updatedProject.color);
     return updatedProject;
   }
 
