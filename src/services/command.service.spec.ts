@@ -1,13 +1,9 @@
 import "reflect-metadata";
 import Container from "typedi";
-import { CommandService } from "./command.service";
-import { GroupService } from "./group.service";
-import { ProjectService } from "./project.service";
-import { WindowService } from "./window.service";
-import { WorkspaceConfigService } from "./workspaceConfig.service";
-import { ProjectRepository } from "../repositories/project.repository";
-import { MockRepository } from "../repositories/base.repository";
 import { GroupRepository } from "../repositories/group.repository";
+import { MockRepository } from "../repositories/mock.repository";
+import { ProjectRepository } from "../repositories/project.repository";
+import { CommandService } from "./command.service";
 
 // jest.mock("vscode");
 

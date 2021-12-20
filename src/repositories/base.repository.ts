@@ -1,3 +1,6 @@
+import { id } from "../util/generators";
+import { partialMatch } from "../util/matchers";
+
 export interface Repository<T extends { id: string }> {
   findAll(): T[];
   findById(id: string): T | undefined;
@@ -7,56 +10,52 @@ export interface Repository<T extends { id: string }> {
   delete(id: string): Promise<void>;
 }
 
-export const matcher = <T>(p: T, q: Partial<T>) => {
-  for (const key of Object.keys(q)) {
-    //@ts-ignore
-    if (p[key] !== q[key]) {
-      return false;
-    }
+export abstract class BaseRepository<T extends { id: string }> implements Repository<T> {
+  private entities = {} as Record<string, T>;
+
+  constructor(private readonly entityName: string) {
+    this.entities = this.read();
   }
-  return true;
-};
 
-export const id = () => {
-  return Math.random().toString(36).slice(2, 9);
-};
+  protected abstract write(data: Record<string, T>): Promise<void>;
 
-export class MockRepository<T extends { id: string }> implements Repository<T> {
-  private entities: T[] = [];
+  protected abstract read(): Record<string, T>;
+
+  protected setEntities(entities: Record<string, T>): void {
+    this.entities = entities;
+  }
 
   findAll(): T[] {
-    return this.entities;
+    return Object.values(this.entities);
   }
 
   findById(id: string): T | undefined {
-    return this.entities.find(en => en.id === id);
+    return this.entities[id];
   }
 
   find(query: Partial<T>): T[] {
-    return this.entities.filter(en => matcher(en, query));
+    return this.findAll().filter(en => partialMatch(en, query));
   }
 
-  create(entity: Partial<T>): Promise<T> {
-    const newEntity = { ...entity, id: id() } as T;
-    this.entities.push(newEntity);
-    return Promise.resolve(newEntity);
+  async create(item: Partial<T>): Promise<T> {
+    const newEntity = { ...item, id: id() } as T;
+    await this.write({ ...this.entities, [newEntity.id]: newEntity });
+    return newEntity;
   }
 
-  update(id: string, entity: T): Promise<T> {
-    const index = this.entities.findIndex(en => en.id === id);
-    if (index === -1) {
-      throw new Error("T not found");
+  async update(id: string, updateData: Partial<T>): Promise<T> {
+    const entity = await this.findById(id);
+    if (!entity) {
+      throw new Error(`${this.entityName} not found`);
     }
-    this.entities[index] = entity;
-    return Promise.resolve(entity);
+    const updatedEntity = { ...entity, ...updateData };
+    await this.write({ ...this.entities, [entity.id]: updatedEntity });
+
+    return updatedEntity;
   }
 
-  delete(id: string): Promise<void> {
-    const index = this.entities.findIndex(en => en.id === id);
-    if (index === -1) {
-      throw new Error("T not found");
-    }
-    this.entities.splice(index, 1);
-    return Promise.resolve();
+  async delete(id: string): Promise<void> {
+    const { [id]: _, ...newConfig } = this.entities;
+    await this.write(newConfig);
   }
 }

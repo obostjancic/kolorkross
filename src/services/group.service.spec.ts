@@ -1,8 +1,9 @@
 import "reflect-metadata";
 import Container from "typedi";
-import { Color, Group, Project } from "../models/types";
-import { MockRepository, Repository } from "../repositories/base.repository";
+import { Group, Project } from "../models/types";
+import { Repository } from "../repositories/base.repository";
 import { GroupRepository } from "../repositories/group.repository";
+import { MockRepository } from "../repositories/mock.repository";
 import { GroupService } from "./group.service";
 
 const mockGroup = {
@@ -100,18 +101,28 @@ describe("GroupService", () => {
   });
 
   describe("createProject", () => {
+    const project = {
+      id: "1",
+      name: "project1",
+      color: { name: "red", value: "#FF0000" },
+      path: "path1",
+    };
+
     it("should add project to group", async () => {
       const group = await repository.create(mockGroup);
-      const project = {
-        id: "1",
-        name: "project1",
-        color: { name: "red", value: "#FF0000" },
-        path: "path1",
-      };
       await service.createProject(project, group);
       const savedGroup = await service.findById(group.id);
       expect(savedGroup.projects.length).toEqual(2);
       expect(savedGroup.projects[1]).toEqual(project.id);
+    });
+
+    it("should throw an exception when adding the same project twice", async () => {
+      const group = await repository.create(mockGroup);
+      await service.createProject(project, group);
+      const savedGroup = await service.findById(group.id);
+      const creatingSameProjectTwice = service.createProject(project, savedGroup);
+
+      expect(creatingSameProjectTwice).rejects.toThrow("Project already exists in group");
     });
   });
 
@@ -121,6 +132,12 @@ describe("GroupService", () => {
       await service.removeProject({ id: "0" } as Project, group);
       const savedGroup = await service.findById(group.id);
       expect(savedGroup.projects.length).toEqual(0);
+    });
+
+    it("should throw an exception when removing a project that does not exist", async () => {
+      const group = await repository.create(mockGroup);
+      const removingNonexistingProject = async () => service.removeProject({ id: "2" } as Project, group);
+      expect(removingNonexistingProject).rejects.toThrow("Project does not exist in group");
     });
   });
 });

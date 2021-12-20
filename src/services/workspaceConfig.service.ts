@@ -14,19 +14,12 @@ export class WorkspaceConfigService {
   }
 
   public async applyConfigToWorkspace(project: Project): Promise<void> {
-    try {
-      if (project.path === this.currentPath) {
-        this.updateWorkspaceConfig(project.color);
-      }
-    } catch (err) {
-      console.warn("Project not part of dashboard");
+    if (project.path === this.currentPath) {
+      this.updateWorkspaceConfig(project.color);
     }
   }
 
   private async updateWorkspaceConfig(color: Color): Promise<void> {
-    if (!color) {
-      return;
-    }
     const { foreground, background } = ColorService.getPallete(color);
     this.writeWorkspaceConfig({
       "titleBar.activeBackground": background,

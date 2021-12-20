@@ -1,8 +1,8 @@
 import "reflect-metadata";
-
 import Container from "typedi";
-import { Color, Project } from "../models/types";
-import { MockRepository, Repository } from "../repositories/base.repository";
+import { Project } from "../models/types";
+import { Repository } from "../repositories/base.repository";
+import { MockRepository } from "../repositories/mock.repository";
 import { ProjectRepository } from "../repositories/project.repository";
 import { ProjectService } from "./project.service";
 
@@ -15,6 +15,7 @@ const mockProject = {
 describe("ProjectService", () => {
   let service: ProjectService;
   let repository: Repository<Project> = new MockRepository<Project>();
+
   beforeEach(() => {
     Container.set(ProjectRepository, repository);
     service = Container.get(ProjectService);
@@ -47,6 +48,22 @@ describe("ProjectService", () => {
       const gettingNonexistingProject = async () => service.findById("2");
       expect(gettingNonexistingProject).rejects.toThrow("Project not found");
       // , Error, "Project not found");
+    });
+  });
+
+  describe("findByPath", () => {
+    it("should return project with path", async () => {
+      const created = await repository.create({
+        ...mockProject,
+        path: "dir/path",
+      });
+      const project = await service.findByPath(created.path);
+      expect(created.id).toEqual(project.id);
+    });
+
+    it("should throw an exception when ", async () => {
+      const gettingNonexistingProject = async () => service.findByPath("non/existing/path");
+      expect(gettingNonexistingProject).rejects.toThrow("Project not found");
     });
   });
 
