@@ -1,10 +1,9 @@
 import Container, { Service } from "typedi";
-import { ProjectService } from "./project.service";
+import { ColorService } from "./color.service";
 import { GroupService } from "./group.service";
+import { ProjectService } from "./project.service";
 import { ShowError, WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
-import { ColorService } from "./color.service";
-import { VSCode } from "../util/vscode.env";
 @Service()
 export class CommandService {
   private readonly projectService: ProjectService = Container.get(ProjectService);
@@ -25,7 +24,6 @@ export class CommandService {
   @ShowError()
   public async openProject(projectId?: string): Promise<void> {
     projectId = await this.windowService.defaultInput("Project Id", projectId);
-
     const project = await this.projectService.findById(projectId);
     await this.windowService.openProject(project);
   }

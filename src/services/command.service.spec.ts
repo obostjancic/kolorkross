@@ -22,7 +22,7 @@ describe("CommandService", () => {
     // groupService = Container.get(GroupService);
     // windowService = Container.get(WindowService);
     // workspaceConfigService = Container.get(WorkspaceConfigService);
-    service = Container.get(CommandService);
+    // service = Container.get(CommandService);
   });
 
   it("Should open project", async () => {
