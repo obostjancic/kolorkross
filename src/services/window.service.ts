@@ -29,10 +29,13 @@ export class WindowService {
     });
   }
 
+  // TODO: reipplement
   async inputColor(name: string, defaultValue: string = ""): Promise<Color> {
-    return (await this.input(name, defaultValue, (val: string) =>
-      isValidHex(val) ? "" : "Invalid hex color"
-    )) as Color;
+    const hex = await this.input(name, defaultValue, (val: string) => (isValidHex(val) ? "" : "Invalid hex color"));
+    if (!hex) {
+      throw new Error(`No ${hex} provided`);
+    }
+    return { name, value: hex };
   }
 
   async inputPath(label: string, defaultValue: string = ""): Promise<string> {
