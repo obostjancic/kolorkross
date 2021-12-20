@@ -29,13 +29,22 @@ export class WindowService {
     });
   }
 
-  // TODO: reipplement
-  async inputColor(name: string, defaultValue: string = ""): Promise<Color> {
-    const hex = await this.input(name, defaultValue, (val: string) => (isValidHex(val) ? "" : "Invalid hex color"));
-    if (!hex) {
-      throw new Error(`No ${hex} provided`);
+  async inputColor(name: string, defaultValue: string = "", colors: Color[]): Promise<Color> {
+    const quickPick = await this.quickPickColor(name, defaultValue, colors);
+    if (!quickPick || quickPick.name === "Custom") {
+      const hex = await this.input(name, defaultValue, (val: string) => (isValidHex(val) ? "" : "Invalid hex color"));
+      if (!hex) {
+        throw new Error(`No ${hex} provided`);
+      }
+      return { name, value: hex };
     }
-    return { name, value: hex };
+    return quickPick;
+  }
+
+  private async quickPickColor(name: string, defaultValue: string = "", colors: Color[]): Promise<Color | undefined> {
+    const quickPickItems = [...colors.map(c => c.name), "Custom"];
+    const quickPick = await VSCode.showQuickPick(quickPickItems);
+    return colors.find(c => c.name === quickPick);
   }
 
   async inputPath(label: string, defaultValue: string = ""): Promise<string> {

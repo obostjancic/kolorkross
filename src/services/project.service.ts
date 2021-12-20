@@ -7,7 +7,6 @@ import { ColorService } from "./color.service";
 @Service()
 export class ProjectService {
   private readonly repo: Repository<Project> = Container.get(ProjectRepository);
-  private readonly colorService: ColorService = Container.get(ColorService);
 
   async findById(id: string): Promise<Project> {
     const project = this.repo.findById(id);
@@ -30,9 +29,11 @@ export class ProjectService {
   }
 
   async create(project: CreateProjectDTO): Promise<Project> {
+    const color = project.color || ColorService.getRandomColor();
     const newProject = {
       path: project.path,
-      color: project.color || this.colorService.getRandomColor(),
+      color,
+      //FIXME: are you sure this will work on every OS?
       name: project.name || project.path.split("/").pop(),
     };
     return this.repo.create(newProject);

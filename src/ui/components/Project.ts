@@ -4,7 +4,7 @@ export const project = (project: Project) => {
   return /*html*/ `
     <div class="project" id="${project.id}" data-id="${project.id}">     
       <div>    
-      <vscode-badge style="--badge-background: ${project.color}"></vscode-badge>
+      <vscode-badge style="--badge-background: ${project.color.value}"></vscode-badge>
       <span class="project-name">
         ${project.name}
       </span>

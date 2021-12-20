@@ -4,6 +4,7 @@ import { GroupService } from "./group.service";
 import { ShowError, WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
 import { VSCode } from "../util/vscode.env";
+import { ColorService } from "./color.service";
 @Service()
 export class CommandService {
   private readonly projectService: ProjectService = Container.get(ProjectService);
@@ -45,7 +46,11 @@ export class CommandService {
 
     const project = await this.projectService.findById(projectId);
     const name = await this.windowService.input("Project Name", project.name);
-    const color = await this.windowService.inputColor("Project Color", project.color.value);
+    const color = await this.windowService.inputColor(
+      "Project Color",
+      project.color.value,
+      ColorService.getPredefinedColors()
+    );
     const path = await this.windowService.inputPath("Update", project.path);
 
     const updatedProject = await this.projectService.update({

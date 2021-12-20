@@ -27,19 +27,16 @@ export namespace token {
 export const DASHBOARD_VIEW_ID = "dash.dashboard";
 
 export const PREDEFINED_COLORS: Color[] = [
-  { name: "purple", value: "#c678dd" },
-
-  { name: "red", value: "#f44747" },
-
-  { name: "coral", value: "#e06c75" },
-
-  { name: "whiskey", value: "#d19a66" },
-  { name: "chalky", value: "#E5C07B" },
-  { name: "lightDark", value: "#7F848E" },
-  { name: "dark", value: "#5C63701" },
-  { name: "malibu", value: "#61AFEF" },
-  { name: "green", value: "#98c379" },
-  { name: "fountainBlue", value: "#56b6c2" },
-  { name: "white", value: "#FFFFFF" },
-  { name: "lightwhite", value: "#abb2bf" },
+  { name: "Purple", value: "#c678dd" },
+  { name: "Red", value: "#f44747" },
+  { name: "Coral", value: "#e06c75" },
+  { name: "Whiskey", value: "#d19a66" },
+  { name: "Chalky", value: "#E5C07B" },
+  { name: "Light dark", value: "#7F848E" },
+  { name: "Dark", value: "#5C63701" },
+  { name: "Malibu", value: "#61AFEF" },
+  { name: "Green", value: "#98c379" },
+  { name: "Fountain blue", value: "#56b6c2" },
+  { name: "White", value: "#FFFFFF" },
+  { name: "Light White", value: "#abb2bf" },
 ];

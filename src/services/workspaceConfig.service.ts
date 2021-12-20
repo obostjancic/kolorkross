@@ -27,8 +27,7 @@ export class WorkspaceConfigService {
     if (!color) {
       return;
     }
-    const cs = new ColorService();
-    const { foreground, background } = cs.getPallete(color);
+    const { foreground, background } = ColorService.getPallete(color);
     this.writeWorkspaceConfig({
       "titleBar.activeBackground": background,
       "titleBar.activeForeground": foreground,

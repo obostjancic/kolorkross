@@ -7,29 +7,30 @@ export interface Pallete {
   background: Color;
 }
 
-@Service()
 export class ColorService {
-  constructor() {}
+  private static readonly colors: Color[] = [...Object.values(PREDEFINED_COLORS)];
 
-  private readonly colors: Color[] = [...Object.values(PREDEFINED_COLORS)];
+  public static getPredefinedColors(): Color[] {
+    return this.colors;
+  }
 
-  public getRandomColor(): Color {
+  public static getRandomColor(): Color {
     const randomIndex = Math.floor(Math.random() * this.colors.length);
     return this.colors[randomIndex];
   }
 
-  public getPallete(color: Color): Pallete {
+  public static getPallete(color: Color): Pallete {
     return {
       foreground: this.getForegroundShade(color),
       background: this.getBackgroundShade(color),
     };
   }
 
-  private getForegroundShade(color: Color): Color {
+  private static getForegroundShade(color: Color): Color {
     return { name: `foreground${color.name}`, value: `${color}FF` };
   }
 
-  private getBackgroundShade(color: Color): Color {
+  private static getBackgroundShade(color: Color): Color {
     return { name: `background${color.name}`, value: `${color}28` };
   }
 }
