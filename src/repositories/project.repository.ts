@@ -1,12 +1,12 @@
 import Container, { Service } from "typedi";
 import { Memento } from "vscode";
 import { Project } from "../models/types";
-import { token } from "../util/constants";
+import { section, token } from "../util/constants";
 import { BaseRepository } from "./base.repository";
 
 @Service()
 export class ProjectRepository extends BaseRepository<Project> {
-  private readonly section = "dash.projects";
+  private readonly stateSection = section.PROJECTS;
   private readonly state: Memento = Container.get(token.GLOBAL_STATE);
 
   constructor() {
@@ -14,10 +14,10 @@ export class ProjectRepository extends BaseRepository<Project> {
   }
 
   read(): Record<string, Project> {
-    return this.state.get(this.section) || {};
+    return this.state.get(this.stateSection) || {};
   }
 
   async write(data: Record<string, Project>): Promise<void> {
-    this.state.update(this.section, data);
+    this.state.update(this.stateSection, data);
   }
 }

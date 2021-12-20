@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import Container from "typedi";
 import { Group } from "../models/types";
-import { token } from "../util/constants";
+import { section, token } from "../util/constants";
 import { MockMemento } from "../util/test";
 import { Repository } from "./base.repository";
 import { GroupRepository } from "./group.repository";
@@ -23,7 +23,7 @@ describe("GroupRepository", () => {
   it("should have properties", () => {
     const repo: any = new GroupRepository();
     expect(repo).toBeDefined();
-    expect(repo["config"]).toBeDefined();
+    expect(repo["state"]).toBeDefined();
     expect(repo["read"]).toBeDefined();
     expect(repo["write"]).toBeDefined();
   });
@@ -35,7 +35,7 @@ describe("GroupRepository", () => {
     });
 
     it("should return one group", async () => {
-      await state.update("dash.groups", { [group.id]: group });
+      await state.update(section.GROUPS, { [group.id]: group });
       const groups = await repository.findAll();
       expect(groups.length).toEqual(1);
     });
@@ -43,7 +43,7 @@ describe("GroupRepository", () => {
 
   describe("findById", () => {
     it("should return group with id", async () => {
-      await state.update("dash.groups", { [group.id]: group });
+      await state.update(section.GROUPS, { [group.id]: group });
       const found = await repository.findById(group.id);
       expect(found).toBeDefined();
       expect(found?.id).toEqual(group.id);
@@ -57,7 +57,7 @@ describe("GroupRepository", () => {
 
   describe("find", () => {
     it("should match group by name", async () => {
-      await state.update("dash.groups", { [group.id]: group, ["2"]: group });
+      await state.update(section.GROUPS, { [group.id]: group, ["2"]: group });
       const found = await repository.find({ name: "group1" });
       expect(found.length).toEqual(2);
     });
@@ -72,15 +72,15 @@ describe("GroupRepository", () => {
     it("should create a group", async () => {
       const created = await repository.create(group);
       expect(created).toBeDefined();
-      expect(created.id).toEqual(state.get("dash.groups")[created.id].id);
+      expect(created.id).toEqual(state.get(section.GROUPS)[created.id].id);
       expect(created.name).toEqual(group.name);
     });
   });
 
   describe("update", () => {
     it("should update a group", async () => {
-      await state.update("dash.groups", { [group.id]: group });
-      const created = state.get("dash.groups")[group.id];
+      await state.update(section.GROUPS, { [group.id]: group });
+      const created = state.get(section.GROUPS)[group.id];
       const updated = await repository.update(created.id, {
         ...created,
         name: "group2",
@@ -97,10 +97,10 @@ describe("GroupRepository", () => {
 
   describe("delete", () => {
     it("should delete a project", async () => {
-      await state.update("dash.groups", { [group.id]: group });
-      const created = state.get("dash.groups")[group.id];
+      await state.update(section.GROUPS, { [group.id]: group });
+      const created = state.get(section.GROUPS)[group.id];
       await repository.delete(created.id);
-      const deleted = state.get("dash.groups")[group.id];
+      const deleted = state.get(section.GROUPS)[group.id];
       expect(deleted).toBeUndefined();
     });
   });

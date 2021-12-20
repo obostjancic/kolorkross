@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import Container from "typedi";
 import { Project } from "../models/types";
-import { token } from "../util/constants";
+import { section, token } from "../util/constants";
 import { MockMemento } from "../util/test";
 import { Repository } from "./base.repository";
 import { ProjectRepository } from "./project.repository";
@@ -37,7 +37,7 @@ describe("ProjectRepository", () => {
     });
 
     it("should return one project", async () => {
-      await state.update("dash.projects", { [project.id]: project });
+      await state.update(section.PROJECTS, { [project.id]: project });
       const projects = await repository.findAll();
       expect(projects.length).toEqual(1);
     });
@@ -45,7 +45,7 @@ describe("ProjectRepository", () => {
 
   describe("findById", () => {
     it("should return project with id", async () => {
-      await state.update("dash.projects", { [project.id]: project });
+      await state.update(section.PROJECTS, { [project.id]: project });
       const found = await repository.findById(project.id);
       expect(found).toBeDefined();
       expect(found?.id).toEqual(project.id);
@@ -59,8 +59,7 @@ describe("ProjectRepository", () => {
 
   describe("find", () => {
     it("should match project by name", async () => {
-      await state.update("dash.projects", { [project.id]: project, ["2"]: project });
-      console.log(state.get("dash.projects"));
+      await state.update(section.PROJECTS, { [project.id]: project, ["2"]: project });
       const found = await repository.find({ name: "project1" });
       expect(found.length).toEqual(2);
     });
@@ -75,7 +74,7 @@ describe("ProjectRepository", () => {
     it("should create a project", async () => {
       const created = await repository.create(project);
       expect(created).toBeDefined();
-      expect(created.id).toEqual(state.get("dash.projects")[created.id].id);
+      expect(created.id).toEqual(state.get(section.PROJECTS)[created.id].id);
       expect(created.name).toEqual(project.name);
       expect(created.color).toEqual(project.color);
       expect(created.path).toEqual(project.path);
@@ -84,8 +83,8 @@ describe("ProjectRepository", () => {
 
   describe("update", () => {
     it("should update a project", async () => {
-      await state.update("dash.projects", { [project.id]: project });
-      const created = state.get("dash.projects")[project.id];
+      await state.update(section.PROJECTS, { [project.id]: project });
+      const created = state.get(section.PROJECTS)[project.id];
       const updated = await repository.update(created.id, {
         ...created,
         name: "project2",
@@ -104,10 +103,10 @@ describe("ProjectRepository", () => {
 
   describe("delete", () => {
     it("should delete a project", async () => {
-      await state.update("dash.projects", { [project.id]: project });
-      const created = state.get("dash.projects")[project.id];
+      await state.update(section.PROJECTS, { [project.id]: project });
+      const created = state.get(section.PROJECTS)[project.id];
       await repository.delete(created.id);
-      const deleted = state.get("dash.projects")[project.id];
+      const deleted = state.get(section.PROJECTS)[project.id];
       expect(deleted).toBeUndefined();
     });
   });

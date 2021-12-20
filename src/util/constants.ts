@@ -24,6 +24,11 @@ export namespace token {
   export const WORKSPACE_CONFIG = "workspaceConfig";
 }
 
+export namespace section {
+  export const PROJECTS = "projects";
+  export const GROUPS = "groups";
+}
+
 export const DASHBOARD_VIEW_ID = "dash.dashboard";
 
 export const PREDEFINED_COLORS: Color[] = [
