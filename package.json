@@ -76,7 +76,7 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "icon": "assets/dash.svg",
+          "icon": "assets/kolorkross.svg",
           "id": "dashboard",
           "title": "Dashboard"
         }

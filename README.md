@@ -1,3 +1,5 @@
+![Drag Racing](./assets/kolorkross.png)
+
 # dash README
 
 After writing up a brief description, we recommend including the following sections.
