@@ -5,42 +5,42 @@ window.addEventListener("load", initDashboardScript);
 function initDashboardScript() {
   addClickListenerToClass(".project", e => {
     vscode.postMessage({
-      command: "dash.openProject",
+      command: "kolorkross.openProject",
       payload: e.currentTarget.getAttribute("data-id"),
     });
   });
 
   addClickListenerToClass(".create-project", e => {
     vscode.postMessage({
-      command: "dash.createProject",
+      command: "kolorkross.createProject",
       payload: e.currentTarget.getAttribute("data-id"),
     });
   });
 
   addClickListenerToClass(".create-group", e => {
     vscode.postMessage({
-      command: "dash.createGroup",
+      command: "kolorkross.createGroup",
       payload: null,
     });
   });
 
   addClickListenerToClass(".update-group", e => {
     vscode.postMessage({
-      command: "dash.updateGroup",
+      command: "kolorkross.updateGroup",
       payload: e.currentTarget.getAttribute("data-id"),
     });
   });
 
   addClickListenerToClass(".delete-group", e => {
     vscode.postMessage({
-      command: "dash.deleteGroup",
+      command: "kolorkross.deleteGroup",
       payload: e.currentTarget.getAttribute("data-id"),
     });
   });
 
   addClickListenerToClass(".update-project", e => {
     vscode.postMessage({
-      command: "dash.updateProject",
+      command: "kolorkross.updateProject",
       payload: e.currentTarget.getAttribute("data-id"),
     });
   });
@@ -48,7 +48,7 @@ function initDashboardScript() {
   addClickListenerToClass(".delete-project", e => {
     console.log("deleting project", e.currentTarget.getAttribute("data-id"));
     vscode.postMessage({
-      command: "dash.deleteProject",
+      command: "kolorkross.deleteProject",
       payload: e.currentTarget.getAttribute("data-id"),
     });
   });

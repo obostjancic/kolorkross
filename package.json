@@ -1,16 +1,16 @@
 {
   "description": "VS Code extension that allows fast & colorful access to multiple workspaces",
-  "displayName": "dash",
+  "displayName": "kolorkross",
   "main": "./dist/extension.js",
-  "name": "dash",
+  "name": "Kolor Kross",
   "publisher": "obostjancic",
-  "repository": "https://github.com/obostjancic/dash",
+  "repository": "https://github.com/obostjancic/kolorkross",
   "version": "0.0.7",
   "activationEvents": [
     "onStartupFinished",
-    "onCommand:dash.helloWorld",
-    "onCommand:dash.createGroup",
-    "onWebviewPanel:dash.dashboard"
+    "onCommand:kolorkross.helloWorld",
+    "onCommand:kolorkross.createGroup",
+    "onWebviewPanel:kolorkross.kolorkrossboard"
   ],
   "categories": [
     "Other"
@@ -18,44 +18,44 @@
   "contributes": {
     "commands": [
       {
-        "command": "dash.openDashboard",
-        "title": "Dash: Open Dashboard"
+        "command": "kolorkross.openDashboard",
+        "title": "Kolor Kross: Open Dashboard"
       },
       {
-        "command": "dash.createGroup",
-        "title": "Dash: Create Group"
+        "command": "kolorkross.createGroup",
+        "title": "Kolor Kross: Create Group"
       },
       {
-        "command": "dash.updateGroup",
-        "title": "Dash: Update Group"
+        "command": "kolorkross.updateGroup",
+        "title": "Kolor Kross: Update Group"
       },
       {
-        "command": "dash.deleteGroup",
-        "title": "Dash: Delete Group"
+        "command": "kolorkross.deleteGroup",
+        "title": "Kolor Kross: Delete Group"
       },
       {
-        "command": "dash.createProject",
-        "title": "Dash: Create Project"
+        "command": "kolorkross.createProject",
+        "title": "Kolor Kross: Create Project"
       },
       {
-        "command": "dash.updateProject",
-        "title": "Dash: Update Project"
+        "command": "kolorkross.updateProject",
+        "title": "Kolor Kross: Update Project"
       },
       {
-        "command": "dash.deleteProject",
-        "title": "Dash: Delete Project"
+        "command": "kolorkross.deleteProject",
+        "title": "Kolor Kross: Delete Project"
       }
     ],
     "configuration": [
       {
         "order": 1,
-        "id": "dash",
-        "title": "Dash",
+        "id": "kolorkross",
+        "title": "Kolor Kross",
         "properties": {
-          "dash.groups": {
+          "kolorkross.groups": {
             "type": "object"
           },
-          "dash.projects": {
+          "kolorkross.projects": {
             "type": "object"
           }
         }
@@ -66,7 +66,7 @@
         {
           "contextualTitle": "Project Dashboard",
           "icon": "media/icon.svg",
-          "id": "dash.dashboard",
+          "id": "kolorkross.dashboard",
           "name": "Project Dashboard",
           "type": "webview",
           "visibility": "visible"

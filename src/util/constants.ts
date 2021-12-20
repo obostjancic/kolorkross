@@ -1,16 +1,16 @@
 import { Color } from "../models/types";
 
 export namespace cmd {
-  export const CREATE_GROUP = "dash.createGroup";
-  export const UPDATE_GROUP = "dash.updateGroup";
-  export const DELETE_GROUP = "dash.deleteGroup";
+  export const CREATE_GROUP = "kolorkross.createGroup";
+  export const UPDATE_GROUP = "kolorkross.updateGroup";
+  export const DELETE_GROUP = "kolorkross.deleteGroup";
 
-  export const OPEN_PROJECT = "dash.openProject";
-  export const CREATE_PROJECT = "dash.createProject";
-  export const UPDATE_PROJECT = "dash.updateProject";
-  export const DELETE_PROJECT = "dash.deleteProject";
+  export const OPEN_PROJECT = "kolorkross.openProject";
+  export const CREATE_PROJECT = "kolorkross.createProject";
+  export const UPDATE_PROJECT = "kolorkross.updateProject";
+  export const DELETE_PROJECT = "kolorkross.deleteProject";
 
-  export const OPEN_DASHBOARD = "dash.openDashboard";
+  export const OPEN_DASHBOARD = "kolorkross.openDashboard";
 
   export const VIEW_EXPLORER = "workbench.view.explorer";
 
@@ -31,7 +31,7 @@ export namespace section {
   export const GROUPS = "groups";
 }
 
-export const DASHBOARD_VIEW_ID = "dash.dashboard";
+export const DASHBOARD_VIEW_ID = "kolorkross.dashboard";
 
 export const PREDEFINED_COLORS: Color[] = [
   { name: "Purple", value: "#c678dd" },
