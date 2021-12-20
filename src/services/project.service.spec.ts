@@ -2,8 +2,8 @@ import "reflect-metadata";
 import Container from "typedi";
 import { Project } from "../models/types";
 import { Repository } from "../repositories/base.repository";
-import { MockRepository } from "../repositories/mock.repository";
 import { ProjectRepository } from "../repositories/project.repository";
+import { MockRepository } from "../util/test";
 import { ProjectService } from "./project.service";
 
 const mockProject = {

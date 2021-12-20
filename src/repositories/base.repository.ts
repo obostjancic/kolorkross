@@ -1,3 +1,4 @@
+import { Service } from "typedi";
 import { id } from "../util/generators";
 import { partialMatch } from "../util/matchers";
 
@@ -11,26 +12,18 @@ export interface Repository<T extends { id: string }> {
 }
 
 export abstract class BaseRepository<T extends { id: string }> implements Repository<T> {
-  private entities = {} as Record<string, T>;
-
-  constructor(private readonly entityName: string) {
-    this.entities = this.read();
-  }
+  constructor(private readonly entityName: string) {}
 
   protected abstract write(data: Record<string, T>): Promise<void>;
 
   protected abstract read(): Record<string, T>;
 
-  protected setEntities(entities: Record<string, T>): void {
-    this.entities = entities;
-  }
-
   findAll(): T[] {
-    return Object.values(this.entities);
+    return Object.values(this.read());
   }
 
   findById(id: string): T | undefined {
-    return this.entities[id];
+    return this.read()[id];
   }
 
   find(query: Partial<T>): T[] {
@@ -39,7 +32,7 @@ export abstract class BaseRepository<T extends { id: string }> implements Reposi
 
   async create(item: Partial<T>): Promise<T> {
     const newEntity = { ...item, id: id() } as T;
-    await this.write({ ...this.entities, [newEntity.id]: newEntity });
+    await this.write({ ...this.read(), [newEntity.id]: newEntity });
     return newEntity;
   }
 
@@ -49,13 +42,13 @@ export abstract class BaseRepository<T extends { id: string }> implements Reposi
       throw new Error(`${this.entityName} not found`);
     }
     const updatedEntity = { ...entity, ...updateData };
-    await this.write({ ...this.entities, [entity.id]: updatedEntity });
+    await this.write({ ...this.read(), [entity.id]: updatedEntity });
 
     return updatedEntity;
   }
 
   async delete(id: string): Promise<void> {
-    const { [id]: _, ...newConfig } = this.entities;
+    const { [id]: _, ...newConfig } = this.read();
     await this.write(newConfig);
   }
 }

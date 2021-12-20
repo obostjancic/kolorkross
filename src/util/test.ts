@@ -1,6 +1,6 @@
-import { id } from "../util/generators";
-import { partialMatch } from "../util/matchers";
-import { Repository } from "./base.repository";
+import { Repository } from "../repositories/base.repository";
+import { id } from "./generators";
+import { partialMatch } from "./matchers";
 
 export class MockRepository<T extends { id: string }> implements Repository<T> {
   private entities: T[] = [];
@@ -39,5 +39,17 @@ export class MockRepository<T extends { id: string }> implements Repository<T> {
     }
     this.entities.splice(index, 1);
     return Promise.resolve();
+  }
+}
+
+export class MockMemento {
+  private state: Record<string, any> = {};
+
+  get(key: string): any {
+    return this.state[key];
+  }
+
+  update(key: string, value: any): void {
+    this.state[key] = value;
   }
 }

@@ -3,7 +3,7 @@ import Container from "typedi";
 import { Group, Project } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { GroupRepository } from "../repositories/group.repository";
-import { MockRepository } from "../repositories/mock.repository";
+import { MockRepository } from "../util/test";
 import { GroupService } from "./group.service";
 
 const mockGroup = {
@@ -66,11 +66,6 @@ describe("GroupService", () => {
       const group = await service.create({ name: mockGroup.name });
       expect(group.name).toEqual(mockGroup.name);
     });
-
-    // it("should throw an exception", async () => {
-    //   const creatingExistingGroup = async () => service.create(mockGroup);
-    //   expect(creatingExistingGroup).rejects.toThrow("Group already exists");
-    // });
   });
 
   describe("update", () => {
