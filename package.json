@@ -3,7 +3,7 @@
   "displayName": "Kolor Kross",
   "main": "./dist/extension.js",
   "name": "kolorkross",
-  "icon": "media/kolorkross.png",
+  "icon": "media/kolorkross_ver.png",
   "publisher": "obostjancic",
   "repository": "https://github.com/obostjancic/kolorkross",
   "version": "0.0.10",
