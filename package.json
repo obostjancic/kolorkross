@@ -1,6 +1,6 @@
 {
   "description": "VS Code extension that allows fast & colorful access to multiple workspaces",
-  "displayName": "kolorkross",
+  "displayName": "Kolor Kross",
   "main": "./dist/extension.js",
   "name": "kolorkross",
   "icon": "media/kolorkross.png",
