@@ -6,7 +6,7 @@
   "icon": "media/kolorkross_ver.png",
   "publisher": "obostjancic",
   "repository": "https://github.com/obostjancic/kolorkross",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "activationEvents": [
     "onStartupFinished",
     "onCommand:kolorkross.helloWorld",
