@@ -19,8 +19,8 @@ describe("ColorService", () => {
     it("should return a pallete", () => {
       const color = { name: "red", value: "#ff0000" };
       let pallete = ColorService.getPallete(color);
-      expect(pallete.foreground.value).toEqual(`${color}FF`);
-      expect(pallete.background.value).toEqual(`${color}28`);
+      expect(pallete.foreground.value).toEqual(`${color.value}FF`);
+      expect(pallete.background.value).toEqual(`${color.value}28`);
     });
   });
 });

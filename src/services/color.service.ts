@@ -27,10 +27,10 @@ export class ColorService {
   }
 
   private static getForegroundShade(color: Color): Color {
-    return { name: `foreground${color.name}`, value: `${color}FF` };
+    return { name: `foreground${color.name}`, value: `${color.value}FF` };
   }
 
   private static getBackgroundShade(color: Color): Color {
-    return { name: `background${color.name}`, value: `${color}28` };
+    return { name: `background${color.name}`, value: `${color.value}28` };
   }
 }
