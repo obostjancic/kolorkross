@@ -26,7 +26,7 @@ export class DashboardPanel {
     if (DashboardPanel.currentPanel) {
       DashboardPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
     } else {
-      const panel = vscode.window.createWebviewPanel(DASHBOARD_VIEW_ID, "Dashboard", vscode.ViewColumn.One, {
+      const panel = vscode.window.createWebviewPanel(DASHBOARD_VIEW_ID, "Kolor Kross", vscode.ViewColumn.One, {
         enableScripts: true,
       });
 

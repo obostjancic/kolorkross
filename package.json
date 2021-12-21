@@ -3,6 +3,7 @@
   "displayName": "kolorkross",
   "main": "./dist/extension.js",
   "name": "kolorkross",
+  "icon": "media/kolorkross.png",
   "publisher": "obostjancic",
   "repository": "https://github.com/obostjancic/kolorkross",
   "version": "0.0.8",
@@ -62,12 +63,10 @@
       }
     ],
     "views": {
-      "dashboard": [
+      "kolorkross": [
         {
-          "contextualTitle": "Project Dashboard",
-          "icon": "media/icon.svg",
+          "name": "Dashboard",
           "id": "kolorkross.dashboard",
-          "name": "Project Dashboard",
           "type": "webview",
           "visibility": "visible"
         }
@@ -77,8 +76,8 @@
       "activitybar": [
         {
           "icon": "assets/kolorkross.svg",
-          "id": "dashboard",
-          "title": "Dashboard"
+          "id": "kolorkross",
+          "title": "Kolor Kross"
         }
       ]
     }

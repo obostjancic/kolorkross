@@ -1,6 +1,6 @@
-![Drag Racing](./assets/kolorkross.png)
+![Logo](./assets/kolorkross.png)
 
-# dash README
+# Kolor Kross
 
 After writing up a brief description, we recommend including the following sections.
 
