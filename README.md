@@ -1,3 +1,13 @@
+<div align="center" display="inline">
+
+[![GitHub license](https://img.shields.io/github/license/obostjancic/kolorkross)](https://github.com/obostjancic/kolorkross/blob/main/LICENSE.md)
+![GitHub repo size](https://img.shields.io/github/repo-size/obostjancic/kolorkross)
+![GitHub issues](https://img.shields.io/github/issues/obostjancic/kolorkross)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/obostjancic/kolorkross/main)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/obostjancic/kolorkross)
+
+</div>
+
 ![Logo](./assets/kolorkross.png)
 
 # Kolor Kross
