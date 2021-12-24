@@ -1,3 +1,7 @@
+![Logo](./assets/kolorkross.png)
+
+VS Code extension that allows you to organize your projects in a color coded way.
+
 <div align="center" display="inline">
 
 [![GitHub license](https://img.shields.io/github/license/obostjancic/kolorkross)](https://github.com/obostjancic/kolorkross/blob/main/LICENSE.md)
@@ -7,12 +11,6 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/obostjancic/kolorkross)
 
 </div>
-
-![Logo](./assets/kolorkross.png)
-
-# Kolor Kross
-
-Kolor Kross is a VS Code extension that allows you to organize your projects in a color coded way.
 
 ## Features
 
@@ -24,11 +22,12 @@ Dasboard offers a quick overview and organization of all projects and their colo
 
 ![Open Project](./assets/open_project.gif)
 
-## Known Issues
-
-No known issues
-
 ## Release Notes
+
+### 0.1.1
+
+- Exchanged `typedi` for `tsyringe`
+- Restyled window colors
 
 ### 0.1.0
 
