@@ -1,7 +1,7 @@
-import { Service } from "typedi";
 import * as vscode from "vscode";
 
-@Service()
+import { injectable } from "tsyringe";
+@injectable()
 export class VSCode {
   public static showInputBox(
     options?: vscode.InputBoxOptions,

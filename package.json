@@ -86,7 +86,7 @@
     "@vscode/codicons": "^0.0.27",
     "@vscode/webview-ui-toolkit": "^0.8.4",
     "reflect-metadata": "^0.1.13",
-    "typedi": "^0.10.0"
+    "tsyringe": "^4.6.0"
   },
   "devDependencies": {
     "@types/glob": "^7.1.4",

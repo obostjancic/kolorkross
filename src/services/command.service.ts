@@ -1,17 +1,17 @@
-import Container, { Service } from "typedi";
+import { inject, singleton } from "tsyringe";
 import { ColorService } from "./color.service";
 import { GroupService } from "./group.service";
 import { ProjectService } from "./project.service";
 import { ShowError, WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
-@Service()
+@singleton()
 export class CommandService {
-  private readonly projectService: ProjectService = Container.get(ProjectService);
-  private readonly groupService: GroupService = Container.get(GroupService);
-  private readonly workspaceConfigService: WorkspaceConfigService = Container.get(WorkspaceConfigService);
-  private readonly windowService: WindowService = Container.get(WindowService);
-
-  constructor() {
+  constructor(
+    @inject(ProjectService) private readonly projectService: ProjectService,
+    @inject(GroupService) private readonly groupService: GroupService,
+    @inject(WorkspaceConfigService) private readonly workspaceConfigService: WorkspaceConfigService,
+    @inject(WindowService) private readonly windowService: WindowService
+  ) {
     this.openProject = this.openProject.bind(this);
     this.createProject = this.createProject.bind(this);
     this.updateProject = this.updateProject.bind(this);
@@ -93,6 +93,9 @@ export class CommandService {
     if (!(await this.windowService.confirm(`Are you sure you want to delete group ${group.name}?`))) {
       return;
     }
+    group.projects.forEach(async projectId => {
+      await this.projectService.delete(projectId);
+    });
     this.groupService.delete(group.id);
   }
 }

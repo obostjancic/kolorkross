@@ -1,15 +1,14 @@
 import "reflect-metadata";
-import Container from "typedi";
-import { Color } from "../models/types";
+import { container } from "tsyringe";
 import { token } from "../util/constants";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
 
 describe("WorkspaceConfigService", () => {
   let service: WorkspaceConfigService;
   beforeEach(() => {
-    Container.set(token.WORKSPACE_CONFIG, { update: () => {} });
-    Container.set(token.CURRENT_PATH, "path1");
-    service = new WorkspaceConfigService();
+    container.register(token.WORKSPACE_CONFIG, { useValue: { update: () => {} } });
+    container.register(token.CURRENT_PATH, { useValue: "path1" });
+    service = container.resolve(WorkspaceConfigService);
   });
 
   describe("applyConfigToWorkspace", () => {

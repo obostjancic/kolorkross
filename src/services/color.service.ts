@@ -1,4 +1,3 @@
-import { Service } from "typedi";
 import { Color } from "../models/types";
 import { PREDEFINED_COLORS } from "../util/constants";
 

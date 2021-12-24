@@ -1,32 +1,38 @@
 import "reflect-metadata";
-import Container from "typedi";
+import { container } from "tsyringe";
+import { Group, Project } from "../models/types";
+import { Repository } from "../repositories/base.repository";
 import { GroupRepository } from "../repositories/group.repository";
 import { ProjectRepository } from "../repositories/project.repository";
 import { MockRepository } from "../util/test";
 import { CommandService } from "./command.service";
+import { GroupService } from "./group.service";
+import { ProjectService } from "./project.service";
+import { WindowService } from "./window.service";
+import { WorkspaceConfigService } from "./workspaceConfig.service";
 // import { WindowService } from "./window.service";
 
-// jest.mock("VSCode");
+// jest.mock("VSCode", () => {});
 
 describe("CommandService", () => {
   let service: CommandService;
-  // let projectService: ProjectService;
-  // let groupService: GroupService;
+  let projectService: ProjectService;
+  let groupService: GroupService;
   // let windowService: WindowService;
-  // let workspaceConfigService: WorkspaceConfigService;
+  let workspaceConfigService: WorkspaceConfigService;
 
   beforeEach(() => {
-    Container.set(ProjectRepository, MockRepository);
-    Container.set(GroupRepository, MockRepository);
-    // projectService = Container.get(ProjectService);
-    // groupService = Container.get(GroupService);
-    // windowService = Container.get(WindowService);
-    // workspaceConfigService = Container.get(WorkspaceConfigService);
-    // service = Container.get(CommandService);
+    container.register<Repository<Project>>(ProjectRepository, { useValue: new MockRepository<Project>() });
+    container.register<Repository<Group>>(GroupRepository, { useValue: new MockRepository<Group>() });
+    projectService = container.resolve(ProjectService);
+    groupService = container.resolve(GroupService);
+    // windowService = container.resolve(WindowService);
+    // workspaceConfigService = container.resolve(WorkspaceConfigService);
+    // service = container.resolve(CommandService);
   });
 
   it("Should open project", async () => {
-    // windowService.validatedInput = jest.fn();
+    // windowService.defaultInput = jest.fn();
     // await service.openProject();
     // expect(VSCode.executeCommand).toHaveBeenCalledWith("vscode.openFolder", VSCode.file(""), true);
   });

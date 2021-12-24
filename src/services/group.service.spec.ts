@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import Container from "typedi";
+import { container } from "tsyringe";
 import { Group, Project } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { GroupRepository } from "../repositories/group.repository";
@@ -14,9 +14,10 @@ const mockGroup = {
 describe("GroupService", () => {
   let service: GroupService;
   let repository: Repository<Group> = new MockRepository<Group>();
+
   beforeEach(() => {
-    Container.set(GroupRepository, repository);
-    service = Container.get(GroupService);
+    container.register(GroupRepository, { useValue: repository });
+    service = container.resolve(GroupService);
   });
 
   describe("findAll", () => {

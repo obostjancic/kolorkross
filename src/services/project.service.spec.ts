@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import Container from "typedi";
+import { container } from "tsyringe";
 import { Project } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { ProjectRepository } from "../repositories/project.repository";
@@ -17,8 +17,8 @@ describe("ProjectService", () => {
   let repository: Repository<Project> = new MockRepository<Project>();
 
   beforeEach(() => {
-    Container.set(ProjectRepository, repository);
-    service = Container.get(ProjectService);
+    container.register(ProjectRepository, { useValue: repository });
+    service = container.resolve(ProjectService);
   });
 
   describe("findAll", () => {

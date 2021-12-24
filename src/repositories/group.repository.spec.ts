@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import Container from "typedi";
+import { container } from "tsyringe";
 import { Group } from "../models/types";
 import { section, token } from "../util/constants";
 import { MockMemento } from "../util/test";
@@ -16,12 +16,12 @@ describe("GroupRepository", () => {
   let repository: Repository<Group>;
 
   beforeEach(() => {
-    Container.set(token.GLOBAL_STATE, state);
-    repository = Container.get(GroupRepository);
+    container.register(token.GLOBAL_STATE, { useValue: state });
+    repository = container.resolve(GroupRepository);
   });
 
   it("should have properties", () => {
-    const repo: any = new GroupRepository();
+    const repo: any = container.resolve(GroupRepository);
     expect(repo).toBeDefined();
     expect(repo["state"]).toBeDefined();
     expect(repo["read"]).toBeDefined();

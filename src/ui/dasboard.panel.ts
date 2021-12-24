@@ -1,18 +1,21 @@
-import { Container } from "typedi";
+import { container, inject } from "tsyringe";
 import * as vscode from "vscode";
 import { DASHBOARD_VIEW_ID, token } from "../util/constants";
+import { getResource } from "../util/loaders";
 import { group } from "./components/Group";
 import { header } from "./components/Header";
 import { DashboardService, EventMessage } from "./dasboard.service";
-import { getResource } from "../util/loaders";
 
 export class DashboardPanel {
   public static currentPanel: DashboardPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
-  private readonly dashboardService: DashboardService = Container.get(DashboardService);
 
-  private constructor(panel: vscode.WebviewPanel, private readonly extensionUri: vscode.Uri) {
+  private constructor(
+    panel: vscode.WebviewPanel,
+    private readonly extensionUri: vscode.Uri,
+    @inject(DashboardService) private readonly dashboardService: DashboardService
+  ) {
     this._panel = panel;
     this._panel.onDidDispose(this.dispose, null, this._disposables);
     this._setWebviewMessageListener(this._panel.webview);
@@ -30,7 +33,11 @@ export class DashboardPanel {
         enableScripts: true,
       });
 
-      DashboardPanel.currentPanel = new DashboardPanel(panel, Container.get<vscode.Uri>(token.URI));
+      DashboardPanel.currentPanel = new DashboardPanel(
+        panel,
+        container.resolve<vscode.Uri>(token.URI),
+        container.resolve(DashboardService)
+      );
       await DashboardPanel.currentPanel.setContent();
     }
   }
@@ -49,7 +56,7 @@ export class DashboardPanel {
   }
 
   private async _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
-    const runMode = Container.get<vscode.ExtensionMode>(token.RUN_MODE);
+    const runMode = container.resolve<vscode.ExtensionMode>(token.RUN_MODE);
     const scriptUri = getResource(webview, extensionUri, ["media", "dashboardScript.js"], runMode);
     const stylesUri = getResource(webview, extensionUri, ["media", "style.css"], runMode);
     const codiconsUri = getResource(

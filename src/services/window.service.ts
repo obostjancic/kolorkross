@@ -1,4 +1,4 @@
-import { Service } from "typedi";
+import { singleton } from "tsyringe";
 import { Color, Project } from "../models/types";
 import { cmd } from "../util/constants";
 import { Catch } from "../util/decorators";
@@ -11,7 +11,7 @@ export const ShowError = () =>
     VSCode.showErrorMessage(error.message);
   });
 
-@Service()
+@singleton()
 export class WindowService {
   async defaultInput(label: string, value?: string): Promise<string> {
     const result = value || (await this.input(label));

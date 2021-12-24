@@ -1,11 +1,11 @@
-import Container, { Service } from "typedi";
+import { inject, singleton } from "tsyringe";
 import { CreateGroupDTO, Group, Project, UpdateGroupDTO } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { GroupRepository } from "../repositories/group.repository";
 
-@Service()
+@singleton()
 export class GroupService {
-  private readonly repo: Repository<Group> = Container.get(GroupRepository);
+  constructor(@inject(GroupRepository) private readonly repo: Repository<Group>) {}
 
   async findById(id: string): Promise<Group> {
     const group = this.repo.findById(id);

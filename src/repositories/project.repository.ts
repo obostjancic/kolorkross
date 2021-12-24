@@ -1,15 +1,14 @@
-import Container, { Service } from "typedi";
+import { inject, singleton } from "tsyringe";
 import { Memento } from "vscode";
 import { Project } from "../models/types";
 import { section, token } from "../util/constants";
 import { BaseRepository } from "./base.repository";
 
-@Service()
+@singleton()
 export class ProjectRepository extends BaseRepository<Project> {
   private readonly stateSection = section.PROJECTS;
-  private readonly state: Memento = Container.get(token.GLOBAL_STATE);
 
-  constructor() {
+  constructor(@inject(token.GLOBAL_STATE) private readonly state: Memento) {
     super("Project");
   }
 

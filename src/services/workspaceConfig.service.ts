@@ -1,13 +1,15 @@
-import Container, { Service } from "typedi";
+import { inject, singleton } from "tsyringe";
 import { WorkspaceConfiguration } from "vscode";
 import { Color, Project } from "../models/types";
 import { token } from "../util/constants";
 import { ColorService } from "./color.service";
 
-@Service()
+@singleton()
 export class WorkspaceConfigService {
-  private readonly workspaceConfig: WorkspaceConfiguration = Container.get(token.WORKSPACE_CONFIG);
-  private readonly currentPath: string = Container.get(token.CURRENT_PATH);
+  constructor(
+    @inject(token.WORKSPACE_CONFIG) private readonly workspaceConfig: WorkspaceConfiguration,
+    @inject(token.CURRENT_PATH) private readonly currentPath: string
+  ) {}
 
   private async writeWorkspaceConfig(data: any) {
     this.workspaceConfig.update("workbench.colorCustomizations", data, 2);

@@ -1,12 +1,12 @@
-import Container, { Service } from "typedi";
+import { inject, singleton } from "tsyringe";
 import { CreateProjectDTO, Project, UpdateProjectDTO } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { ProjectRepository } from "../repositories/project.repository";
 import { ColorService } from "./color.service";
 
-@Service()
+@singleton()
 export class ProjectService {
-  private readonly repo: Repository<Project> = Container.get(ProjectRepository);
+  constructor(@inject(ProjectRepository) private readonly repo: Repository<Project>) {}
 
   async findById(id: string): Promise<Project> {
     const project = this.repo.findById(id);

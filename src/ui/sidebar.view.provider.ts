@@ -1,8 +1,8 @@
-import { Service } from "typedi";
-import { VSCode } from "../util/vscode.env";
-import { cmd } from "../util/constants";
+import { singleton } from "tsyringe";
 import { WebviewView, WebviewViewProvider } from "vscode";
-@Service()
+import { cmd } from "../util/constants";
+import { VSCode } from "../util/vscode.env";
+@singleton()
 export class SidebarDummyDashboardViewProvider implements WebviewViewProvider {
   private _view?: WebviewView;
 

@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import Container from "typedi";
+import { container } from "tsyringe";
 import { Project } from "../models/types";
 import { section, token } from "../util/constants";
 import { MockMemento } from "../util/test";
@@ -18,12 +18,12 @@ describe("ProjectRepository", () => {
   let repository: Repository<Project>;
 
   beforeEach(() => {
-    Container.set(token.GLOBAL_STATE, state);
-    repository = Container.get(ProjectRepository);
+    container.register(token.GLOBAL_STATE, { useValue: state });
+    repository = container.resolve(ProjectRepository);
   });
 
   it("should have properties", () => {
-    const repo: any = new ProjectRepository();
+    const repo: any = container.resolve(ProjectRepository);
     expect(repo).toBeDefined();
     expect(repo["state"]).toBeDefined();
     expect(repo["read"]).toBeDefined();

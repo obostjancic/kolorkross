@@ -1,13 +1,15 @@
-import Container, { Service } from "typedi";
+import { injectable, container, inject } from "tsyringe";
 import { CommandService } from "./services/command.service";
 import { VSCode } from "./util/vscode.env";
 import { DashboardPanel } from "./ui/dasboard.panel";
 import { cmd, token } from "./util/constants";
 
-@Service()
+@injectable()
 export class CommandRegisterer {
-  private readonly cmdService: CommandService = Container.get(CommandService);
-  private readonly subs: any = Container.get(token.SUBSCRIPTIONS);
+  constructor(
+    @inject(CommandService) private readonly cmdService: CommandService,
+    @inject(token.SUBSCRIPTIONS) private readonly subs: any
+  ) {}
 
   public register() {
     this.subs.push(VSCode.registerCommand(cmd.OPEN_DASHBOARD, DashboardPanel.render));
