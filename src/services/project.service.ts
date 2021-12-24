@@ -49,4 +49,11 @@ export class ProjectService {
     await this.findById(id);
     this.repo.delete(id);
   }
+
+  async deleteAll(): Promise<void> {
+    const all = await this.findAll();
+    for (const project of all) {
+      await this.delete(project.id);
+    }
+  }
 }

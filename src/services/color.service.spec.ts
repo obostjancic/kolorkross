@@ -17,10 +17,29 @@ describe("ColorService", () => {
 
   describe("getPallete", () => {
     it("should return a pallete", () => {
-      const color = { name: "red", value: "#ff0000" };
+      const color = { name: "red", value: "#800000" };
       let pallete = ColorService.getPallete(color);
-      expect(pallete.foreground.value).toEqual(`${color.value}FF`);
-      expect(pallete.background.value).toEqual(`${color.value}28`);
+      expect(pallete.veryLight.value).toBe("#e00000");
+      expect(pallete.light.value).toBe("#c00000");
+      expect(pallete.medium.value).toBe("#800000");
+      expect(pallete.dark.value).toBe("#400000");
+      expect(pallete.veryDark.value).toBe("#200000");
+    });
+  });
+
+  describe("darker", () => {
+    it("should return a darker color", () => {
+      const color = { name: "red", value: "#ff0000" };
+      const darkerColor = ColorService.darker(color, 0.5);
+      expect(darkerColor.value).toEqual(`#800000`);
+    });
+  });
+
+  describe("lighter", () => {
+    it("should return a lighter color", () => {
+      const color = { name: "red", value: "#ff0000" };
+      const lighterColor = ColorService.lighter(color, 0.5);
+      expect(lighterColor.value).toEqual(`#ff0000`);
     });
   });
 });

@@ -20,6 +20,11 @@ describe("GroupService", () => {
     service = container.resolve(GroupService);
   });
 
+  afterEach(() => {
+    const groups = repository.findAll();
+    groups.forEach(group => repository.delete(group.id));
+  });
+
   describe("findAll", () => {
     it("should return nothing", async () => {
       const groups = await service.findAll();

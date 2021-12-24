@@ -21,6 +21,11 @@ describe("ProjectService", () => {
     service = container.resolve(ProjectService);
   });
 
+  afterEach(() => {
+    const projects = repository.findAll();
+    projects.forEach(project => repository.delete(project.id));
+  });
+
   describe("findAll", () => {
     it("should return nothing", async () => {
       const projects = await service.findAll();
@@ -114,6 +119,14 @@ describe("ProjectService", () => {
     it("should throw an exception", async () => {
       const deletingNonexistingProject = async () => service.delete("2");
       expect(deletingNonexistingProject).rejects.toThrow("Project not found");
+    });
+  });
+
+  describe("deleteAll", () => {
+    it("should delete all projects", async () => {
+      await repository.create(mockProject);
+      await service.deleteAll();
+      expect(repository.findAll().length).toEqual(0);
     });
   });
 });

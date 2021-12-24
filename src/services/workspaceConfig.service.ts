@@ -22,16 +22,16 @@ export class WorkspaceConfigService {
   }
 
   private async updateWorkspaceConfig(color: Color): Promise<void> {
-    const { foreground, background } = ColorService.getPallete(color);
+    const { veryLight, light, medium, dark, veryDark } = ColorService.getPallete(color);
     this.writeWorkspaceConfig({
-      "titleBar.activeBackground": background.value,
-      "titleBar.activeForeground": foreground.value,
-      "titleBar.inactiveBackground": background.value,
-      "titleBar.inactiveForeground": foreground.value,
-      "activityBar.background": background.value,
-      "activityBar.foreground": foreground.value,
-      "statusBar.background": background.value,
-      "statusBar.foreground": foreground.value,
+      "titleBar.activeBackground": ColorService.transparent(dark, 0.5).value,
+      "titleBar.activeForeground": ColorService.transparent(veryLight, 0.75).value,
+      "titleBar.inactiveBackground": ColorService.transparent(veryDark, 0.5).value,
+      "titleBar.inactiveForeground": ColorService.transparent(light, 0.75).value,
+      "activityBar.background": ColorService.transparent(medium, 0.5).value,
+      "activityBar.foreground": ColorService.transparent(veryLight, 0.75).value,
+      "statusBar.background": ColorService.transparent(dark, 0.5).value,
+      "statusBar.foreground": ColorService.transparent(veryLight, 0.75).value,
     });
   }
 }
