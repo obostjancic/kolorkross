@@ -1,6 +1,10 @@
 ![Logo](./assets/kolorkross.png)
 
-VS Code extension that allows you to organize your projects in a color coded way.
+<div align="center">
+
+VS Code extension that allows you to organize and access your projects in a color coded way.
+
+</div>
 
 <div align="center" display="inline">
 
