@@ -1,14 +1,15 @@
 import "reflect-metadata";
-import { container } from "tsyringe";
-import { Group, Project } from "../models/types";
-import { Repository } from "../repositories/base.repository";
-import { GroupRepository } from "../repositories/group.repository";
-import { ProjectRepository } from "../repositories/project.repository";
+
 import * as handlers from "../util/error.handler";
 const errorHandler = jest.spyOn(handlers, "handler").mockImplementation((error: Error) => {
   return error.message;
 });
 
+import { container } from "tsyringe";
+import { Group, Project } from "../models/types";
+import { Repository } from "../repositories/base.repository";
+import { GroupRepository } from "../repositories/group.repository";
+import { ProjectRepository } from "../repositories/project.repository";
 import { MockRepository } from "../util/test";
 import { CommandService } from "./command.service";
 import { GroupService } from "./group.service";
@@ -48,11 +49,11 @@ describe("CommandService", () => {
           }
           throw new Error(`No ${label} provided`);
         }),
-        openProject: jest.fn((id: string) => {}),
-        inputPath: jest.fn(() => Promise.resolve("test-path")),
+        openProject: jest.fn(),
+        inputPath: jest.fn(),
         input: jest.fn(),
         inputColor: jest.fn(),
-        confirm: jest.fn(() => true),
+        confirm: jest.fn(),
       },
     });
     windowService = container.resolve(WindowService);
@@ -63,6 +64,7 @@ describe("CommandService", () => {
 
   afterEach(() => {
     groupService.deleteAll();
+    projectService.deleteAll();
   });
 
   describe("openProject", () => {
@@ -86,32 +88,36 @@ describe("CommandService", () => {
   describe("createProject", () => {
     it("Should create project", async () => {
       const group = await groupService.create(mockGroup);
+      jest.spyOn(windowService, "inputPath").mockImplementation(() => Promise.resolve("some path"));
 
       await service.createProject(group.id);
 
+      expect(errorHandler).not.toHaveBeenCalled();
       expect(windowService.defaultInput).toHaveBeenCalledWith("Group Id", group.id);
       expect(windowService.inputPath).toHaveBeenCalledWith("Open");
-      expect(errorHandler).not.toHaveBeenCalled();
+
+      expect(await projectService.findAll()).toHaveLength(1);
     });
 
     it("Should show error if no group id was provided", async () => {
-      const project = await container.resolve(ProjectService).create(mockProject);
-
       await service.createProject();
 
       expect(errorHandler).toReturnWith("No Group Id provided");
+      expect(await projectService.findAll()).toHaveLength(0);
     });
   });
 
   describe("updateProject", () => {
     it("Should update project", async () => {
       const project = await projectService.create(mockProject);
+      jest.spyOn(windowService, "inputPath").mockImplementation(() => Promise.resolve("test-project-updated"));
 
       await service.updateProject(project.id);
 
       expect(errorHandler).not.toHaveBeenCalled();
       expect(windowService.defaultInput).toHaveBeenCalledWith("Project Id", project.id);
-      expect(windowService.inputPath).toHaveBeenCalledWith("Update", "test-project");
+
+      expect((await projectService.findById(project.id)).path).toStrictEqual("test-project-updated");
     });
 
     it("Should show error if project does not exist", async () => {
@@ -124,12 +130,14 @@ describe("CommandService", () => {
   describe("deleteProject", () => {
     it("Should delete a project", async () => {
       const project = await projectService.create(mockProject);
+      jest.spyOn(windowService, "confirm").mockImplementation((_text: string) => Promise.resolve(true));
 
       await service.deleteProject(project.id);
 
       expect(errorHandler).not.toHaveBeenCalled();
       expect(windowService.defaultInput).toHaveBeenCalledWith("Project Id", project.id);
       expect(windowService.confirm).toHaveBeenCalledWith(`Are you sure you want to delete project ${project.name}?`);
+      expect(await projectService.findAll()).toHaveLength(0);
     });
 
     it("Should show error if project does not exist", async () => {
@@ -152,18 +160,20 @@ describe("CommandService", () => {
   describe("createGroup", () => {
     it("Should create a group", async () => {
       jest.spyOn(windowService, "defaultInput").mockImplementation((_label: string) => Promise.resolve("test-group"));
-      const group = await service.createGroup();
+      await service.createGroup();
 
-      expect((await groupService.findAll()).length).toBe(1);
+      expect(await groupService.findAll()).toHaveLength(1);
     });
   });
 
   describe("updateGroup", () => {
     it("Should update a group", async () => {
       const group = await container.resolve(GroupRepository).create(mockGroup);
+
       await service.updateGroup(group.id);
-      expect(windowService.defaultInput).toHaveBeenCalledWith("Group Id", group.id);
+
       expect(errorHandler).not.toHaveBeenCalled();
+      expect(windowService.defaultInput).toHaveBeenCalledWith("Group Id", group.id);
     });
 
     it("Should show error if group does not exist", async () => {
@@ -182,20 +192,20 @@ describe("CommandService", () => {
       expect(errorHandler).not.toHaveBeenCalled();
       expect(windowService.defaultInput).toHaveBeenCalledWith("Group Id", group.id);
       expect(windowService.confirm).toHaveBeenCalledWith(`Are you sure you want to delete group ${group.name}?`);
-
-      expect(await groupService.findAll()).toStrictEqual([]);
+      expect(await groupService.findAll()).toHaveLength(0);
     });
 
     it("Should delete the group and all of its projects", async () => {
       const group = await groupService.create(mockGroup);
       const project = await projectService.create(mockProject);
+      jest.spyOn(windowService, "confirm").mockImplementation((_text: string) => Promise.resolve(true));
       await groupService.addProject(group, project);
 
       await service.deleteGroup(group.id);
 
       expect(errorHandler).not.toHaveBeenCalled();
-      expect(await groupService.findAll()).toStrictEqual([]);
-      expect(await projectService.findAll()).toStrictEqual([]);
+      expect(await groupService.findAll()).toHaveLength(0);
+      expect(await projectService.findAll()).toHaveLength(0);
     });
 
     it("Should abort group deletion if confirm is not true", async () => {
@@ -210,6 +220,7 @@ describe("CommandService", () => {
 
     it("Should show error if group does not exist", async () => {
       await service.deleteGroup("non-existent");
+
       expect(errorHandler).toReturnWith("Group not found");
     });
   });

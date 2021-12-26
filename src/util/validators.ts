@@ -1,8 +1,3 @@
-/**
- * Validates hex value
- * @param  {String} color hex color value
- * @return {Boolean}
- */
 export function isValidHex(color: string): boolean {
   if (!color || typeof color !== "string") {
     return false;

@@ -1,5 +1,4 @@
 import { handler } from "./error.handler";
-import { VSCode } from "./vscode.env";
 
 /* eslint-disable @typescript-eslint/naming-convention */
 type HandlerFunction = (error: Error, ctx: any) => void;
@@ -8,7 +7,6 @@ export const CatchError = (errorType: any, handler: HandlerFunction): any => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     // Save a reference to the original method
     const originalMethod = descriptor.value;
-
     // Rewrite original method with try/catch wrapper
     descriptor.value = function (...args: any[]) {
       try {
@@ -21,7 +19,6 @@ export const CatchError = (errorType: any, handler: HandlerFunction): any => {
             _handleError(this, errorType, handler, error);
           });
         }
-
         // Return actual result
         return result;
       } catch (error) {

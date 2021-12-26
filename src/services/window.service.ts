@@ -30,6 +30,7 @@ export class WindowService {
     }
 
     //FIXME: this cb is untestable
+    /* istanbul ignore next */
     const hex = await this.input(name, defaultValue, (val: string) => (isValidHex(val) ? "" : "Invalid hex color"));
     if (!hex) {
       throw new Error(`No ${name} provided`);

@@ -5,7 +5,7 @@ import { VSCode } from "../util/vscode.env";
 import { WindowService } from "./window.service";
 
 jest.mock("../util/vscode.env", () => ({
-  ///@eslint-disable-next-line @typescript-eslint/naming-convention
+  /* eslint-disable @typescript-eslint/naming-convention */
   VSCode: {
     showErrorMessage: jest.fn(),
     showInformationMessage: jest.fn(),

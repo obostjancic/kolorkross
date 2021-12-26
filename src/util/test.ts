@@ -2,6 +2,7 @@ import { Repository } from "../repositories/base.repository";
 import { id } from "./generators";
 import { partialMatch } from "./matchers";
 
+/* istanbul ignore next */
 export class MockRepository<T extends { id: string }> implements Repository<T> {
   private entities: T[] = [];
 
