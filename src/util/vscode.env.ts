@@ -1,52 +1,56 @@
-import * as vscode from "vscode";
+import {
+  window,
+  commands,
+  InputBoxOptions,
+  CancellationToken,
+  QuickPickOptions,
+  OpenDialogOptions,
+  Uri,
+  Disposable,
+} from "vscode";
 
-import { injectable } from "tsyringe";
-@injectable()
 export class VSCode {
-  public static showInputBox(
-    options?: vscode.InputBoxOptions,
-    token?: vscode.CancellationToken
-  ): Thenable<string | undefined> {
-    return vscode.window.showInputBox(options, token);
+  public static showInputBox(options?: InputBoxOptions, token?: CancellationToken): Thenable<string | undefined> {
+    return window.showInputBox(options, token);
   }
 
   public static showQuickPick(
     items: readonly string[] | Thenable<readonly string[]>,
-    options?: vscode.QuickPickOptions,
-    token?: vscode.CancellationToken
+    options?: QuickPickOptions,
+    token?: CancellationToken
   ): Thenable<string | undefined> {
-    return vscode.window.showQuickPick(items, options, token);
+    return window.showQuickPick(items, options, token);
   }
 
   public static showErrorMessage(message: string, ...items: string[]): Thenable<string | undefined> {
-    return vscode.window.showErrorMessage(message, ...items);
+    return window.showErrorMessage(message, ...items);
   }
 
   public static showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
-    return vscode.window.showInformationMessage(message, ...items);
+    return window.showInformationMessage(message, ...items);
   }
 
   public static showWarningMessage(message: string, ...items: string[]): Thenable<string | undefined> {
-    return vscode.window.showWarningMessage(message, ...items);
+    return window.showWarningMessage(message, ...items);
   }
 
-  public static showOpenDialog(options: vscode.OpenDialogOptions): Thenable<vscode.Uri[] | undefined> {
-    return vscode.window.showOpenDialog(options);
+  public static showOpenDialog(options: OpenDialogOptions): Thenable<Uri[] | undefined> {
+    return window.showOpenDialog(options);
   }
 
-  public static registerCommand(command: string, callback: (...args: any[]) => any, thisArg?: any): vscode.Disposable {
-    return vscode.commands.registerCommand(command, callback, thisArg);
+  public static registerCommand(command: string, callback: (...args: any[]) => any, thisArg?: any): Disposable {
+    return commands.registerCommand(command, callback, thisArg);
   }
 
   public static executeCommand(command: string, ...args: any[]): Thenable<any> {
-    return vscode.commands.executeCommand(command, ...args);
+    return commands.executeCommand(command, ...args);
   }
 
-  public static parse(path: string): vscode.Uri {
-    return vscode.Uri.parse(path);
+  public static parse(path: string): Uri {
+    return Uri.parse(path);
   }
 
-  public static file(path: string): vscode.Uri {
-    return vscode.Uri.file(path);
+  public static file(path: string): Uri {
+    return Uri.file(path);
   }
 }

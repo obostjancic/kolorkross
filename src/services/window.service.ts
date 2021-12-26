@@ -1,15 +1,8 @@
 import { singleton } from "tsyringe";
 import { Color, Project } from "../models/types";
 import { cmd } from "../util/constants";
-import { Catch } from "../util/decorators";
 import { isValidHex } from "../util/validators";
 import { VSCode } from "../util/vscode.env";
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const ShowError = () =>
-  Catch((error: Error) => {
-    VSCode.showErrorMessage(error.message);
-  });
 
 @singleton()
 export class WindowService {
@@ -30,15 +23,16 @@ export class WindowService {
     });
   }
 
-  async inputColor(name: string, defaultValue: string = "", colors: Color[]): Promise<Color> {
+  async inputColor(name: string, defaultValue: string, colors: Color[]): Promise<Color> {
     const quickPick = await this.quickPickColor(colors);
-    if (quickPick && quickPick.name !== "Custom") {
+    if (quickPick) {
       return quickPick;
     }
 
+    //FIXME: this cb is untestable
     const hex = await this.input(name, defaultValue, (val: string) => (isValidHex(val) ? "" : "Invalid hex color"));
     if (!hex) {
-      throw new Error(`No ${hex} provided`);
+      throw new Error(`No ${name} provided`);
     }
     return { name, value: hex };
   }
@@ -57,7 +51,7 @@ export class WindowService {
       openLabel: label,
       defaultUri: VSCode.parse(defaultValue),
     });
-    const result = uri?.[0].path;
+    const result = uri?.[0]?.path;
     if (!result) {
       throw new Error(`No ${label} provided`);
     }

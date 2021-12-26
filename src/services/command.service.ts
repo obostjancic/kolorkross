@@ -1,8 +1,9 @@
 import { inject, singleton } from "tsyringe";
+import { ShowError } from "../util/decorators";
 import { ColorService } from "./color.service";
 import { GroupService } from "./group.service";
 import { ProjectService } from "./project.service";
-import { ShowError, WindowService } from "./window.service";
+import { WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
 @singleton()
 export class CommandService {
@@ -32,16 +33,14 @@ export class CommandService {
   public async createProject(groupId?: string): Promise<void> {
     groupId = await this.windowService.defaultInput("Group Id", groupId);
     const projectPath = await this.windowService.inputPath("Open");
-
     const newProject = await this.projectService.create({ path: projectPath });
     const group = await this.groupService.findById(groupId);
-    this.groupService.createProject(newProject, group);
+    this.groupService.addProject(group, newProject);
   }
 
   @ShowError()
   public async updateProject(projectId?: string): Promise<void> {
     projectId = await this.windowService.defaultInput("Project Id", projectId);
-
     const project = await this.projectService.findById(projectId);
     const name = await this.windowService.input("Project Name", project.name);
     const color = await this.windowService.inputColor(

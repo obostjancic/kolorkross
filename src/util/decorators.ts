@@ -1,3 +1,6 @@
+import { handler } from "./error.handler";
+import { VSCode } from "./vscode.env";
+
 /* eslint-disable @typescript-eslint/naming-convention */
 type HandlerFunction = (error: Error, ctx: any) => void;
 
@@ -47,3 +50,8 @@ function _handleError(ctx: any, errorType: any, handler: HandlerFunction, error:
     throw error;
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const ShowError = () => {
+  return Catch(handler);
+};

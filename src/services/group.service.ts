@@ -38,7 +38,12 @@ export class GroupService {
     this.repo.delete(id);
   }
 
-  async createProject(project: Project, group: Group): Promise<void> {
+  async deleteAll(): Promise<void> {
+    const groups = await this.findAll();
+    groups.forEach(group => this.repo.delete(group.id));
+  }
+
+  async addProject(group: Group, project: Project): Promise<void> {
     if (group.projects.find(p => p === project.id)) {
       throw new Error("Project already exists in group");
     }

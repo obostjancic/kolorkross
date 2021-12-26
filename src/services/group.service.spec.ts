@@ -111,7 +111,7 @@ describe("GroupService", () => {
 
     it("should add project to group", async () => {
       const group = await repository.create(mockGroup);
-      await service.createProject(project, group);
+      await service.addProject(group, project);
       const savedGroup = await service.findById(group.id);
       expect(savedGroup.projects.length).toEqual(2);
       expect(savedGroup.projects[1]).toEqual(project.id);
@@ -119,9 +119,9 @@ describe("GroupService", () => {
 
     it("should throw an exception when adding the same project twice", async () => {
       const group = await repository.create(mockGroup);
-      await service.createProject(project, group);
+      await service.addProject(group, project);
       const savedGroup = await service.findById(group.id);
-      const creatingSameProjectTwice = service.createProject(project, savedGroup);
+      const creatingSameProjectTwice = service.addProject(savedGroup, project);
 
       expect(creatingSameProjectTwice).rejects.toThrow("Project already exists in group");
     });
