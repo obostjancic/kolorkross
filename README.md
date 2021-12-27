@@ -15,7 +15,7 @@ VS Code extension that allows you to organize and access your projects in a colo
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/obostjancic/kolorkross)
 
 </div>
-## 
+
 <div align="center" display="inline">
 
 ![Coverage lines](./assets/badges/badge-lines.svg)
