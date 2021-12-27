@@ -1,9 +1,9 @@
 {
   "description": "VS Code extension that allows fast & colorful access to multiple workspaces",
   "displayName": "Kolor Kross",
+  "icon": "media/kolorkross_ver.png",
   "main": "./dist/extension.js",
   "name": "kolorkross",
-  "icon": "media/kolorkross_ver.png",
   "publisher": "obostjancic",
   "repository": "https://github.com/obostjancic/kolorkross",
   "version": "0.1.3",
@@ -65,8 +65,8 @@
     "views": {
       "kolorkross": [
         {
-          "name": "Dashboard",
           "id": "kolorkross.dashboard",
+          "name": "Dashboard",
           "type": "webview",
           "visibility": "visible"
         }
@@ -85,6 +85,7 @@
   "dependencies": {
     "@vscode/codicons": "^0.0.27",
     "@vscode/webview-ui-toolkit": "^0.8.4",
+    "jest-coverage-badges": "^1.1.2",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.6.0"
   },
@@ -125,6 +126,7 @@
     "release:minor": "npm version minor && git push && git push --tags",
     "release:patch": "npm version patch && git push && git push --tags",
     "test": "jest",
+    "test:coverage": "jest --coverage && jest-coverage-badges --output assets/badges/",
     "test:e2e": "node ./out/test/runTest.js",
     "vscode:prepublish": "yarn run package",
     "watch": "webpack --watch",
