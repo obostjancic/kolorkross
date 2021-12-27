@@ -16,6 +16,15 @@ VS Code extension that allows you to organize and access your projects in a colo
 
 </div>
 
+<div align="center" display="inline">
+
+![Coverage lines](./assets/badges/badge-lines.svg)
+![Coverage statements](./assets/badges/badge-statements.svg)
+![Coverage branches](./assets/badges/badge-branches.svg)
+![Coverage functions](./assets/badges/badge-functions.svg)
+
+</div>
+
 ## Features
 
 Kolor Kross organizes projects (workspaces) in flexible groups. Every project is asssigned to a color, and VS Code window of that project is colored with that color.
