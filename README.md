@@ -35,7 +35,7 @@ Kolor Kross organizes projects (workspaces) in flexible groups. Every project is
 
 To Add a project to a group, simply on **+ Add Project button**
 
-![Add Pro1ject](https://raw.githubusercontent.com/obostjancic/kolorkross/main/assets/add_project.gif)
+![Add Project](https://raw.githubusercontent.com/obostjancic/kolorkross/main/assets/add_project.gif)
 
 You can change the color of the project, as well as project name and path by clicking on the **edit** icon.
 
