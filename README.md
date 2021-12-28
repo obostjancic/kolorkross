@@ -1,4 +1,4 @@
-![Logo](./assets/kolorkross.png)
+![Logo](https://raw.githubusercontent.com/obostjancic/kolorkross/main/assets/kolorkross.png)
 
 <div align="center">
 
@@ -18,10 +18,10 @@ VS Code extension that allows you to organize and access your projects in a colo
 
 <div align="center" display="inline">
 
-![Coverage lines](./assets/badges/badge-lines.svg)
-![Coverage statements](./assets/badges/badge-statements.svg)
-![Coverage branches](./assets/badges/badge-branches.svg)
-![Coverage functions](./assets/badges/badge-functions.svg)
+![Coverage lines](https://img.shields.io/badge/Coverage%3Alines-100%25-brightgreen)
+![Coverage statements](https://img.shields.io/badge/Coverage%3Astatements-100%25-brightgreen)
+![Coverage branches](https://img.shields.io/badge/Coverage%3Abranches-100%25-brightgreen)
+![Coverage functions](https://img.shields.io/badge/Coverage%3Afunctions-100%25-brightgreen)
 
 </div>
 
@@ -33,7 +33,7 @@ This allows users to develop mental maps when working across multiple projects.
 
 Dasboard offers a quick overview and organization of all projects and their color codes. It also allows users to quickly jump to a project.
 
-![Open Project](./assets/open_project.gif)
+![Open Project](https://raw.githubusercontent.com/obostjancic/kolorkross/main/assets/open_project.gif)
 
 ## Release Notes
 

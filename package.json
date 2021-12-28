@@ -87,7 +87,6 @@
     "@vscode/codicons": "^0.0.27",
     "@vscode/webview-ui-toolkit": "^0.8.4",
     "color": "^4.1.0",
-    "jest-coverage-badges": "^1.1.2",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.6.0"
   },
@@ -128,7 +127,7 @@
     "release:minor": "npm version minor && git push && git push --tags",
     "release:patch": "npm version patch && git push && git push --tags",
     "test": "jest",
-    "test:coverage": "jest --coverage && jest-coverage-badges --output assets/badges/",
+    "test:coverage": "jest --coverage",
     "test:e2e": "node ./out/test/runTest.js",
     "vscode:prepublish": "yarn run package",
     "watch": "webpack --watch",
