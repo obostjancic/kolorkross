@@ -3,7 +3,7 @@ import { Color, Project } from "../models/types";
 import { cmd } from "../util/constants";
 import { isValidHex } from "../util/validators";
 import { VSCode } from "../util/vscode.env";
-
+import { homedir } from "os";
 @singleton()
 export class WindowService {
   async defaultInput(label: string, value?: string): Promise<string> {
@@ -44,7 +44,7 @@ export class WindowService {
     return colors.find(c => c.name === quickPick);
   }
 
-  async inputPath(label: string, defaultValue: string = ""): Promise<string> {
+  async inputPath(label: string, defaultValue: string = `${homedir()}/mocks`): Promise<string> {
     const uri = await VSCode.showOpenDialog({
       canSelectFiles: false,
       canSelectFolders: true,

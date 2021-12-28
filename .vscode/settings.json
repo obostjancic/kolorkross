@@ -21,15 +21,5 @@
     "vendor": true
   },
   // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-  "typescript.tsc.autoDetect": "off",
-  "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#73603e80",
-    "titleBar.activeForeground": "#ffffd7bf",
-    "titleBar.inactiveBackground": "#39301f80",
-    "titleBar.inactiveForeground": "#ffffb9bf",
-    "activityBar.background": "#E5C07B80",
-    "activityBar.foreground": "#ffffd7bf",
-    "statusBar.background": "#73603e80",
-    "statusBar.foreground": "#ffffd7bf"
-  }
+  "typescript.tsc.autoDetect": "off"
 }
