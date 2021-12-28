@@ -1,9 +1,12 @@
 # Change Log
 
-All notable changes to the "dash" extension will be documented in this file.
+## [0.2.0] - 2021-12-28
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- Added CI release process
+- Added more colors to the color palette
+- Exchanged `typedi` for `tsyringe`
+- Restyled window colors
 
-## [Unreleased]
+### [0.1.0] - 2021-12-21
 
-- Initial release
+Initial release of Kolor Kross.

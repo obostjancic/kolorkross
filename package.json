@@ -9,7 +9,6 @@
   "version": "0.2.0",
   "activationEvents": [
     "onStartupFinished",
-    "onCommand:kolorkross.helloWorld",
     "onCommand:kolorkross.createGroup",
     "onWebviewPanel:kolorkross.kolorkrossboard"
   ],
@@ -54,10 +53,12 @@
         "title": "Kolor Kross",
         "properties": {
           "kolorkross.groups": {
-            "type": "object"
+            "type": "object",
+            "description": "Groups"
           },
           "kolorkross.projects": {
-            "type": "object"
+            "type": "object",
+            "description": "Projects"
           }
         }
       }
