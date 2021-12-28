@@ -6,7 +6,7 @@
   "name": "kolorkross",
   "publisher": "obostjancic",
   "repository": "https://github.com/obostjancic/kolorkross",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "activationEvents": [
     "onStartupFinished",
     "onCommand:kolorkross.createGroup",
