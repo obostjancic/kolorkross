@@ -29,7 +29,7 @@ export class DashboardService {
     [cmd.UPDATE_GROUP]: this.cmdService.updateGroup,
   };
 
-  public async handleCommand(command: typeof cmd, payload: any) {
+  public async handleCommand(command: typeof cmd, payload: string): Promise<void> {
     //@ts-expect-error - bc typeof cmd cant be used as index
     return this.eventCmdMap[command](payload);
   }
