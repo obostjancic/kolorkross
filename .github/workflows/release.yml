@@ -59,3 +59,5 @@ jobs:
         run: yarn global add npx
       - name: Publish version
         run: npx vsce publish -p ${{ secrets.PUBLISH_TOKEN }}
+      - name: Publish ovsx
+        run: npx ovsx publish kolorkross.vsix -p ${{ secrets.OVSX_PUBLISH_TOKEN }}
