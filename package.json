@@ -83,8 +83,10 @@
     }
   },
   "dependencies": {
+    "@types/color": "^3.0.2",
     "@vscode/codicons": "^0.0.27",
     "@vscode/webview-ui-toolkit": "^0.8.4",
+    "color": "^4.1.0",
     "jest-coverage-badges": "^1.1.2",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.6.0"

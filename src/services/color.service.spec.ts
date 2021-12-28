@@ -4,7 +4,7 @@ describe("ColorService", () => {
   describe("getPredefinedColors", () => {
     it("should return predefined colors", () => {
       const colors = ColorService.getPredefinedColors();
-      expect(colors).toHaveLength(12);
+      expect(colors).toHaveLength(18);
     });
   });
 
@@ -19,11 +19,11 @@ describe("ColorService", () => {
     it("should return a pallete", () => {
       const color = { name: "red", value: "#800000" };
       let pallete = ColorService.getPallete(color);
-      expect(pallete.veryLight.value).toBe("#e00000");
-      expect(pallete.light.value).toBe("#c00000");
-      expect(pallete.medium.value).toBe("#800000");
-      expect(pallete.dark.value).toBe("#400000");
-      expect(pallete.veryDark.value).toBe("#200000");
+      expect(pallete.veryLight.value).toBe("#E60000");
+      expect(pallete.light.value).toBe("#B30000");
+      expect(pallete.medium.value).toBe("#660000");
+      expect(pallete.dark.value).toBe("#4D0000");
+      expect(pallete.veryDark.value).toBe("#330000");
     });
   });
 
@@ -39,7 +39,7 @@ describe("ColorService", () => {
     it("should return a lighter color", () => {
       const color = { name: "red", value: "#ff0000" };
       const lighterColor = ColorService.lighter(color, 0.5);
-      expect(lighterColor.value).toEqual(`#ff0000`);
+      expect(lighterColor.value).toEqual(`#FF8080`);
     });
   });
 });
