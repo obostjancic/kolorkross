@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import { Color } from "../models/types";
 
 export namespace cmd {

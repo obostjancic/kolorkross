@@ -14,7 +14,7 @@ export class WindowService {
     return result;
   }
 
-  async input(name: string, defaultValue: string = "", validateInput?: any): Promise<string | undefined> {
+  async input(name: string, defaultValue = "", validateInput?: (value: string) => string): Promise<string | undefined> {
     return await VSCode.showInputBox({
       placeHolder: name,
       ignoreFocusOut: true,
@@ -44,7 +44,7 @@ export class WindowService {
     return colors.find(c => c.name === quickPick);
   }
 
-  async inputPath(label: string, defaultValue: string = `${homedir()}/mocks`): Promise<string> {
+  async inputPath(label: string, defaultValue = `${homedir()}/mocks`): Promise<string> {
     const uri = await VSCode.showOpenDialog({
       canSelectFiles: false,
       canSelectFolders: true,

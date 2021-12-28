@@ -1,14 +1,14 @@
 import { id } from "../util/generators";
 import { partialMatch } from "../util/matchers";
 
-export interface Repository<T extends { id: string }> {
+export type Repository<T extends { id: string }> = {
   findAll(): T[];
   findById(id: string): T | undefined;
   find(query: Partial<T>): T[];
   create(item: Partial<T>): Promise<T>;
   update(id: string, item: T): Promise<T>;
   delete(id: string): Promise<void>;
-}
+};
 
 export abstract class BaseRepository<T extends { id: string }> implements Repository<T> {
   constructor(private readonly entityName: string) {}
@@ -47,6 +47,7 @@ export abstract class BaseRepository<T extends { id: string }> implements Reposi
   }
 
   async delete(id: string): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [id]: _, ...newConfig } = this.read();
     await this.write(newConfig);
   }

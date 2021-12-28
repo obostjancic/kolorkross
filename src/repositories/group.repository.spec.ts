@@ -12,7 +12,7 @@ const group = {
 };
 
 describe("GroupRepository", () => {
-  let state = new MockMemento();
+  const state = new MockMemento();
   let repository: Repository<Group>;
 
   beforeEach(() => {

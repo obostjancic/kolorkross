@@ -2,13 +2,13 @@ import * as ExtColor from "color";
 import { Color } from "../models/types";
 import { PREDEFINED_COLORS } from "../util/constants";
 
-export interface Pallete {
+export type Pallete = {
   veryLight: Color;
   light: Color;
   medium: Color;
   dark: Color;
   veryDark: Color;
-}
+};
 
 export class ColorService {
   private static readonly colors: Color[] = [...Object.values(PREDEFINED_COLORS)];

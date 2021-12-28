@@ -10,7 +10,7 @@ describe("ColorService", () => {
 
   describe("getRandomColor", () => {
     it("should return a color", () => {
-      let color = ColorService.getRandomColor();
+      const color = ColorService.getRandomColor();
       expect(typeof color.value).toBe("string");
     });
   });
@@ -18,7 +18,7 @@ describe("ColorService", () => {
   describe("getPallete", () => {
     it("should return a pallete", () => {
       const color = { name: "red", value: "#800000" };
-      let pallete = ColorService.getPallete(color);
+      const pallete = ColorService.getPallete(color);
       expect(pallete.veryLight.value).toBe("#E60000");
       expect(pallete.light.value).toBe("#B30000");
       expect(pallete.medium.value).toBe("#660000");

@@ -46,7 +46,7 @@ describe("isValidHex", () => {
   it("should return false when color is undefined", () => {
     const color = undefined;
 
-    //@ts-expect-error
+    //@ts-expect-error - testing when color is undefined, even though ts should not allow it
     const result = isValidHex(color);
 
     expect(result).toBeFalsy();

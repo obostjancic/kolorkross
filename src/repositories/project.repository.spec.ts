@@ -14,7 +14,7 @@ const project = {
 };
 
 describe("ProjectRepository", () => {
-  let state = new MockMemento();
+  const state = new MockMemento();
   let repository: Repository<Project>;
 
   beforeEach(() => {

@@ -30,7 +30,7 @@ export class DashboardService {
   };
 
   public async handleCommand(command: typeof cmd, payload: any) {
-    //@ts-expect-error
+    //@ts-expect-error - bc typeof cmd cant be used as index
     return this.eventCmdMap[command](payload);
   }
 

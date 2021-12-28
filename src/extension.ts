@@ -2,21 +2,17 @@ import "reflect-metadata";
 import { container } from "tsyringe";
 import * as vscode from "vscode";
 import { CommandRegisterer } from "./command.registerer";
-import { ProjectRepository } from "./repositories/project.repository";
 import { ProjectService } from "./services/project.service";
 import { WorkspaceConfigService } from "./services/workspaceConfig.service";
 import { SidebarDummyDashboardViewProvider } from "./ui/sidebar.view.provider";
 import { DASHBOARD_VIEW_ID, token } from "./util/constants";
-
-// TODO: ops - write a nice readme
-// TODO: ops - add tests for commands
 
 // TODO: feat - add a better project update mechanism
 // TODO: feat - project drag and drop
 
 // TODO: fix - _dispose error
 
-export const init = (context: vscode.ExtensionContext) => {
+export const init = (context: vscode.ExtensionContext): void => {
   container.register(token.URI, { useValue: context.extensionUri });
   container.register(token.SUBSCRIPTIONS, { useValue: context.subscriptions });
   container.register(token.GLOBAL_STATE, { useValue: context.globalState });
@@ -36,7 +32,7 @@ const checkWorkspaceConfig = async () => {
   }
 };
 
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
   init(context);
   checkWorkspaceConfig();
 
@@ -45,4 +41,5 @@ export async function activate(context: vscode.ExtensionContext) {
   container.resolve(CommandRegisterer).register();
 }
 
-export function deactivate() {}
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export function deactivate(): void {}

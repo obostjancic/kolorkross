@@ -130,7 +130,7 @@ describe("CommandService", () => {
   describe("deleteProject", () => {
     it("Should delete a project", async () => {
       const project = await projectService.create(mockProject);
-      jest.spyOn(windowService, "confirm").mockImplementation((_text: string) => Promise.resolve(true));
+      jest.spyOn(windowService, "confirm").mockImplementation(() => Promise.resolve(true));
 
       await service.deleteProject(project.id);
 
@@ -148,7 +148,7 @@ describe("CommandService", () => {
 
     it("Should abort project deletion if confirm is not true", async () => {
       const project = await projectService.create(mockProject);
-      jest.spyOn(windowService, "confirm").mockImplementation((_text: string) => Promise.resolve(false));
+      jest.spyOn(windowService, "confirm").mockImplementation(() => Promise.resolve(false));
 
       await service.deleteProject(project.id);
 
@@ -159,7 +159,7 @@ describe("CommandService", () => {
 
   describe("createGroup", () => {
     it("Should create a group", async () => {
-      jest.spyOn(windowService, "defaultInput").mockImplementation((_label: string) => Promise.resolve("test-group"));
+      jest.spyOn(windowService, "defaultInput").mockImplementation(() => Promise.resolve("test-group"));
       await service.createGroup();
 
       expect(await groupService.findAll()).toHaveLength(1);
@@ -185,7 +185,7 @@ describe("CommandService", () => {
   describe("deleteGroup", () => {
     it("Should delete a group", async () => {
       const group = await groupService.create(mockGroup);
-      jest.spyOn(windowService, "confirm").mockImplementation((_text: string) => Promise.resolve(true));
+      jest.spyOn(windowService, "confirm").mockImplementation(() => Promise.resolve(true));
 
       await service.deleteGroup(group.id);
 
@@ -198,7 +198,7 @@ describe("CommandService", () => {
     it("Should delete the group and all of its projects", async () => {
       const group = await groupService.create(mockGroup);
       const project = await projectService.create(mockProject);
-      jest.spyOn(windowService, "confirm").mockImplementation((_text: string) => Promise.resolve(true));
+      jest.spyOn(windowService, "confirm").mockImplementation(() => Promise.resolve(true));
       await groupService.addProject(group, project);
 
       await service.deleteGroup(group.id);
@@ -210,7 +210,7 @@ describe("CommandService", () => {
 
     it("Should abort group deletion if confirm is not true", async () => {
       const group = await groupService.create(mockGroup);
-      jest.spyOn(windowService, "confirm").mockImplementation((_text: string) => Promise.resolve(false));
+      jest.spyOn(windowService, "confirm").mockImplementation(() => Promise.resolve(false));
 
       await service.deleteGroup(group.id);
 

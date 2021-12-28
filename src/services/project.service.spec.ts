@@ -14,7 +14,7 @@ const mockProject = {
 
 describe("ProjectService", () => {
   let service: ProjectService;
-  let repository: Repository<Project> = new MockRepository<Project>();
+  const repository: Repository<Project> = new MockRepository<Project>();
 
   beforeEach(() => {
     container.register(ProjectRepository, { useValue: repository });

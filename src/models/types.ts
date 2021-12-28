@@ -3,22 +3,22 @@ export type Color = {
   value: string;
 };
 
-export interface Group {
+export type Group = {
   id: string;
   name: string;
   projects: string[];
-}
+};
 
 export type UpdateGroupDTO = Partial<Group> & { id: string };
 
 export type CreateGroupDTO = Partial<Group> & { name: string };
 
-export interface Project {
+export type Project = {
   id: string;
   name: string;
   color: Color;
   path: string;
-}
+};
 
 export type UpdateProjectDTO = Partial<Project> & { id: string };
 

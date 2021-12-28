@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { container } from "tsyringe";
-import { Color } from "../models/types";
 import { VSCode } from "../util/vscode.env";
 import { WindowService } from "./window.service";
 

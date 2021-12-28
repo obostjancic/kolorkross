@@ -6,7 +6,7 @@ import { WorkspaceConfigService } from "./workspaceConfig.service";
 describe("WorkspaceConfigService", () => {
   let service: WorkspaceConfigService;
   beforeEach(() => {
-    container.register(token.WORKSPACE_CONFIG, { useValue: { update: () => {} } });
+    container.register(token.WORKSPACE_CONFIG, { useValue: { update: jest.fn() } });
     container.register(token.CURRENT_PATH, { useValue: "path1" });
     service = container.resolve(WorkspaceConfigService);
   });

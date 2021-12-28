@@ -1,11 +1,9 @@
 import { CatchError } from "./decorators";
 
-jest.mock("./error.handler", () => {
-  handler: jest.fn();
-});
+jest.mock("./error.handler", jest.fn());
 
 class Test {
-  @CatchError(Error, () => {})
+  @CatchError(Error, jest.fn())
   public thrower() {
     throw new Error("test");
   }
@@ -14,11 +12,11 @@ class Test {
     return "Async error handled";
   })
   public async throwerAsync() {
-    await Promise.resolve(setTimeout(() => {}, 1000));
+    await Promise.resolve(setTimeout(jest.fn(), 1000));
     throw new Error("test");
   }
 
-  @CatchError(Error, () => {})
+  @CatchError(Error, jest.fn())
   public notThrowing() {
     return "Not throwing";
   }
@@ -31,7 +29,7 @@ class Test {
     throw null;
   }
 
-  //@ts-expect-error
+  //@ts-expect-error - testing for null handler, even though ts should not allow it
   @CatchError(Error, null)
   public throwerNull() {
     throw new Error("Regular error");

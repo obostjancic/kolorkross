@@ -13,7 +13,7 @@ const mockGroup = {
 
 describe("GroupService", () => {
   let service: GroupService;
-  let repository: Repository<Group> = new MockRepository<Group>();
+  const repository: Repository<Group> = new MockRepository<Group>();
 
   beforeEach(() => {
     container.register(GroupRepository, { useValue: repository });
