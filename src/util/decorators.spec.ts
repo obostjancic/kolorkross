@@ -2,6 +2,8 @@ import { CatchError } from "./decorators";
 
 jest.mock("./error.handler", jest.fn());
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 class Test {
   @CatchError(Error, jest.fn())
   public thrower() {
@@ -12,7 +14,7 @@ class Test {
     return "Async error handled";
   })
   public async throwerAsync() {
-    await Promise.resolve(setTimeout(jest.fn(), 1000));
+    await sleep(100);
     throw new Error("test");
   }
 
