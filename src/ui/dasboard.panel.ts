@@ -17,6 +17,7 @@ export class DashboardPanel {
     @inject(DashboardService) private readonly dashboardService: DashboardService
   ) {
     this._panel = panel;
+    this.dispose = this.dispose.bind(this);
     this._panel.onDidDispose(this.dispose, null, this._disposables);
     this._setWebviewMessageListener(this._panel.webview);
   }
