@@ -1,9 +1,7 @@
 import "reflect-metadata";
 
 import * as handlers from "../util/error.handler";
-const errorHandler = jest.spyOn(handlers, "handler").mockImplementation((error: Error) => {
-  return error.message;
-});
+const errorHandler = jest.spyOn(handlers, "handler").mockImplementation((error: Error) => error.message);
 
 import { container } from "tsyringe";
 import { Group, Project } from "../models/types";
@@ -57,9 +55,9 @@ describe("CommandService", () => {
       },
     });
     windowService = container.resolve(WindowService);
-    service = container.resolve(CommandService);
     groupService = container.resolve(GroupService);
     projectService = container.resolve(ProjectService);
+    service = container.resolve(CommandService);
   });
 
   afterEach(() => {

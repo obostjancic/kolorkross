@@ -1,38 +1,25 @@
-// import * as path from "path";
-// import * as Mocha from "mocha";
-// import * as glob from "glob";
-// export function run(): void {}
-// export function run(): Promise<void> {
-//   // Create the mocha test
-//   const mocha = new Mocha({
-//     ui: "tdd",
-//     color: true,
-//   });
+import * as path from "path";
+import { runCLI } from "jest";
 
-//   const testsRoot = path.resolve(__dirname, "..");
+const jestTestRunnerForVSCodeE2E: any = {
+  run(testsRoot: string, reportTestResults: (error: Error | undefined, failures?: number) => void): void {
+    const projectRootPath = process.cwd();
+    console.log(projectRootPath);
+    const config = path.join(projectRootPath, "jest.e2e.config.js");
+    console.log(config)
+    runCLI({ config } as any, [projectRootPath])
+      .then(jestCliCallResult => {
+        console.log('then');
+        console.log('cli res',jestCliCallResult);
 
-//   return new Promise((c, e) => {
-//     glob("**/**.test.js", { cwd: testsRoot }, (err, files) => {
-//       if (err) {
-//         return e(err);
-//       }
+        reportTestResults(undefined, jestCliCallResult.results.numFailedTests);
+      })
+      .catch(errorCaughtByJestRunner => {
+                console.log('catch');
 
-//       // Add files to the test suite
-//       files.forEach(f => mocha.addFile(path.resolve(testsRoot, f)));
+        reportTestResults(errorCaughtByJestRunner, 0);
+      });
+  },
+};
 
-//       try {
-//         // Run the mocha test
-//         mocha.run(failures => {
-//           if (failures > 0) {
-//             e(new Error(`${failures} tests failed.`));
-//           } else {
-//             c();
-//           }
-//         });
-//       } catch (err) {
-//         console.error(err);
-//         e(err);
-//       }
-//     });
-//   });
-// }
+module.exports = jestTestRunnerForVSCodeE2E;

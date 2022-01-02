@@ -10,8 +10,6 @@ import { DASHBOARD_VIEW_ID, token } from "./util/constants";
 // TODO: feat - add a better project update mechanism
 // TODO: feat - project drag and drop
 
-// TODO: fix - _dispose error
-
 export const init = (context: vscode.ExtensionContext): void => {
   container.register(token.URI, { useValue: context.extensionUri });
   container.register(token.SUBSCRIPTIONS, { useValue: context.subscriptions });
