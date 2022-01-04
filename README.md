@@ -8,20 +8,12 @@ VS Code extension that allows you to organize and access your projects in a colo
 
 <div align="center" display="inline">
 
-![VSCode Marketplace ](https://vsmarketplacebadge.apphb.com/version/obostjancic.kolorkross.svg?color=blue&style=?style=for-the-badge&logo=visual-studio-code)
+![VSCode Marketplace](https://vsmarketplacebadge.apphb.com/version/obostjancic.kolorkross.svg?color=blue&style=?style=for-the-badge&logo=visual-studio-code)
 [![GitHub license](https://img.shields.io/github/license/obostjancic/kolorkross)](https://github.com/obostjancic/kolorkross/blob/main/LICENSE.md)
 ![GitHub issues](https://img.shields.io/github/issues/obostjancic/kolorkross)
+[![codecov](https://codecov.io/gh/obostjancic/kolorkross/branch/main/graph/badge.svg?token=Y8KHCMX7PF)](https://codecov.io/gh/obostjancic/kolorkross)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/obostjancic/kolorkross/main)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/obostjancic/kolorkross)
-
-</div>
-
-<div align="center" display="inline">
-
-![Coverage lines](https://img.shields.io/badge/Coverage%3Alines-100%25-brightgreen)
-![Coverage statements](https://img.shields.io/badge/Coverage%3Astatements-100%25-brightgreen)
-![Coverage branches](https://img.shields.io/badge/Coverage%3Abranches-100%25-brightgreen)
-![Coverage functions](https://img.shields.io/badge/Coverage%3Afunctions-100%25-brightgreen)
 
 </div>
 
