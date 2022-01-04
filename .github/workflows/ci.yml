@@ -53,6 +53,6 @@ jobs:
       - name: Install npx
         run: yarn global add npx
       - name: Run tests
-        run: yarn test
+        run: yarn test --coverage
       - name: Generate coverage report
         run: npx codecov
