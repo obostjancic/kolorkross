@@ -41,7 +41,7 @@ export class ProjectService {
 
   async update(updateData: UpdateProjectDTO): Promise<Project> {
     const project = await this.findById(updateData.id);
-    const updatedProject = await this.repo.update(updateData.id, { ...project, ...updateData });
+    const updatedProject = await this.repo.update(updateData.id, { ...project, ...updateData, });
     return updatedProject;
   }
 

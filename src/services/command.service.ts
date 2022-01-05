@@ -33,7 +33,7 @@ export class CommandService {
   public async createProject(groupId?: string): Promise<void> {
     groupId = await this.windowService.defaultInput("Group Id", groupId);
     const projectPath = await this.windowService.inputPath("Open");
-    const newProject = await this.projectService.create({ path: projectPath });
+    const newProject = await this.projectService.create({ path: projectPath.toLowerCase() });
     const group = await this.groupService.findById(groupId);
     this.groupService.addProject(group, newProject);
   }
@@ -54,7 +54,7 @@ export class CommandService {
       ...project,
       name,
       color,
-      path,
+      path: path.toLowerCase(),
     });
 
     this.workspaceConfigService.applyConfigToWorkspace(updatedProject);
