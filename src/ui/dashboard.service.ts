@@ -23,15 +23,17 @@ export class DashboardService {
     [cmd.OPEN_PROJECT]: this.cmdService.openProject,
     [cmd.DELETE_GROUP]: this.cmdService.deleteGroup,
     [cmd.CREATE_GROUP]: this.cmdService.createGroup,
+    [cmd.UPDATE_GROUP]: this.cmdService.updateGroup,
+    [cmd.UPDATE_GROUP_ORDER]: this.cmdService.updateGroupOrder,
     [cmd.CREATE_PROJECT]: this.cmdService.createProject,
     [cmd.DELETE_PROJECT]: this.cmdService.deleteProject,
     [cmd.UPDATE_PROJECT]: this.cmdService.updateProject,
-    [cmd.UPDATE_GROUP]: this.cmdService.updateGroup,
+    [cmd.UPDATE_PROJECT_ORDER]: this.cmdService.updateProjectOrder,
   };
 
-  public async handleCommand(command: typeof cmd, payload: string): Promise<void> {
+  public async handleCommand(command: typeof cmd, args: any[]): Promise<void> {
     //@ts-expect-error - bc typeof cmd cant be used as index
-    return this.eventCmdMap[command](payload);
+    return this.eventCmdMap[command](...args);
   }
 
   public async getGroups(): Promise<GroupWProject[]> {
@@ -43,6 +45,9 @@ export class DashboardService {
   }
 
   private async getGroupWithProjects(group: Group, projects: Project[]): Promise<GroupWProject> {
-    return { ...group, projects: projects.filter(project => group.projects.includes(project.id)) };
+    return {
+      ...group,
+      projects: group.projects.map(pId => projects.find(p => p.id === pId)).filter(p => p) as Project[],
+    };
   }
 }
