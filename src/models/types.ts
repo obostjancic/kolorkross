@@ -7,6 +7,7 @@ export type Group = {
   id: string;
   name: string;
   projects: string[];
+  order: number;
 };
 
 export type UpdateGroupDTO = Partial<Group> & { id: string };
@@ -18,6 +19,11 @@ export type Project = {
   name: string;
   color: Color;
   path: string;
+};
+
+export type Migration = {
+  id: string;
+  name: string;
 };
 
 export type UpdateProjectDTO = Partial<Project> & { id: string };

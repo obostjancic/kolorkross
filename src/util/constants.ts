@@ -1,14 +1,21 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Color } from "../models/types";
 
+export enum Direction {
+  up = "up",
+  down = "down",
+}
+
 export namespace cmd {
   export const CREATE_GROUP = "kolorkross.createGroup";
   export const UPDATE_GROUP = "kolorkross.updateGroup";
   export const DELETE_GROUP = "kolorkross.deleteGroup";
+  export const UPDATE_GROUP_ORDER = "kolorkross.updateGroupOrder";
 
   export const OPEN_PROJECT = "kolorkross.openProject";
   export const CREATE_PROJECT = "kolorkross.createProject";
   export const UPDATE_PROJECT = "kolorkross.updateProject";
+  export const UPDATE_PROJECT_ORDER = "kolorkross.updateProjectOrder";
   export const DELETE_PROJECT = "kolorkross.deleteProject";
 
   export const OPEN_DASHBOARD = "kolorkross.openDashboard";
@@ -30,6 +37,7 @@ export namespace token {
 export namespace section {
   export const PROJECTS = "projects";
   export const GROUPS = "groups";
+  export const MIGRATIONS = "migrations";
 }
 
 export const DASHBOARD_VIEW_ID = "kolorkross.dashboard";

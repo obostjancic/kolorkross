@@ -14,6 +14,7 @@ import { GroupService } from "./group.service";
 import { ProjectService } from "./project.service";
 import { WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
+import { Direction } from "../util/constants";
 
 jest.mock("../util/vscode.env", () => ({ showErrorMessage: jest.fn(), executeCommand: jest.fn() }));
 
@@ -51,6 +52,7 @@ describe("CommandService", () => {
         inputPath: jest.fn(),
         input: jest.fn(),
         inputColor: jest.fn(),
+        inputDirection: jest.fn(),
         confirm: jest.fn(),
       },
     });
@@ -125,6 +127,54 @@ describe("CommandService", () => {
     });
   });
 
+  describe("updateProjectOrder", () => {
+    const createGroupWithProjects = async () => {
+      const project1 = await projectService.create(mockProject);
+      const project2 = await projectService.create(mockProject);
+      const group = await groupService.create(mockGroup);
+      await groupService.addProject(group, project1);
+      await groupService.addProject(group, project2);
+
+      return groupService.findById(group.id);
+    };
+
+    it("Should update project order with default direction", async () => {
+      jest.spyOn(windowService, "inputDirection").mockImplementation(() => Promise.resolve(Direction.up));
+      const group = await createGroupWithProjects();
+
+      await service.updateProjectOrder(group.id, group.projects[1]);
+      expect(errorHandler).not.toHaveBeenCalled();
+      const updatedGroup = await groupService.findById(group.id);
+      expect(updatedGroup.projects[0]).toStrictEqual(group.projects[1]);
+    });
+
+    it("Should update project order with passed direction", async () => {
+      jest.spyOn(windowService, "inputDirection").mockImplementation(() => Promise.resolve(Direction.up));
+      const group = await createGroupWithProjects();
+
+      await service.updateProjectOrder(group.id, group.projects[1], Direction.up);
+      expect(errorHandler).not.toHaveBeenCalled();
+      const updatedGroup = await groupService.findById(group.id);
+      expect(updatedGroup.projects[0]).toStrictEqual(group.projects[1]);
+    });
+
+    it("Should show error if group does not exist", async () => {
+      const project = await projectService.create(mockProject);
+
+      await service.updateProjectOrder("non-existent", project.id);
+
+      expect(errorHandler).toReturnWith("Group not found");
+    });
+
+    it("Should show error if project does not exist", async () => {
+      const group = await createGroupWithProjects();
+
+      await service.updateProjectOrder(group.id, "non-existent");
+
+      expect(errorHandler).toReturnWith("Project not found in group");
+    });
+  });
+
   describe("deleteProject", () => {
     it("Should delete a project", async () => {
       const project = await projectService.create(mockProject);
@@ -177,6 +227,38 @@ describe("CommandService", () => {
     it("Should show error if group does not exist", async () => {
       await service.updateGroup("non-existent");
       expect(errorHandler).toHaveBeenCalled();
+    });
+  });
+
+  describe("updateGroupOrder", () => {
+    it("Should update group order with default direction", async () => {
+      jest.spyOn(windowService, "inputDirection").mockImplementation(() => Promise.resolve(Direction.up));
+      await groupService.create(mockGroup);
+      const group2 = await groupService.create(mockGroup);
+
+      await service.updateGroupOrder(group2.id);
+
+      const allGroups = await groupService.findAll();
+      expect(errorHandler).not.toHaveBeenCalled();
+      expect(allGroups[0]?.id).toStrictEqual(group2.id);
+    });
+
+    it("Should update group order with passed direction", async () => {
+      jest.spyOn(windowService, "inputDirection").mockImplementation(() => Promise.resolve(Direction.up));
+      await groupService.create(mockGroup);
+      const group2 = await groupService.create(mockGroup);
+
+      await service.updateGroupOrder(group2.id, Direction.up);
+
+      const allGroups = await groupService.findAll();
+      expect(errorHandler).not.toHaveBeenCalled();
+      expect(allGroups[0]?.id).toStrictEqual(group2.id);
+    });
+
+    it("Should show error if group does not exist", async () => {
+      await service.updateGroupOrder("non-existent");
+
+      expect(errorHandler).toReturnWith("Group not found");
     });
   });
 

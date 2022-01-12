@@ -18,6 +18,11 @@ export class MockRepository<T extends { id: string }> implements Repository<T> {
     return this.entities.filter(en => partialMatch(en, query));
   }
 
+  findOne(query: Partial<T>): T {
+    const entities = this.find(query);
+    return entities?.[0];
+  }
+
   create(entity: Partial<T>): Promise<T> {
     const newEntity = { ...entity, id: id() } as T;
     this.entities.push(newEntity);

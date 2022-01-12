@@ -1,10 +1,12 @@
 import { inject, singleton } from "tsyringe";
+import { Direction } from "../util/constants";
 import { ShowError } from "../util/decorators";
 import { ColorService } from "./color.service";
 import { GroupService } from "./group.service";
 import { ProjectService } from "./project.service";
 import { WindowService } from "./window.service";
 import { WorkspaceConfigService } from "./workspaceConfig.service";
+
 @singleton()
 export class CommandService {
   constructor(
@@ -16,9 +18,11 @@ export class CommandService {
     this.openProject = this.openProject.bind(this);
     this.createProject = this.createProject.bind(this);
     this.updateProject = this.updateProject.bind(this);
+    this.updateProjectOrder = this.updateProjectOrder.bind(this);
     this.deleteProject = this.deleteProject.bind(this);
     this.createGroup = this.createGroup.bind(this);
     this.updateGroup = this.updateGroup.bind(this);
+    this.updateGroupOrder = this.updateGroupOrder.bind(this);
     this.deleteGroup = this.deleteGroup.bind(this);
   }
 
@@ -61,6 +65,15 @@ export class CommandService {
   }
 
   @ShowError()
+  public async updateProjectOrder(groupId?: string, projectId?: string, direction = Direction.up): Promise<void> {
+    groupId = await this.windowService.defaultInput("Group Id", groupId);
+    projectId = await this.windowService.defaultInput("Project Id", projectId);
+    direction = await this.windowService.inputDirection(direction);
+
+    await this.groupService.updateProjectOrder(groupId, projectId, direction);
+  }
+
+  @ShowError()
   public async deleteProject(projectId?: string): Promise<void> {
     projectId = await this.windowService.defaultInput("Project Id", projectId);
     const project = await this.projectService.findById(projectId);
@@ -83,6 +96,14 @@ export class CommandService {
     const newName = await this.windowService.input("Group Name", group.name);
 
     await this.groupService.update({ ...group, name: newName });
+  }
+
+  @ShowError()
+  public async updateGroupOrder(groupId?: string, direction = Direction.up): Promise<void> {
+    groupId = await this.windowService.defaultInput("Group Id", groupId);
+    direction = await this.windowService.inputDirection(direction);
+
+    await this.groupService.updateOrder(groupId, direction);
   }
 
   @ShowError()

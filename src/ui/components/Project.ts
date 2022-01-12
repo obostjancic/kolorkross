@@ -1,6 +1,6 @@
 import { Project } from "../../models/types";
 
-export const project = (project: Project) => {
+export const project = (project: Project, groupId?: string) => {
   return /*html*/ `
     <div class="project" id="${project.id}" data-id="${project.id}" data-name="${project.name}">     
       <div>    
@@ -12,7 +12,15 @@ export const project = (project: Project) => {
         ${project.path}
       </span>
       </div>
-      <div class="icons">
+      <div class="project-actions">
+        <div class="move-project">
+          <vscode-button class="move-project-up" appearance="icon" aria-label="Edit"  data-group-id="${groupId}" data-id="${project.id}">
+            <span class="codicon codicon-arrow-up" />
+          </vscode-button>
+          <vscode-button class="move-project-down" appearance="icon" aria-label="Edit" data-group-id="${groupId}" data-id="${project.id}">
+            <span class="codicon codicon-arrow-down" />
+          </vscode-button>
+        </div>
         <vscode-button class="update-project" appearance="icon" aria-label="Edit" data-id="${project.id}">
           <span class="codicon codicon-edit" />
         </vscode-button>

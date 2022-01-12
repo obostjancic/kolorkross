@@ -1,6 +1,6 @@
 import { singleton } from "tsyringe";
 import { Color, Project } from "../models/types";
-import { cmd } from "../util/constants";
+import { cmd, Direction } from "../util/constants";
 import { isValidHex } from "../util/validators";
 import { VSCode } from "../util/vscode.env";
 @singleton()
@@ -56,6 +56,14 @@ export class WindowService {
       throw new Error(`No ${label} provided`);
     }
     return result;
+  }
+
+  async inputDirection(direction?: Direction | string): Promise<Direction> {
+    direction = direction || (await VSCode.showQuickPick([Direction.up, Direction.down]));
+    if (!direction) {
+      throw new Error(`No direction provided`);
+    }
+    return direction as Direction;
   }
 
   async confirm(text: string): Promise<boolean> {

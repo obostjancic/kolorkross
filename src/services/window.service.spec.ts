@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { container } from "tsyringe";
+import { Direction } from "../util/constants";
 import { VSCode } from "../util/vscode.env";
 import { WindowService } from "./window.service";
 
@@ -125,13 +126,34 @@ describe("WindowService", () => {
       expect(result).toBeUndefined();
     });
 
-    it("Should return undefined  if the input and quick pick are empty", async () => {
+    it("Should return undefined if the input and quick pick are empty", async () => {
       jest.spyOn(VSCode, "showQuickPick").mockImplementation(() => Promise.resolve(undefined));
       jest.spyOn(windowService, "input").mockImplementation(() => Promise.resolve(undefined));
 
       const result = await windowService["quickPickColor"](colors);
 
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe("inputDirection", () => {
+    it("Should return a valid direction when provided with a default", async () => {
+      jest.spyOn(VSCode, "showQuickPick").mockImplementation(() => Promise.resolve(Direction.up));
+      const direction = await windowService.inputDirection(Direction.up);
+      expect(direction).toBe(Direction.up);
+    });
+
+    it("Should return a valid direction when not provided with a default", async () => {
+      jest.spyOn(VSCode, "showQuickPick").mockImplementation(() => Promise.resolve(Direction.up));
+
+      const direction = await windowService.inputDirection();
+      expect(direction).toBe(Direction.up);
+    });
+
+    it("should throw an error if quick pick returns undefined", async () => {
+      jest.spyOn(VSCode, "showQuickPick").mockImplementation(() => Promise.resolve(undefined));
+
+      await expect(windowService.inputDirection()).rejects.toThrow("No direction provided");
     });
   });
 
