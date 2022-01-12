@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.3.0] - 2022-01-12
+
+- Implemented migration service
+- Added feature to move projects up or down within a group
+- Added feature to move groups up or down on the dashboard
+
 ## [0.2.0] - 2021-12-28
 
 - Added CI release process
