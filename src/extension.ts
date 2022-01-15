@@ -1,7 +1,8 @@
 import "reflect-metadata";
 import { container } from "tsyringe";
 import * as vscode from "vscode";
-import { CommandRegisterer } from "./command.registerer";
+import { CommandRegistrar } from "./command.registrar";
+import { MigrationService } from "./services/migration.service";
 import { ProjectService } from "./services/project.service";
 import { WorkspaceConfigService } from "./services/workspaceConfig.service";
 import { SidebarDummyDashboardViewProvider } from "./ui/sidebar.view.provider";
@@ -30,13 +31,18 @@ const checkWorkspaceConfig = async () => {
   }
 };
 
+const applyMigrations = async () => {
+  const migrationsService = container.resolve(MigrationService);
+  await migrationsService.run();
+};
+
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   init(context);
   checkWorkspaceConfig();
-
+  await applyMigrations();
   const provider = container.resolve(SidebarDummyDashboardViewProvider);
   context.subscriptions.push(vscode.window.registerWebviewViewProvider(DASHBOARD_VIEW_ID, provider));
-  container.resolve(CommandRegisterer).register();
+  container.resolve(CommandRegistrar).register();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function

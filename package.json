@@ -6,7 +6,7 @@
   "name": "kolorkross",
   "publisher": "obostjancic",
   "repository": "https://github.com/obostjancic/kolorkross",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "activationEvents": [
     "onStartupFinished",
     "onCommand:kolorkross.createGroup",
@@ -30,6 +30,10 @@
         "title": "Kolor Kross: Update Group"
       },
       {
+        "command": "kolorkross.updateGroupOrder",
+        "title": "Kolor Kross: Update Group Order"
+      },
+      {
         "command": "kolorkross.deleteGroup",
         "title": "Kolor Kross: Delete Group"
       },
@@ -40,6 +44,10 @@
       {
         "command": "kolorkross.updateProject",
         "title": "Kolor Kross: Update Project"
+      },
+      {
+        "command": "kolorkross.updateProjectOrder",
+        "title": "Kolor Kross: Update Project Order"
       },
       {
         "command": "kolorkross.deleteProject",

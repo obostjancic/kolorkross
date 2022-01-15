@@ -40,6 +40,12 @@ To navigate to a project, simply click on the anywehere on the project row in th
 
 ## Release Notes
 
+### 0.3.0
+
+- Implemented migration service
+- Added feature to move projects up or down within a group
+- Added feature to move groups up or down on the dashboard
+
 ### 0.2.0
 
 - Added CI release process

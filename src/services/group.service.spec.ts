@@ -3,6 +3,7 @@ import { container } from "tsyringe";
 import { Group, Project } from "../models/types";
 import { Repository } from "../repositories/base.repository";
 import { GroupRepository } from "../repositories/group.repository";
+import { Direction } from "../util/constants";
 import { MockRepository } from "../util/test";
 import { GroupService } from "./group.service";
 
@@ -20,9 +21,15 @@ describe("GroupService", () => {
     service = container.resolve(GroupService);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     const groups = repository.findAll();
-    groups.forEach(group => repository.delete(group.id));
+    const ids = groups.map(group => group.id);
+    for (const groupId of ids) {
+      await repository.delete(groupId);
+    }
+    if (repository.findAll().length > 0) {
+      throw new Error("GroupService: afterEach: groups not deleted");
+    }
   });
 
   describe("findAll", () => {
@@ -40,6 +47,38 @@ describe("GroupService", () => {
       expect(groups[0].name).toEqual(group.name);
 
       repository.delete(group.id);
+    });
+
+    it("should return two groups", async () => {
+      const group1 = await repository.create({ name: "group1", order: 1 });
+      const group2 = await repository.create({ name: "group2", order: 0 });
+
+      const groups = await service.findAll();
+      expect(groups.length).toEqual(2);
+      expect(groups[0].name).toEqual(group2.name);
+      expect(groups[1].name).toEqual(group1.name);
+    });
+  });
+
+  describe("countAll", () => {
+    it("shoulrd return zero because there are no groups", async () => {
+      const count = await service.countAll();
+      expect(count).toEqual(0);
+    });
+
+    it("should return one group", async () => {
+      await repository.create({ name: "group1" });
+
+      const count = await service.countAll();
+      expect(count).toEqual(1);
+    });
+
+    it("should return two groups", async () => {
+      await repository.create({ name: "group1" });
+      await repository.create({ name: "group2" });
+
+      const count = await service.countAll();
+      expect(count).toEqual(2);
     });
   });
 
@@ -61,16 +100,28 @@ describe("GroupService", () => {
     it("should create a group when all props are passed", async () => {
       const group = await service.create(mockGroup);
       expect(group.name).toEqual(mockGroup.name);
+      expect(group.order).toEqual(0);
     });
 
     it("should create a group when name and color are passed", async () => {
       const group = await service.create({ name: mockGroup.name });
       expect(group.name).toEqual(mockGroup.name);
+      expect(group.order).toEqual(0);
     });
 
     it("should create a group when only name is passed", async () => {
       const group = await service.create({ name: mockGroup.name });
       expect(group.name).toEqual(mockGroup.name);
+      expect(group.order).toEqual(0);
+    });
+
+    it("should two groups when called twice", async () => {
+      const group1 = await service.create({ name: mockGroup.name });
+      const group2 = await service.create({ name: mockGroup.name });
+      expect(group1.name).toEqual(mockGroup.name);
+      expect(group1.order).toEqual(0);
+      expect(group2.name).toEqual(mockGroup.name);
+      expect(group2.order).toEqual(1);
     });
   });
 
@@ -85,6 +136,110 @@ describe("GroupService", () => {
     it("should throw an exception", async () => {
       const updatingNonexistingGroup = async () => service.update({ id: "2", name: "updatedName" });
       expect(updatingNonexistingGroup).rejects.toThrow("Group not found");
+    });
+  });
+
+  describe("updateOrder", () => {
+    it("should push group up", async () => {
+      const { id: group1Id } = await service.create({ name: mockGroup.name });
+      const { id: group2Id } = await service.create({ name: mockGroup.name });
+
+      await service.updateOrder(group2Id, Direction.up);
+
+      const group1 = await service.findById(group1Id);
+      const group2 = await service.findById(group2Id);
+
+      expect(group2.order).toEqual(0);
+      expect(group1.order).toEqual(1);
+    });
+
+    it("should push group down", async () => {
+      const { id: group1Id } = await service.create({ name: mockGroup.name });
+      const { id: group2Id } = await service.create({ name: mockGroup.name });
+
+      await service.updateOrder(group1Id, Direction.down);
+
+      const group1 = await service.findById(group1Id);
+      const group2 = await service.findById(group2Id);
+
+      expect(group2.order).toEqual(0);
+      expect(group1.order).toEqual(1);
+    });
+
+    it("should throw an exception when called with non existant group", async () => {
+      const pushingNonexistingGroup = async () => service.updateOrder("2", Direction.up);
+      expect(pushingNonexistingGroup).rejects.toThrow("Group not found");
+    });
+
+    it("should throw an exception when there is no group to swap with", async () => {
+      const group1 = await service.create({ name: mockGroup.name });
+      const group2 = await service.create({ name: mockGroup.name });
+
+      await repository.update(group2.id, { ...group2, order: 9999 });
+      const pushingFirstElementDown = async () => service.updateOrder(group1.id, Direction.down);
+
+      expect(pushingFirstElementDown).rejects.toThrow("Group to swap with not found");
+    });
+
+    it("should throw an exception when trying to push the first element up", async () => {
+      const group = await service.create({ name: mockGroup.name });
+      const pushingFirstElementUp = async () => service.updateOrder(group.id, Direction.up);
+      expect(pushingFirstElementUp).rejects.toThrow("Cannot move group up");
+    });
+
+    it("should throw an exception when trying to push the last element down", async () => {
+      const group = await service.create({ name: mockGroup.name });
+      const pushingLastElementDown = async () => service.updateOrder(group.id, Direction.down);
+      expect(pushingLastElementDown).rejects.toThrow("Cannot move group down");
+    });
+  });
+
+  describe("updateProjectOrder", () => {
+    const createGroupWithProjects = async () => {
+      const group = await service.create({ name: mockGroup.name });
+      await service.addProject(group, { id: "pr1" } as Project);
+      await service.addProject(group, { id: "pr2" } as Project);
+
+      return service.findById(group.id);
+    };
+
+    it("should push project up", async () => {
+      const group = await createGroupWithProjects();
+      await service.updateProjectOrder(group.id, "pr2", Direction.up);
+
+      const groupAfterUpdate = await service.findById(group.id);
+
+      expect(groupAfterUpdate.projects[0]).toEqual("pr2");
+    });
+
+    it("should push project down", async () => {
+      const group = await createGroupWithProjects();
+      await service.updateProjectOrder(group.id, "pr1", Direction.down);
+
+      const groupAfterUpdate = await service.findById(group.id);
+
+      expect(groupAfterUpdate.projects[0]).toEqual("pr2");
+    });
+
+    it("should throw an exception when trying to push a project that is not a part of the group", async () => {
+      const group = await createGroupWithProjects();
+
+      const pushingNonExistingProject = async () => service.updateProjectOrder(group.id, "pr3", Direction.up);
+      expect(pushingNonExistingProject).rejects.toThrow("Project not found in group");
+    });
+
+    it("should throw an exception when trying to push the first element up", async () => {
+      const group = await createGroupWithProjects();
+
+      const pushingFirstElementUp = async () => service.updateProjectOrder(group.id, "pr1", Direction.up);
+      expect(pushingFirstElementUp).rejects.toThrow("Cannot move project up");
+    });
+
+    it("should throw an exception when trying to push the last element down", async () => {
+      const group = await createGroupWithProjects();
+
+      const pushingLastElementDown = async () => service.updateProjectOrder(group.id, "pr2", Direction.down);
+      expect(pushingLastElementDown).rejects.toThrow("Cannot move project down");
     });
   });
 

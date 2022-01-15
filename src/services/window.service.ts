@@ -1,9 +1,8 @@
 import { singleton } from "tsyringe";
 import { Color, Project } from "../models/types";
-import { cmd } from "../util/constants";
+import { cmd, Direction } from "../util/constants";
 import { isValidHex } from "../util/validators";
 import { VSCode } from "../util/vscode.env";
-import { homedir } from "os";
 @singleton()
 export class WindowService {
   async defaultInput(label: string, value?: string): Promise<string> {
@@ -44,7 +43,7 @@ export class WindowService {
     return colors.find(c => c.name === quickPick);
   }
 
-  async inputPath(label: string, defaultValue = `${homedir()}/mocks`): Promise<string> {
+  async inputPath(label: string, defaultValue = ""): Promise<string> {
     const uri = await VSCode.showOpenDialog({
       canSelectFiles: false,
       canSelectFolders: true,
@@ -57,6 +56,14 @@ export class WindowService {
       throw new Error(`No ${label} provided`);
     }
     return result;
+  }
+
+  async inputDirection(direction?: Direction | string): Promise<Direction> {
+    direction = direction || (await VSCode.showQuickPick([Direction.up, Direction.down]));
+    if (!direction) {
+      throw new Error(`No direction provided`);
+    }
+    return direction as Direction;
   }
 
   async confirm(text: string): Promise<boolean> {

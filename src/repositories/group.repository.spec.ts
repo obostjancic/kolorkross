@@ -9,6 +9,7 @@ import { GroupRepository } from "./group.repository";
 const group = {
   id: "1",
   name: "group1",
+  order: 0,
 };
 
 describe("GroupRepository", () => {
@@ -65,6 +66,20 @@ describe("GroupRepository", () => {
     it("should return nothing", async () => {
       const found = await repository.find({ name: "group2" });
       expect(found.length).toEqual(0);
+    });
+  });
+
+  describe("findOne", () => {
+    it("should match group by name", async () => {
+      await state.update(section.GROUPS, { [group.id]: group, ["2"]: group });
+      const found = await repository.findOne({ name: "group1" });
+      expect(found).toBeDefined();
+      expect(found?.id).toEqual(group.id);
+    });
+
+    it("should return nothing", async () => {
+      const found = await repository.findOne({ name: "no group" });
+      expect(found).toBeUndefined();
     });
   });
 

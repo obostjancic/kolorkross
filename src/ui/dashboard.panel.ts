@@ -4,7 +4,7 @@ import { DASHBOARD_VIEW_ID, token } from "../util/constants";
 import { getResource } from "../util/loaders";
 import { group } from "./components/Group";
 import { header } from "./components/Header";
-import { DashboardService, EventMessage } from "./dasboard.service";
+import { DashboardService, EventMessage } from "./dashboard.service";
 
 export class DashboardPanel {
   public static currentPanel: DashboardPanel | undefined;

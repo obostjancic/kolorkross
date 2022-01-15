@@ -1,8 +1,3 @@
-.group {
-  /* display: flex;
-  flex-direction: column;
-  align-items: flex-start; */
-}
 .group-name {
   /* border-bottom: 2px solid; */
   /* padding: 0.1em 0.25em; */
@@ -15,58 +10,30 @@
   padding-left: 0;
 }
 
-.group-name h2 {
-  /* width: 100%; */
-  /* margin-bottom: 1.5em; */
-}
-
-.icons {
-  /* display: flex;
-  flex-direction: row-reverse;
-  width: 100%;
-  justify-content: flex-start;
-  margin-top: 0.25em; */
-}
-
-.icon {
-  /* width: 0.6em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-weight: bold;
-  margin: 0 0 0 0.25em;
-  font-size: 1.25em;
-  align-content: center;
-  justify-content: center; */
-}
-.icon:hover {
-  /* cursor: pointer;
-  filter: brightness(120%); */
-}
-
-.delete-icon {
-  /* width: 0.5em; */
-}
-
 .group-projects {
-  /* display: flex;
-  flex-direction: row; */
   margin-bottom: 1.5em;
+}
+
+.group-actions {
+  display: flex;
+}
+
+.move-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 0.5em;
+  opacity: 0.75;
 }
 
 .project {
   display: flex;
   flex-direction: row;
   align-items: center;
-  /* border: 1px solid; */
-  /* border-radius: 2px; */
-  /* margin: 0.5em 1em 0.5em 0; */
+
   padding: 0.2em 0.5em;
   justify-content: space-between;
-}
-
-.project > * {
-  /* margin: 0.25em; */
 }
 
 .project-name {
@@ -78,27 +45,27 @@
 .project:hover {
   cursor: pointer;
   background: var(--button-icon-hover-background);
-  /* backgorund-color: #f2f2f2; */
+}
+
+.project-actions {
+  display: flex;
+}
+
+.move-project {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 0.5em;
+  opacity: 0.75;
 }
 
 vscode-badge {
   margin-bottom: -3px;
 }
 
-.project-path {
-  /* margin: 0.75em 0 0 0; */
-}
-
 .create-project {
   margin-top: 1em;
-  /* margin-left: 0; */
-  /* font-size: 3em;
-  padding: 0 1.5em;
-  display: inherit;
-  justify-content: center;
-  align-items: center;
-  line-height: 0;
-  font-weight: lighter; */
 }
 
 .header-title {

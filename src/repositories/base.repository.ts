@@ -5,6 +5,7 @@ export type Repository<T extends { id: string }> = {
   findAll(): T[];
   findById(id: string): T | undefined;
   find(query: Partial<T>): T[];
+  findOne(query: Partial<T>): T | undefined;
   create(item: Partial<T>): Promise<T>;
   update(id: string, item: T): Promise<T>;
   delete(id: string): Promise<void>;
@@ -27,6 +28,11 @@ export abstract class BaseRepository<T extends { id: string }> implements Reposi
 
   find(query: Partial<T>): T[] {
     return this.findAll().filter(en => partialMatch(en, query));
+  }
+
+  findOne(query: Partial<T>): T | undefined {
+    const entities = this.find(query);
+    return entities?.[0];
   }
 
   async create(item: Partial<T>): Promise<T> {
