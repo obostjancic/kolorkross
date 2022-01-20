@@ -2,7 +2,7 @@
 
 <div align="center">
 
-VS Code extension that allows you to organize and access your projects in a color coded way.
+A VS Code extension that allows you to organize and access your projects in a color-coded way.
 
 </div>
 
@@ -20,21 +20,21 @@ VS Code extension that allows you to organize and access your projects in a colo
 
 ## Installation
 
-To begin with, you can download the extension from **[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=obostjancic.kolorkross)** or by opening Extensions side bar panel in Visual Studio Code and choose the menu options for **View → Extensions** and searching for **Kolor Kross**.
+To begin, you can get the extension from the **[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=obostjancic.kolorkross)** or by opening the Extensions side bar panel in Visual Studio Code and selecting the menu options for **View → Extensions** and searching for **Kolor Kross**.
 
 ## Features
 
-Kolor Kross organizes projects (workspaces) in flexible groups. Every project is asssigned a random color on creation. This allows users to develop mental maps when working across multiple projects. Dasboard offers a quick overview and organization of all projects and their color codes. It also allows users to quickly jump to a project.
+Kolor Kross organizes projects (workspaces) into flexible groups. Every project is assigned a random color on creation. This allows users to develop mental maps when working across multiple projects. The Dasboard offers a quick overview and organization of all projects and their color codes. It also allows users to quickly jump into a project.
 
-To Add a project to a group, simply on **+ Add Project button**
+To Add a project to a group, simply click on the **+ Add Project** button.
 
 ![Add Project](https://raw.githubusercontent.com/obostjancic/kolorkross/main/assets/add_project.gif)
 
-You can change the color of the project, as well as project name and path by clicking on the **edit** icon.
+You can change the color of the project, as well as the project name and path, by clicking on the **edit** icon.
 
 ![Edit Project](https://raw.githubusercontent.com/obostjancic/kolorkross/main/assets/edit_project.gif)
 
-To navigate to a project, simply click on the anywehere on the project row in the dashboard. Vs Code will open the project in the new window that is colored with the project color.
+To navigate to a project, simply click anywhere on the project row in the dashboard. Vs Code will open the project in a new window that is colored with the project color.
 
 ![Open Project](https://raw.githubusercontent.com/obostjancic/kolorkross/main/assets/open_project.gif)
 
